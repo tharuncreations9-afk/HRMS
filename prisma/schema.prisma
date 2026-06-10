@@ -1,0 +1,690 @@
+// VLJ HRMS — Enterprise Database Architecture (Phase 2)
+// MySQL + Prisma ORM — Backend integration in Phase 3
+// Attendance is NEVER linked by employee name — only employee_id, employee_code, cam_attendance_id
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────────────────────────────────────────
+
+enum EmployeeStatus {
+  Active
+  Resigned
+  On_Hold
+  Terminated
+}
+
+enum EmploymentType {
+  Full_Time
+  Part_Time
+  Contract
+  Intern
+}
+
+enum AttendanceStatus {
+  Present
+  Absent
+  Late
+  Half_Day
+  Leave
+  Holiday
+  Weekly_Off
+}
+
+enum LeaveWorkflowStatus {
+  Pending
+  Approved
+  Rejected
+  Not_Applicable
+}
+
+enum AttendanceCorrectionStatus {
+  Pending
+  Approved
+  Rejected
+}
+
+enum AttendanceSyncStatus {
+  Success
+  Partial
+  Failed
+  In_Progress
+}
+
+enum AttendanceExceptionIssue {
+  Missing_Punch
+  Duplicate_Punch
+  Unmatched_Employee
+  Invalid_Time
+  Device_Error
+}
+
+enum DocumentType {
+  Aadhaar
+  PAN
+  Bank_Passbook
+  Offer_Letter
+  Agreement
+  Other
+}
+
+enum HolidayType {
+  National
+  Optional
+  Restricted
+  Company
+}
+
+enum ReportType {
+  Daily_Attendance
+  Monthly_Attendance
+  Department_Attendance
+  Late_Arrival
+  Overtime
+  Attendance_Register
+  Leave_Summary
+}
+
+enum AuditActionType {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  APPROVE
+  REJECT
+  EXPORT
+  SYNC
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE 1: ROLES
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Role {
+  id        Int      @id @default(autoincrement())
+  roleName  String   @unique @map("role_name") @db.VarChar(50)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  createdBy Int?     @map("created_by")
+  updatedBy Int?     @map("updated_by")
+
+  employees       Employee[]
+  rolePermissions RolePermission[]
+
+  creator Employee? @relation("RoleCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updater Employee? @relation("RoleUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@index([roleName])
+  @@map("roles")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE 2: PERMISSIONS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Permission {
+  id             Int      @id @default(autoincrement())
+  permissionName String   @map("permission_name") @db.VarChar(100)
+  moduleName     String   @map("module_name") @db.VarChar(100)
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  createdBy      Int?     @map("created_by")
+  updatedBy      Int?     @map("updated_by")
+
+  rolePermissions RolePermission[]
+  employeePermissions EmployeePermission[]
+
+  creator Employee? @relation("PermissionCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updater Employee? @relation("PermissionUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@unique([permissionName, moduleName])
+  @@index([moduleName])
+  @@map("permissions")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE 3: ROLE_PERMISSIONS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model RolePermission {
+  id           Int      @id @default(autoincrement())
+  roleId       Int      @map("role_id")
+  permissionId Int      @map("permission_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  createdBy    Int?     @map("created_by")
+  updatedBy    Int?     @map("updated_by")
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  creator Employee? @relation("RolePermissionCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updater Employee? @relation("RolePermissionUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@unique([roleId, permissionId])
+  @@index([roleId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE 7: DEPARTMENTS (defined before employees for FK order)
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Department {
+  id             Int      @id @default(autoincrement())
+  departmentName String   @map("department_name") @db.VarChar(100)
+  departmentCode String   @unique @map("department_code") @db.VarChar(20)
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  createdBy      Int?     @map("created_by")
+  updatedBy      Int?     @map("updated_by")
+
+  employees Employee[]
+
+  creator Employee? @relation("DepartmentCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updater Employee? @relation("DepartmentUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@index([departmentName])
+  @@map("departments")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE 8: DESIGNATIONS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Designation {
+  id              Int      @id @default(autoincrement())
+  designationName String   @unique @map("designation_name") @db.VarChar(100)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  createdBy       Int?     @map("created_by")
+  updatedBy       Int?     @map("updated_by")
+
+  employees Employee[]
+
+  creator Employee? @relation("DesignationCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updater Employee? @relation("DesignationUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@map("designations")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE 5: EMPLOYEES
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Employee {
+  id                 Int            @id @default(autoincrement())
+  employeeCode       String         @unique @map("employee_code") @db.VarChar(20)
+  camAttendanceId    String         @unique @map("cam_attendance_id") @db.VarChar(20)
+  firstName          String         @map("first_name") @db.VarChar(100)
+  lastName           String         @map("last_name") @db.VarChar(100)
+  fullName           String         @map("full_name") @db.VarChar(200)
+  profilePhoto       String?        @map("profile_photo") @db.VarChar(500)
+  dob                DateTime?      @db.Date
+  gender             String?        @db.VarChar(20)
+  bloodGroup         String?        @map("blood_group") @db.VarChar(10)
+  mobile             String         @db.VarChar(15)
+  alternateMobile    String?        @map("alternate_mobile") @db.VarChar(15)
+  email              String         @unique @db.VarChar(150)
+  passwordHash       String         @map("password_hash") @db.VarChar(255)
+  roleId             Int            @map("role_id")
+  lastLogin          DateTime?      @map("last_login")
+  address            String?        @db.Text
+  departmentId       Int            @map("department_id")
+  designationId      Int            @map("designation_id")
+  reportingManagerId Int?           @map("reporting_manager_id")
+  joiningDate        DateTime       @map("joining_date") @db.Date
+  employmentType     EmploymentType @default(Full_Time) @map("employment_type")
+  status             EmployeeStatus @default(Active)
+  emergencyContact   String?        @map("emergency_contact") @db.VarChar(200)
+  bankName           String?        @map("bank_name") @db.VarChar(100)
+  accountNumber      String?        @map("account_number") @db.VarChar(50)
+  pan                String?        @db.VarChar(20)
+  aadhaar            String?        @db.VarChar(20)
+  createdAt          DateTime       @default(now()) @map("created_at")
+  updatedAt          DateTime       @updatedAt @map("updated_at")
+  createdBy          Int?           @map("created_by")
+  updatedBy          Int?           @map("updated_by")
+
+  department       Department  @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  designation      Designation @relation(fields: [designationId], references: [id], onDelete: Restrict)
+  role             Role        @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  reportingManager Employee?   @relation("EmployeeReportingHierarchy", fields: [reportingManagerId], references: [id], onDelete: SetNull)
+  directReports    Employee[]  @relation("EmployeeReportingHierarchy")
+
+  documents             EmployeeDocument[]
+  notifications         Notification[]
+  passwordResetTokens   PasswordResetToken[]
+  employeePermissions   EmployeePermission[]
+  auditLogs             AuditLog[]
+  attendanceRecords     Attendance[]
+  attendanceExceptions  AttendanceException[]
+  leaveBalances         LeaveBalance[]
+  leaveRequests         LeaveRequest[]
+  attendanceCorrections AttendanceCorrection[]
+
+  creator Employee? @relation("EmployeeCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updater Employee? @relation("EmployeeUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+  createdEmployees Employee[] @relation("EmployeeCreatedBy")
+  updatedEmployees Employee[] @relation("EmployeeUpdatedBy")
+  rolesCreated           Role[]                 @relation("RoleCreatedBy")
+  rolesUpdated           Role[]                 @relation("RoleUpdatedBy")
+  permissionsCreated     Permission[]           @relation("PermissionCreatedBy")
+  permissionsUpdated     Permission[]           @relation("PermissionUpdatedBy")
+  rolePermissionsCreated RolePermission[]       @relation("RolePermissionCreatedBy")
+  rolePermissionsUpdated RolePermission[]       @relation("RolePermissionUpdatedBy")
+  departmentsCreated     Department[]           @relation("DepartmentCreatedBy")
+  departmentsUpdated     Department[]           @relation("DepartmentUpdatedBy")
+  designationsCreated    Designation[]          @relation("DesignationCreatedBy")
+  designationsUpdated    Designation[]          @relation("DesignationUpdatedBy")
+  documentsCreated       EmployeeDocument[]     @relation("EmployeeDocumentCreatedBy")
+  documentsUpdated       EmployeeDocument[]     @relation("EmployeeDocumentUpdatedBy")
+  attendanceCreated      Attendance[]           @relation("AttendanceCreatedBy")
+  attendanceUpdated      Attendance[]           @relation("AttendanceUpdatedBy")
+  syncLogsCreated        AttendanceSyncLog[]    @relation("AttendanceSyncLogCreatedBy")
+  syncLogsUpdated        AttendanceSyncLog[]    @relation("AttendanceSyncLogUpdatedBy")
+  exceptionsCreated      AttendanceException[]  @relation("AttendanceExceptionCreatedBy")
+  exceptionsUpdated      AttendanceException[]  @relation("AttendanceExceptionUpdatedBy")
+  leaveTypesCreated      LeaveType[]            @relation("LeaveTypeCreatedBy")
+  leaveTypesUpdated      LeaveType[]            @relation("LeaveTypeUpdatedBy")
+  leaveBalancesCreated   LeaveBalance[]         @relation("LeaveBalanceCreatedBy")
+  leaveBalancesUpdated   LeaveBalance[]         @relation("LeaveBalanceUpdatedBy")
+  leaveRequestsCreated   LeaveRequest[]         @relation("LeaveRequestCreatedBy")
+  leaveRequestsUpdated   LeaveRequest[]         @relation("LeaveRequestUpdatedBy")
+  holidaysCreated        Holiday[]              @relation("HolidayCreatedBy")
+  holidaysUpdated        Holiday[]              @relation("HolidayUpdatedBy")
+  correctionsCreated     AttendanceCorrection[] @relation("AttendanceCorrectionCreatedBy")
+  correctionsUpdated     AttendanceCorrection[] @relation("AttendanceCorrectionUpdatedBy")
+  correctionsApproved    AttendanceCorrection[] @relation("AttendanceCorrectionApprovedBy")
+  reportsGenerated       ReportDownloadLog[]    @relation("ReportGeneratedBy")
+  reportLogsCreated      ReportDownloadLog[]    @relation("ReportLogCreatedBy")
+  reportLogsUpdated      ReportDownloadLog[]    @relation("ReportLogUpdatedBy")
+  employeePermissionsCreated EmployeePermission[] @relation("EmployeePermissionCreatedBy")
+  employeePermissionsUpdated EmployeePermission[] @relation("EmployeePermissionUpdatedBy")
+
+  @@index([employeeCode])
+  @@index([camAttendanceId])
+  @@index([departmentId])
+  @@index([designationId])
+  @@index([reportingManagerId])
+  @@index([roleId])
+  @@index([status])
+  @@index([mobile])
+  @@index([email])
+  @@map("employees")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE 6: EMPLOYEE_DOCUMENTS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model EmployeeDocument {
+  id           Int          @id @default(autoincrement())
+  employeeId   Int          @map("employee_id")
+  documentType DocumentType @map("document_type")
+  fileName     String       @map("file_name") @db.VarChar(255)
+  filePath     String       @map("file_path") @db.VarChar(500)
+  uploadedAt   DateTime     @default(now()) @map("uploaded_at")
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+  createdBy    Int?         @map("created_by")
+  updatedBy    Int?         @map("updated_by")
+
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  creator  Employee? @relation("EmployeeDocumentCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updater  Employee? @relation("EmployeeDocumentUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@index([employeeId])
+  @@index([documentType])
+  @@map("employee_documents")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE 9: ATTENDANCE
+// Never stores employee name — mapped by employee_id, employee_code, cam_attendance_id
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Attendance {
+  id               Int              @id @default(autoincrement())
+  employeeId       Int              @map("employee_id")
+  employeeCode     String           @map("employee_code") @db.VarChar(20)
+  camAttendanceId  String           @map("cam_attendance_id") @db.VarChar(20)
+  attendanceDate   DateTime         @map("attendance_date") @db.Date
+  inTime           DateTime?        @map("in_time")
+  outTime          DateTime?        @map("out_time")
+  workingHours     Decimal?         @map("working_hours") @db.Decimal(5, 2)
+  overtimeHours    Decimal?         @map("overtime_hours") @db.Decimal(5, 2)
+  attendanceStatus AttendanceStatus @map("attendance_status")
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @updatedAt @map("updated_at")
+  createdBy        Int?             @map("created_by")
+  updatedBy        Int?             @map("updated_by")
+
+  employee    Employee               @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  corrections AttendanceCorrection[]
+  creator     Employee?              @relation("AttendanceCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updater     Employee?              @relation("AttendanceUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@unique([employeeId, attendanceDate])
+  @@index([employeeCode])
+  @@index([camAttendanceId])
+  @@index([attendanceDate])
+  @@index([attendanceStatus])
+  @@index([employeeId, attendanceDate])
+  @@map("attendance")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE 10: ATTENDANCE_SYNC_LOGS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model AttendanceSyncLog {
+  id             Int                  @id @default(autoincrement())
+  syncDate       DateTime             @map("sync_date")
+  totalRecords   Int                  @default(0) @map("total_records")
+  successRecords Int                  @default(0) @map("success_records")
+  failedRecords  Int                  @default(0) @map("failed_records")
+  status         AttendanceSyncStatus @default(In_Progress)
+  remarks        String?              @db.Text
+  createdAt      DateTime             @default(now()) @map("created_at")
+  updatedAt      DateTime             @updatedAt @map("updated_at")
+  createdBy      Int?                 @map("created_by")
+  updatedBy      Int?                 @map("updated_by")
+
+  creator Employee? @relation("AttendanceSyncLogCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updater Employee? @relation("AttendanceSyncLogUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@index([syncDate])
+  @@index([status])
+  @@map("attendance_sync_logs")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE 11: ATTENDANCE_EXCEPTIONS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model AttendanceException {
+  id             Int                      @id @default(autoincrement())
+  employeeId     Int?                     @map("employee_id")
+  attendanceDate DateTime                 @map("attendance_date") @db.Date
+  issueType      AttendanceExceptionIssue @map("issue_type")
+  remarks        String?                  @db.Text
+  resolved       Boolean                  @default(false)
+  createdAt      DateTime                 @default(now()) @map("created_at")
+  updatedAt      DateTime                 @updatedAt @map("updated_at")
+  createdBy      Int?                     @map("created_by")
+  updatedBy      Int?                     @map("updated_by")
+
+  employee Employee? @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+  creator  Employee? @relation("AttendanceExceptionCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updater  Employee? @relation("AttendanceExceptionUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@index([employeeId])
+  @@index([attendanceDate])
+  @@index([issueType])
+  @@index([resolved])
+  @@map("attendance_exceptions")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE 12: LEAVE_TYPES
+// ─────────────────────────────────────────────────────────────────────────────
+
+model LeaveType {
+  id          Int      @id @default(autoincrement())
+  leaveName   String   @unique @map("leave_name") @db.VarChar(100)
+  yearlyLimit Int      @map("yearly_limit")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  createdBy   Int?     @map("created_by")
+  updatedBy   Int?     @map("updated_by")
+
+  leaveBalances LeaveBalance[]
+  leaveRequests LeaveRequest[]
+
+  creator Employee? @relation("LeaveTypeCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updater Employee? @relation("LeaveTypeUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@map("leave_types")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE 13: LEAVE_BALANCES
+// ─────────────────────────────────────────────────────────────────────────────
+
+model LeaveBalance {
+  id             Int      @id @default(autoincrement())
+  employeeId     Int      @map("employee_id")
+  leaveTypeId    Int      @map("leave_type_id")
+  totalLeave     Decimal  @default(0) @map("total_leave") @db.Decimal(5, 1)
+  usedLeave      Decimal  @default(0) @map("used_leave") @db.Decimal(5, 1)
+  remainingLeave Decimal  @default(0) @map("remaining_leave") @db.Decimal(5, 1)
+  year           Int
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  createdBy      Int?     @map("created_by")
+  updatedBy      Int?     @map("updated_by")
+
+  employee  Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  leaveType LeaveType @relation(fields: [leaveTypeId], references: [id], onDelete: Restrict)
+
+  creator Employee? @relation("LeaveBalanceCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updater Employee? @relation("LeaveBalanceUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@unique([employeeId, leaveTypeId, year])
+  @@index([employeeId])
+  @@index([year])
+  @@map("leave_balances")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE 14: LEAVE_REQUESTS
+// Workflow: Employee → Manager Approval → HR Approval → Attendance Update
+// ─────────────────────────────────────────────────────────────────────────────
+
+model LeaveRequest {
+  id            Int                 @id @default(autoincrement())
+  employeeId    Int                 @map("employee_id")
+  leaveTypeId   Int                 @map("leave_type_id")
+  fromDate      DateTime            @map("from_date") @db.Date
+  toDate        DateTime            @map("to_date") @db.Date
+  totalDays     Decimal             @map("total_days") @db.Decimal(5, 1)
+  reason        String?             @db.Text
+  managerStatus LeaveWorkflowStatus @default(Pending) @map("manager_status")
+  hrStatus      LeaveWorkflowStatus @default(Pending) @map("hr_status")
+  finalStatus   LeaveWorkflowStatus @default(Pending) @map("final_status")
+  createdAt     DateTime            @default(now()) @map("created_at")
+  updatedAt     DateTime            @updatedAt @map("updated_at")
+  createdBy     Int?                @map("created_by")
+  updatedBy     Int?                @map("updated_by")
+
+  employee  Employee  @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  leaveType LeaveType @relation(fields: [leaveTypeId], references: [id], onDelete: Restrict)
+
+  creator Employee? @relation("LeaveRequestCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updater Employee? @relation("LeaveRequestUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@index([employeeId])
+  @@index([leaveTypeId])
+  @@index([finalStatus])
+  @@index([fromDate, toDate])
+  @@map("leave_requests")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE 15: HOLIDAYS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Holiday {
+  id          Int         @id @default(autoincrement())
+  holidayName String      @map("holiday_name") @db.VarChar(150)
+  holidayDate DateTime    @unique @map("holiday_date") @db.Date
+  holidayType HolidayType @default(National) @map("holiday_type")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+  createdBy   Int?        @map("created_by")
+  updatedBy   Int?        @map("updated_by")
+
+  creator Employee? @relation("HolidayCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updater Employee? @relation("HolidayUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@index([holidayDate])
+  @@index([holidayType])
+  @@map("holidays")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE 16: ATTENDANCE_CORRECTIONS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model AttendanceCorrection {
+  id               Int                        @id @default(autoincrement())
+  employeeId       Int                        @map("employee_id")
+  attendanceId     Int                        @map("attendance_id")
+  requestedInTime  DateTime?                  @map("requested_in_time")
+  requestedOutTime DateTime?                  @map("requested_out_time")
+  reason           String?                    @db.Text
+  status           AttendanceCorrectionStatus @default(Pending)
+  approvedBy       Int?                       @map("approved_by")
+  createdAt        DateTime                   @default(now()) @map("created_at")
+  updatedAt        DateTime                   @updatedAt @map("updated_at")
+  createdBy        Int?                       @map("created_by")
+  updatedBy        Int?                       @map("updated_by")
+
+  employee   Employee   @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  attendance Attendance @relation(fields: [attendanceId], references: [id], onDelete: Cascade)
+  approver   Employee?  @relation("AttendanceCorrectionApprovedBy", fields: [approvedBy], references: [id], onDelete: SetNull)
+  creator    Employee?  @relation("AttendanceCorrectionCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updater    Employee?  @relation("AttendanceCorrectionUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@index([employeeId])
+  @@index([attendanceId])
+  @@index([status])
+  @@map("attendance_corrections")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE 17: REPORT_DOWNLOAD_LOGS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model ReportDownloadLog {
+  id          Int        @id @default(autoincrement())
+  reportType  ReportType @map("report_type")
+  generatedBy Int        @map("generated_by")
+  generatedAt DateTime   @default(now()) @map("generated_at")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  createdBy   Int?       @map("created_by")
+  updatedBy   Int?       @map("updated_by")
+
+  generator Employee  @relation("ReportGeneratedBy", fields: [generatedBy], references: [id], onDelete: Restrict)
+  creator   Employee? @relation("ReportLogCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updater   Employee? @relation("ReportLogUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@index([reportType])
+  @@index([generatedBy])
+  @@index([generatedAt])
+  @@map("report_download_logs")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE 18: AUDIT_LOGS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model AuditLog {
+  id         Int             @id @default(autoincrement())
+  employeeId Int?            @map("employee_id")
+  moduleName String          @map("module_name") @db.VarChar(100)
+  actionType AuditActionType @map("action_type")
+  oldValue   Json?           @map("old_value")
+  newValue   Json?           @map("new_value")
+  actionDate DateTime        @default(now()) @map("action_date")
+  createdAt  DateTime        @default(now()) @map("created_at")
+  updatedAt  DateTime        @updatedAt @map("updated_at")
+  createdBy  Int?            @map("created_by")
+  updatedBy  Int?            @map("updated_by")
+
+  employee Employee? @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+
+  @@index([employeeId])
+  @@index([moduleName])
+  @@index([actionType])
+  @@index([actionDate])
+  @@map("audit_logs")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// NOTIFICATIONS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Notification {
+  id         Int      @id @default(autoincrement())
+  employeeId Int      @map("employee_id")
+  title      String   @db.VarChar(200)
+  message    String   @db.Text
+  module     String   @db.VarChar(100)
+  isRead     Boolean  @default(false) @map("is_read")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@index([employeeId])
+  @@index([isRead])
+  @@index([employeeId, isRead])
+  @@map("notifications")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PASSWORD RESET TOKENS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model PasswordResetToken {
+  id         Int       @id @default(autoincrement())
+  employeeId Int       @map("employee_id")
+  token      String    @unique @db.VarChar(255)
+  expiresAt  DateTime  @map("expires_at")
+  usedAt     DateTime? @map("used_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@index([employeeId])
+  @@index([token])
+  @@index([expiresAt])
+  @@map("password_reset_tokens")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// USER PERMISSIONS (optional per-user override)
+// ─────────────────────────────────────────────────────────────────────────────
+
+model EmployeePermission {
+  id           Int      @id @default(autoincrement())
+  employeeId   Int      @map("employee_id")
+  permissionId Int      @map("permission_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  createdBy    Int?     @map("created_by")
+  updatedBy    Int?     @map("updated_by")
+
+  employee   Employee   @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  creator    Employee?  @relation("EmployeePermissionCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updater    Employee?  @relation("EmployeePermissionUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@unique([employeeId, permissionId])
+  @@index([employeeId])
+  @@index([permissionId])
+  @@map("employee_permissions")
+}
