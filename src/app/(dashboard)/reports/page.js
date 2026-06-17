@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { AttendanceRegister } from "@/components/reports/attendance-register";
+import { ReportPreviewScaler } from "@/components/reports/report-preview-scaler";
 import { MONTHS } from "@/lib/utils";
 import { toast } from "sonner";
 import { api } from "@/lib/api-client";
@@ -71,23 +72,23 @@ export default function ReportsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 space-y-6">
       <div>
         <h1 className="text-2xl font-bold lg:text-3xl">Reports & Downloads</h1>
         <p className="text-muted-foreground">Generate and download attendance reports</p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid min-w-0 gap-6 lg:grid-cols-3">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="lg:col-span-1"
+          className="min-w-0 lg:col-span-1"
         >
           <Card className="glass-card lg:sticky lg:top-20">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <FileBarChart className="h-5 w-5 text-royal" />
-                Monthly Attendance Sheet
+                <FileBarChart className="h-5 w-5 shrink-0 text-royal" />
+                <span>Monthly Attendance Sheet</span>
               </CardTitle>
               <CardDescription>
                 Generate printable attendance register for security guards
@@ -97,7 +98,7 @@ export default function ReportsPage() {
               <div className="space-y-2">
                 <Label>Department</Label>
                 <Select value={department} onValueChange={setDepartment}>
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select Department" />
                   </SelectTrigger>
                   <SelectContent>
@@ -109,32 +110,34 @@ export default function ReportsPage() {
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <Label>Month</Label>
-                <Select value={month} onValueChange={setMonth}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Month" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {MONTHS.map((m) => (
-                      <SelectItem key={m} value={m}>{m}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1">
+                <div className="space-y-2">
+                  <Label>Month</Label>
+                  <Select value={month} onValueChange={setMonth}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select Month" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {MONTHS.map((m) => (
+                        <SelectItem key={m} value={m}>{m}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-              <div className="space-y-2">
-                <Label>Year</Label>
-                <Select value={year} onValueChange={setYear}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Year" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {years.map((y) => (
-                      <SelectItem key={y} value={String(y)}>{y}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="space-y-2">
+                  <Label>Year</Label>
+                  <Select value={year} onValueChange={setYear}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select Year" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {years.map((y) => (
+                        <SelectItem key={y} value={String(y)}>{y}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <div className="space-y-2 pt-2">
@@ -153,25 +156,29 @@ export default function ReportsPage() {
                     animate={{ opacity: 1, height: "auto" }}
                     className="grid grid-cols-2 gap-2"
                   >
-                    <Button variant="outline" size="sm" onClick={() => setShowPreview(!showPreview)}>
-                      <Eye className="h-4 w-4" /> Preview
+                    <Button variant="outline" size="sm" className="w-full" onClick={() => setShowPreview(!showPreview)}>
+                      <Eye className="h-4 w-4 shrink-0" />
+                      <span className="truncate">{showPreview ? "Hide" : "Preview"}</span>
                     </Button>
-                    <Button variant="outline" size="sm" onClick={handlePrint}>
-                      <Printer className="h-4 w-4" /> Print
+                    <Button variant="outline" size="sm" className="w-full" onClick={handlePrint}>
+                      <Printer className="h-4 w-4 shrink-0" />
+                      <span className="truncate">Print</span>
                     </Button>
-                    <Button variant="outline" size="sm" onClick={handleDownloadPDF}>
-                      <Download className="h-4 w-4" /> PDF
+                    <Button variant="outline" size="sm" className="w-full" onClick={handleDownloadPDF}>
+                      <Download className="h-4 w-4 shrink-0" />
+                      <span className="truncate">PDF</span>
                     </Button>
-                    <Button variant="outline" size="sm" onClick={handleDownloadExcel}>
-                      <FileSpreadsheet className="h-4 w-4" /> Excel
+                    <Button variant="outline" size="sm" className="w-full" onClick={handleDownloadExcel}>
+                      <FileSpreadsheet className="h-4 w-4 shrink-0" />
+                      <span className="truncate">Excel</span>
                     </Button>
                   </motion.div>
                 )}
               </div>
 
               <div className="rounded-lg bg-muted/50 p-3 text-xs text-muted-foreground">
-                <p className="font-medium text-foreground mb-1">Attendance Register Format</p>
-                <ul className="list-disc pl-4 space-y-1">
+                <p className="mb-1 font-medium text-foreground">Attendance Register Format</p>
+                <ul className="list-disc space-y-1 pl-4">
                   <li>Monday to Saturday only (Sundays excluded)</li>
                   <li>Two dates per page for manual entry</li>
                   <li>In Time, Out Time, Signature columns</li>
@@ -182,7 +189,7 @@ export default function ReportsPage() {
           </Card>
         </motion.div>
 
-        <div className="lg:col-span-2">
+        <div className="min-w-0 lg:col-span-2">
           <AnimatePresence mode="wait">
             {showPreview && generated ? (
               <motion.div
@@ -190,23 +197,29 @@ export default function ReportsPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
+                className="min-w-0"
               >
                 <div className="no-print mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <h2 className="text-base font-semibold sm:text-lg break-words">
+                  <h2 className="text-base font-semibold break-words sm:text-lg">
                     Preview — {department} · {month} {year}
                   </h2>
-                  <Button variant="outline" size="sm" className="w-full sm:w-auto" onClick={handlePrint}>
-                    <Printer className="h-4 w-4 mr-1" /> Print Register
+                  <Button variant="outline" size="sm" className="w-full shrink-0 sm:w-auto" onClick={handlePrint}>
+                    <Printer className="mr-1 h-4 w-4" /> Print Register
                   </Button>
                 </div>
-                <div className="overflow-x-auto rounded-lg border bg-gray-100 p-4 dark:bg-gray-900">
-                  <AttendanceRegister
-                    department={department}
-                    month={month}
-                    year={parseInt(year)}
-                    employees={reportEmployees}
-                    companyName={companyName}
-                  />
+                <div className="w-full max-w-full rounded-lg border bg-gray-100 p-2 dark:bg-gray-900 sm:p-4">
+                  <p className="no-print mb-2 text-center text-[11px] text-muted-foreground lg:hidden">
+                    Preview scaled to fit your screen. Use Print for full A4 output.
+                  </p>
+                  <ReportPreviewScaler>
+                    <AttendanceRegister
+                      department={department}
+                      month={month}
+                      year={parseInt(year)}
+                      employees={reportEmployees}
+                      companyName={companyName}
+                    />
+                  </ReportPreviewScaler>
                 </div>
               </motion.div>
             ) : (
@@ -214,11 +227,11 @@ export default function ReportsPage() {
                 key="empty"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="flex h-96 items-center justify-center rounded-xl border-2 border-dashed border-muted-foreground/20"
+                className="flex h-64 items-center justify-center rounded-xl border-2 border-dashed border-muted-foreground/20 sm:h-96"
               >
-                <div className="text-center">
+                <div className="px-4 text-center">
                   <FileBarChart className="mx-auto h-12 w-12 text-muted-foreground/30" />
-                  <p className="mt-4 text-muted-foreground">
+                  <p className="mt-4 text-sm text-muted-foreground sm:text-base">
                     Select Department, Month, and Year to generate the attendance register
                   </p>
                 </div>

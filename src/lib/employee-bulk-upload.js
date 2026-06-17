@@ -101,7 +101,7 @@ function mapStatus(value) {
   const key = String(value || "Active")
     .trim()
     .replace(/\s+/g, "_");
-  const allowed = ["Active", "Resigned", "On_Hold", "Terminated"];
+  const allowed = ["Active", "Inactive", "On_Hold", "Terminated"];
   return allowed.includes(key) ? key : null;
 }
 

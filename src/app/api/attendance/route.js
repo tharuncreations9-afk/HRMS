@@ -11,42 +11,14 @@ import {
 import { createAuditLog } from "@/lib/audit";
 
 import { isDateBeforeToday } from "@/lib/utils";
-
-
+import { toAttendanceDate, getAttendanceDayRange } from "@/lib/attendance-date";
+import { adjustLeaveForWorkAttendance } from "@/lib/leave-attendance-sync";
 
 const STATUS_MAP = {
-
   present: "Present",
-
   halfDay: "Half_Day",
-
   leave: "Leave",
-
 };
-
-
-
-function toAttendanceDate(dateStr) {
-
-  const [year, month, day] = String(dateStr).split("T")[0].split("-").map(Number);
-
-  return new Date(Date.UTC(year, month - 1, day));
-
-}
-
-
-
-function getDateRange(dateStr) {
-
-  const start = toAttendanceDate(dateStr);
-
-  const end = new Date(start);
-
-  end.setUTCDate(end.getUTCDate() + 1);
-
-  return { start, end };
-
-}
 
 
 
@@ -62,7 +34,7 @@ export async function GET(request) {
 
   const dateStr = searchParams.get("date") || new Date().toISOString().split("T")[0];
 
-  const { start, end } = getDateRange(dateStr);
+  const { start, end } = getAttendanceDayRange(dateStr);
 
 
 
@@ -155,7 +127,7 @@ export async function POST(request) {
 
     const attendanceDate = toAttendanceDate(date);
 
-    const { start, end } = getDateRange(date);
+    const { start, end } = getAttendanceDayRange(date);
 
 
 
@@ -247,6 +219,9 @@ export async function POST(request) {
 
       saved++;
 
+      if (status === "Present" || status === "Half_Day") {
+        await adjustLeaveForWorkAttendance(prisma, employee.id, date, authUser.id);
+      }
     }
 
 

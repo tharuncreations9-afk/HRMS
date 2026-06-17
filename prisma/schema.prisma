@@ -17,7 +17,7 @@ datasource db {
 
 enum EmployeeStatus {
   Active
-  Resigned
+  Inactive
   On_Hold
   Terminated
 }
@@ -67,12 +67,20 @@ enum AttendanceExceptionIssue {
   Device_Error
 }
 
+enum EmployeeCategory {
+  Fresher
+  Experienced
+}
+
 enum DocumentType {
   Aadhaar
   PAN
   Bank_Passbook
   Offer_Letter
   Agreement
+  Experience_Letter
+  Relieving_Letter
+  Payslip
   Other
 }
 
@@ -251,6 +259,27 @@ model Employee {
   accountNumber      String?        @map("account_number") @db.VarChar(50)
   pan                String?        @db.VarChar(20)
   aadhaar            String?        @db.VarChar(20)
+  employeeCategory   EmployeeCategory @default(Fresher) @map("employee_category")
+  qualification      String?        @db.VarChar(150)
+  specialization     String?        @db.VarChar(150)
+  skills             String?        @db.Text
+  collegeName        String?        @map("college_name") @db.VarChar(200)
+  graduationYear     Int?           @map("graduation_year")
+  cgpa               String?        @db.VarChar(20)
+  internshipDetails  String?        @map("internship_details") @db.Text
+  certifications     String?        @db.Text
+  totalExperienceYears   Int?       @map("total_experience_years")
+  totalExperienceMonths  Int?       @map("total_experience_months")
+  previousCompany        String?    @map("previous_company") @db.VarChar(200)
+  previousDesignation    String?    @map("previous_designation") @db.VarChar(150)
+  previousCtc            Decimal?   @map("previous_ctc") @db.Decimal(12, 2)
+  expectedCtc            Decimal?   @map("expected_ctc") @db.Decimal(12, 2)
+  lastWorkingDate        DateTime?  @map("last_working_date") @db.Date
+  noticePeriod           String?    @map("notice_period") @db.VarChar(100)
+  relevantExperience     String?    @map("relevant_experience") @db.Text
+  experienceLetterUrl    String?    @map("experience_letter_url") @db.VarChar(500)
+  relievingLetterUrl     String?    @map("relieving_letter_url") @db.VarChar(500)
+  payslipUrls            Json?      @map("payslip_urls")
   createdAt          DateTime       @default(now()) @map("created_at")
   updatedAt          DateTime       @updatedAt @map("updated_at")
   createdBy          Int?           @map("created_by")
@@ -314,6 +343,7 @@ model Employee {
 
   @@index([employeeCode])
   @@index([camAttendanceId])
+  @@index([employeeCategory])
   @@index([departmentId])
   @@index([designationId])
   @@index([reportingManagerId])

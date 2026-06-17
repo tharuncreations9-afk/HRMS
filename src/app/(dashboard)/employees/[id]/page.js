@@ -1,11 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowLeft, Mail, Phone, Building, Calendar, FileText, Download, Save } from "lucide-react";
+import {
+  ArrowLeft,
+  Mail,
+  Phone,
+  Building,
+  Calendar,
+  FileText,
+  Download,
+  Save,
+  Upload,
+  Camera,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +34,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatDate } from "@/lib/utils";
 import { toast } from "sonner";
 import { api } from "@/lib/api-client";
+import { useAuth } from "@/context/auth-context";
+import { EMPLOYEE_FORM_STATUS_OPTIONS } from "@/lib/employee-status";
+
+const MAX_PHOTO_SIZE = 2 * 1024 * 1024;
 
 function toEditForm(emp) {
   if (!emp) return {};
@@ -49,7 +64,25 @@ function toEditForm(emp) {
     aadhaar: emp.aadhaar || "",
     bankName: emp.bankName || "",
     accountNumber: emp.accountNumber || "",
+    skills: emp.skills || "",
   };
+}
+
+function DocLink({ label, url }) {
+  if (!url) return <DetailRow label={label} value="" />;
+  return (
+    <div className="flex justify-between gap-4 border-b pb-2 last:border-0">
+      <span className="text-sm text-muted-foreground">{label}</span>
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-1 text-sm font-medium text-royal hover:underline"
+      >
+        <Download className="h-3.5 w-3.5" /> View / Download
+      </a>
+    </div>
+  );
 }
 
 function DetailRow({ label, value }) {
@@ -72,8 +105,13 @@ function EditField({ label, children, className = "" }) {
 
 export default function EmployeeProfilePage() {
   const params = useParams();
+  const { user, hasPermission } = useAuth();
+  const photoInputRef = useRef(null);
+
   const [employee, setEmployee] = useState(null);
   const [lookups, setLookups] = useState(null);
+  const [canEdit, setCanEdit] = useState(false);
+  const [editScope, setEditScope] = useState(null);
   const [attendance, setAttendance] = useState([]);
   const [leaves, setLeaves] = useState([]);
   const [documents, setDocuments] = useState([]);
@@ -81,20 +119,104 @@ export default function EmployeeProfilePage() {
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState({});
   const [saving, setSaving] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [pendingPhoto, setPendingPhoto] = useState(null);
+
+  const isFullEdit = editScope === "full";
+  const isOwnProfile = user?.id === Number(params.id);
+  const backHref = hasPermission("Employee Management") ? "/employees" : "/dashboard";
 
   const set = (field, value) => setEditForm((f) => ({ ...f, [field]: value }));
 
-  useEffect(() => {
-    api.employee(params.id).then((data) => {
+  const loadProfile = () => {
+    return api.employee(params.id).then((data) => {
       setEmployee(data.employee);
       setLookups(data.lookups || null);
+      setCanEdit(Boolean(data.canEdit));
+      setEditScope(data.editScope || null);
       setAttendance(data.attendance || []);
       setLeaves(data.leaves || []);
       setDocuments(data.documents || []);
       setActivityLogs(data.activityLogs || []);
       setEditForm(toEditForm(data.employee));
-    }).catch(() => {});
+      setPhotoPreview(data.employee?.photo || null);
+      setPendingPhoto(null);
+    });
+  };
+
+  useEffect(() => {
+    loadProfile().catch(() => {});
   }, [params.id]);
+
+  const handlePhotoSelect = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!["image/jpeg", "image/jpg", "image/png"].includes(file.type)) {
+      toast.error("Only JPG and PNG photos are allowed");
+      return;
+    }
+    if (file.size > MAX_PHOTO_SIZE) {
+      toast.error("Photo must be under 2MB");
+      return;
+    }
+    setPendingPhoto(file);
+    setPhotoPreview(URL.createObjectURL(file));
+  };
+
+  const handleCancel = () => {
+    setEditForm(toEditForm(employee));
+    setPhotoPreview(employee?.photo || null);
+    setPendingPhoto(null);
+    setEditing(false);
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      let profilePhotoUrl = employee.photo;
+
+      if (pendingPhoto) {
+        const { document } = await api.uploadEmployeeDocument(
+          params.id,
+          "Other",
+          pendingPhoto
+        );
+        profilePhotoUrl = document?.url || profilePhotoUrl;
+      }
+
+      const payload = {
+        ...editForm,
+        profilePhoto: profilePhotoUrl,
+        reportingManagerId:
+          editForm.reportingManagerId === "none" ? null : editForm.reportingManagerId,
+      };
+
+      const { employee: updated } = await api.updateEmployee(params.id, payload);
+      setEmployee(updated);
+      setEditForm(toEditForm(updated));
+      setPhotoPreview(updated.photo);
+      setPendingPhoto(null);
+      setEditing(false);
+
+      const data = await api.employee(params.id);
+      setLookups(data.lookups || null);
+      setActivityLogs(data.activityLogs || []);
+
+      if (isOwnProfile) {
+        try {
+          const { user: freshUser } = await api.me();
+          localStorage.setItem("emp_user", JSON.stringify(freshUser));
+        } catch {
+          /* ignore */
+        }
+      }
+
+      toast.success("Profile updated successfully");
+    } catch (err) {
+      toast.error(err.message);
+    }
+    setSaving(false);
+  };
 
   if (!employee) {
     return (
@@ -105,45 +227,26 @@ export default function EmployeeProfilePage() {
   }
 
   const statusColor =
-    employee.status === "Active" ? "success" : employee.status?.includes("Hold") ? "warning" : "secondary";
+    employee.status === "Active"
+      ? "success"
+      : employee.status === "On Leave"
+        ? "warning"
+        : employee.status?.includes("Hold")
+          ? "warning"
+          : "secondary";
 
-  const handleCancel = () => {
-    setEditForm(toEditForm(employee));
-    setEditing(false);
-  };
-
-  const handleSave = async () => {
-    setSaving(true);
-    try {
-      const payload = {
-        ...editForm,
-        reportingManagerId:
-          editForm.reportingManagerId === "none" ? null : editForm.reportingManagerId,
-      };
-      const { employee: updated } = await api.updateEmployee(params.id, payload);
-      setEmployee(updated);
-      setEditForm(toEditForm(updated));
-      setEditing(false);
-      const data = await api.employee(params.id);
-      setLookups(data.lookups || null);
-      setActivityLogs(data.activityLogs || []);
-      toast.success("Employee updated successfully");
-    } catch (err) {
-      toast.error(err.message);
-    }
-    setSaving(false);
-  };
+  const displayPhoto = photoPreview || employee.photo;
 
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Link href="/employees">
+        <Link href={backHref}>
           <Button variant="ghost" size="icon">
             <ArrowLeft className="h-5 w-5" />
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-bold">Employee Profile</h1>
+          <h1 className="text-2xl font-bold">{isOwnProfile ? "My Profile" : "Employee Profile"}</h1>
           <p className="text-muted-foreground">Employee ID: {employee.employeeCode}</p>
         </div>
       </div>
@@ -151,25 +254,49 @@ export default function EmployeeProfilePage() {
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
         <Card className="glass-card overflow-hidden">
           <div className="h-24 bg-gradient-to-r from-navy to-royal" />
-          <CardContent className="relative px-6 pb-6">
+          <CardContent className="relative px-4 pb-6 sm:px-6">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:flex-wrap">
-              <Image
-                src={employee.photo}
-                alt={employee.name}
-                width={96}
-                height={96}
-                className="-mt-12 rounded-2xl border-4 border-background shadow-lg"
-                unoptimized
-              />
-              <div className="flex-1">
+              <div className="relative -mt-12 shrink-0">
+                <Image
+                  src={displayPhoto}
+                  alt={employee.name}
+                  width={96}
+                  height={96}
+                  className="rounded-2xl border-4 border-background shadow-lg object-cover"
+                  unoptimized
+                />
+                {editing && (
+                  <div className="mt-2 flex flex-col gap-1">
+                    <input
+                      ref={photoInputRef}
+                      type="file"
+                      accept="image/jpeg,image/png"
+                      className="hidden"
+                      onChange={handlePhotoSelect}
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      type="button"
+                      className="w-full"
+                      onClick={() => photoInputRef.current?.click()}
+                    >
+                      <Camera className="h-3.5 w-3.5" />
+                      {pendingPhoto ? "Change Photo" : "Update Photo"}
+                    </Button>
+                    <p className="text-[10px] text-muted-foreground text-center">JPG/PNG, max 2MB</p>
+                  </div>
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-3">
-                  <h2 className="text-2xl font-bold">
+                  <h2 className="text-2xl font-bold break-words">
                     {editing
                       ? `${editForm.firstName || ""} ${editForm.lastName || ""}`.trim() || employee.name
                       : employee.name}
                   </h2>
                   <Badge variant={statusColor}>
-                    {editing
+                    {editing && isFullEdit
                       ? String(editForm.status || "").replace("_", " ")
                       : employee.status}
                   </Badge>
@@ -178,19 +305,21 @@ export default function EmployeeProfilePage() {
                   {employee.designation} · {employee.department}
                 </p>
               </div>
-              {editing ? (
-                <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
-                  <Button variant="outline" className="w-full sm:w-auto" onClick={handleCancel}>
-                    Cancel
+              {canEdit && (
+                editing ? (
+                  <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+                    <Button variant="outline" className="w-full sm:w-auto" onClick={handleCancel}>
+                      Cancel
+                    </Button>
+                    <Button variant="premium" className="w-full sm:w-auto" onClick={handleSave} disabled={saving}>
+                      <Save className="h-4 w-4" /> {saving ? "Saving..." : "Save"}
+                    </Button>
+                  </div>
+                ) : (
+                  <Button variant="premium" className="w-full sm:w-auto" onClick={() => setEditing(true)}>
+                    <Upload className="h-4 w-4" /> Edit Profile
                   </Button>
-                  <Button variant="premium" className="w-full sm:w-auto" onClick={handleSave} disabled={saving}>
-                    <Save className="h-4 w-4" /> {saving ? "Saving..." : "Save"}
-                  </Button>
-                </div>
-              ) : (
-                <Button variant="premium" className="w-full sm:w-auto" onClick={() => setEditing(true)}>
-                  Edit Profile
-                </Button>
+                )
               )}
             </div>
 
@@ -202,16 +331,16 @@ export default function EmployeeProfilePage() {
                 {
                   icon: Calendar,
                   label: "Joined",
-                  value: editing && editForm.joiningDate
+                  value: editing && isFullEdit && editForm.joiningDate
                     ? formatDate(editForm.joiningDate)
                     : formatDate(employee.joiningDate),
                 },
               ].map((item) => (
                 <div key={item.label} className="flex items-center gap-3 rounded-lg border p-3">
-                  <item.icon className="h-4 w-4 text-royal" />
-                  <div>
+                  <item.icon className="h-4 w-4 shrink-0 text-royal" />
+                  <div className="min-w-0">
                     <p className="text-[10px] text-muted-foreground">{item.label}</p>
-                    <p className="text-sm font-medium">{item.value}</p>
+                    <p className="text-sm font-medium truncate">{item.value}</p>
                   </div>
                 </div>
               ))}
@@ -226,7 +355,7 @@ export default function EmployeeProfilePage() {
           <TabsTrigger value="attendance">Attendance</TabsTrigger>
           <TabsTrigger value="leaves">Leaves</TabsTrigger>
           <TabsTrigger value="documents">Documents</TabsTrigger>
-          <TabsTrigger value="activity">Activity Logs</TabsTrigger>
+          {isFullEdit && <TabsTrigger value="activity">Activity Logs</TabsTrigger>}
         </TabsList>
 
         <TabsContent value="overview">
@@ -290,6 +419,15 @@ export default function EmployeeProfilePage() {
                         rows={3}
                       />
                     </EditField>
+                    {!isFullEdit && (
+                      <EditField label="Skills" className="sm:col-span-2">
+                        <Textarea
+                          value={editForm.skills}
+                          onChange={(e) => set("skills", e.target.value)}
+                          rows={2}
+                        />
+                      </EditField>
+                    )}
                   </>
                 ) : (
                   <>
@@ -303,6 +441,7 @@ export default function EmployeeProfilePage() {
                     <DetailRow label="Email" value={employee.email} />
                     <DetailRow label="Emergency Contact" value={employee.emergencyContact} />
                     <DetailRow label="Address" value={employee.address} />
+                    {employee.skills && <DetailRow label="Skills" value={employee.skills} />}
                   </>
                 )}
               </CardContent>
@@ -310,8 +449,8 @@ export default function EmployeeProfilePage() {
 
             <Card className="glass-card">
               <CardHeader><CardTitle>Employment Details</CardTitle></CardHeader>
-              <CardContent className={editing ? "grid gap-4 sm:grid-cols-2" : "space-y-3"}>
-                {editing ? (
+              <CardContent className={editing && isFullEdit ? "grid gap-4 sm:grid-cols-2" : "space-y-3"}>
+                {editing && isFullEdit ? (
                   <>
                     <EditField label="Employee ID" className="sm:col-span-2">
                       <Input
@@ -387,10 +526,9 @@ export default function EmployeeProfilePage() {
                       <Select value={editForm.status} onValueChange={(v) => set("status", v)}>
                         <SelectTrigger><SelectValue /></SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Active">Active</SelectItem>
-                          <SelectItem value="Resigned">Resigned</SelectItem>
-                          <SelectItem value="On_Hold">On Hold</SelectItem>
-                          <SelectItem value="Terminated">Terminated</SelectItem>
+                          {EMPLOYEE_FORM_STATUS_OPTIONS.map((opt) => (
+                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </EditField>
@@ -407,23 +545,60 @@ export default function EmployeeProfilePage() {
                       value={employee.joiningDate ? formatDate(employee.joiningDate) : ""}
                     />
                     <DetailRow label="Employment Type" value={employee.employmentType} />
-                    <DetailRow label="Status" value={employee.status} />
+                    <DetailRow label="Employment Status" value={employee.employmentStatus} />
+                    <DetailRow label="Current Status" value={employee.status} />
+                    <DetailRow label="Employee Category" value={employee.employeeCategory} />
                   </>
                 )}
               </CardContent>
             </Card>
 
+            {employee.employeeCategory === "Fresher" && !editing && (
+              <Card className="glass-card">
+                <CardHeader><CardTitle>Education</CardTitle></CardHeader>
+                <CardContent className="space-y-3">
+                  <DetailRow label="Highest Qualification" value={employee.qualification} />
+                  <DetailRow label="College / University" value={employee.collegeName} />
+                  <DetailRow label="Specialization" value={employee.specialization} />
+                  <DetailRow label="Graduation Year" value={employee.graduationYear} />
+                  <DetailRow label="Percentage / CGPA" value={employee.cgpa} />
+                  <DetailRow label="Internship Experience" value={employee.internshipDetails} />
+                  <DetailRow label="Skills" value={employee.skills} />
+                  <DetailRow label="Certifications" value={employee.certifications} />
+                </CardContent>
+              </Card>
+            )}
+
+            {employee.employeeCategory === "Experienced" && !editing && (
+              <Card className="glass-card">
+                <CardHeader><CardTitle>Experience History</CardTitle></CardHeader>
+                <CardContent className="space-y-3">
+                  <DetailRow label="Total Experience" value={employee.experienceSummary} />
+                  <DetailRow label="Previous Company" value={employee.previousCompany} />
+                  <DetailRow label="Previous Designation" value={employee.previousDesignation} />
+                  <DetailRow label="Previous CTC" value={employee.previousCtc != null ? `₹${employee.previousCtc}` : ""} />
+                  <DetailRow label="Expected CTC" value={employee.expectedCtc != null ? `₹${employee.expectedCtc}` : ""} />
+                  <DetailRow
+                    label="Last Working Date"
+                    value={employee.lastWorkingDate ? formatDate(employee.lastWorkingDate) : ""}
+                  />
+                  <DetailRow label="Notice Period" value={employee.noticePeriod} />
+                  <DetailRow label="Relevant Experience" value={employee.relevantExperience} />
+                  <DetailRow label="Skills" value={employee.skills} />
+                  <DocLink label="Experience Letter" url={employee.experienceLetterUrl} />
+                  <DocLink label="Relieving Letter" url={employee.relievingLetterUrl} />
+                  {(employee.payslipUrls || []).map((url, i) => (
+                    <DocLink key={url} label={`Payslip ${i + 1}`} url={url} />
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
             <Card className="glass-card lg:col-span-2">
-              <CardHeader><CardTitle>Bank & Identification</CardTitle></CardHeader>
+              <CardHeader><CardTitle>Bank Details</CardTitle></CardHeader>
               <CardContent className={editing ? "grid gap-4 sm:grid-cols-2" : "space-y-3"}>
                 {editing ? (
                   <>
-                    <EditField label="PAN">
-                      <Input value={editForm.pan} onChange={(e) => set("pan", e.target.value)} />
-                    </EditField>
-                    <EditField label="Aadhaar">
-                      <Input value={editForm.aadhaar} onChange={(e) => set("aadhaar", e.target.value)} />
-                    </EditField>
                     <EditField label="Bank Name">
                       <Input value={editForm.bankName} onChange={(e) => set("bankName", e.target.value)} />
                     </EditField>
@@ -433,13 +608,27 @@ export default function EmployeeProfilePage() {
                         onChange={(e) => set("accountNumber", e.target.value)}
                       />
                     </EditField>
+                    {isFullEdit && (
+                      <>
+                        <EditField label="PAN">
+                          <Input value={editForm.pan} onChange={(e) => set("pan", e.target.value)} />
+                        </EditField>
+                        <EditField label="Aadhaar">
+                          <Input value={editForm.aadhaar} onChange={(e) => set("aadhaar", e.target.value)} />
+                        </EditField>
+                      </>
+                    )}
                   </>
                 ) : (
                   <>
-                    <DetailRow label="PAN" value={employee.pan} />
-                    <DetailRow label="Aadhaar" value={employee.aadhaar} />
                     <DetailRow label="Bank Name" value={employee.bankName} />
                     <DetailRow label="Account Number" value={employee.accountNumber} />
+                    {isFullEdit && (
+                      <>
+                        <DetailRow label="PAN" value={employee.pan} />
+                        <DetailRow label="Aadhaar" value={employee.aadhaar} />
+                      </>
+                    )}
                   </>
                 )}
               </CardContent>
@@ -530,11 +719,11 @@ export default function EmployeeProfilePage() {
                     ]
                 ).map((doc) => (
                   <div key={doc.name} className="flex items-center justify-between rounded-lg border p-4">
-                    <div className="flex items-center gap-3">
-                      <FileText className="h-8 w-8 text-royal" />
-                      <div>
+                    <div className="flex items-center gap-3 min-w-0">
+                      <FileText className="h-8 w-8 shrink-0 text-royal" />
+                      <div className="min-w-0">
                         <p className="font-medium">{doc.name}</p>
-                        <p className="text-xs text-muted-foreground">{doc.fileName || doc.id}</p>
+                        <p className="text-xs text-muted-foreground truncate">{doc.fileName || doc.id}</p>
                       </div>
                     </div>
                     {doc.url ? (
@@ -555,26 +744,28 @@ export default function EmployeeProfilePage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="activity">
-          <Card className="glass-card">
-            <CardHeader><CardTitle>Audit History</CardTitle></CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {activityLogs.map((log, i) => (
-                  <div key={i} className="flex gap-4 border-l-2 border-royal pl-4">
-                    <div>
-                      <p className="font-medium">{log.action}</p>
-                      <p className="text-sm text-muted-foreground">{log.details}</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        by {log.by} · {formatDate(log.date)}
-                      </p>
+        {isFullEdit && (
+          <TabsContent value="activity">
+            <Card className="glass-card">
+              <CardHeader><CardTitle>Audit History</CardTitle></CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {activityLogs.map((log, i) => (
+                    <div key={i} className="flex gap-4 border-l-2 border-royal pl-4">
+                      <div>
+                        <p className="font-medium">{log.action}</p>
+                        <p className="text-sm text-muted-foreground">{log.details}</p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          by {log.by} · {formatDate(log.date)}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
       </Tabs>
     </div>
   );

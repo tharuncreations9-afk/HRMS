@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowLeft, Upload, Save, ChevronRight, ChevronLeft, Check } from "lucide-react";
 import Link from "next/link";
@@ -13,10 +13,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { api } from "@/lib/api-client";
+import { EMPLOYEE_FORM_STATUS_OPTIONS } from "@/lib/employee-status";
+import { validateEmployeeCategory } from "@/lib/employee-category";
+import { useAuth } from "@/context/auth-context";
 
 const sections = [
   { id: "personal", title: "Personal Information" },
   { id: "employment", title: "Employment Information" },
+  { id: "category", title: "Education / Experience" },
   { id: "contact", title: "Contact Information" },
   { id: "documents", title: "Documents" },
 ];
@@ -28,21 +32,47 @@ const DOCUMENT_UPLOADS = [
   { label: "Offer Letter", type: "Offer_Letter" },
 ];
 
+const EXPERIENCE_DOC_UPLOADS = [
+  { label: "Experience Letter", type: "Experience_Letter", key: "Experience_Letter" },
+  { label: "Relieving Letter", type: "Relieving_Letter", key: "Relieving_Letter" },
+  { label: "Payslip (Month 1)", type: "Payslip", key: "Payslip_1" },
+  { label: "Payslip (Month 2)", type: "Payslip", key: "Payslip_2" },
+  { label: "Payslip (Month 3)", type: "Payslip", key: "Payslip_3" },
+];
+
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
 const emptyForm = {
   employeeCode: "", firstName: "", lastName: "", dob: "", gender: "",
   bloodGroup: "", emergencyContact: "", departmentId: "", designationId: "", joiningDate: "",
-  employmentType: "Full_Time", status: "Active", mobile: "", alternateMobile: "", email: "",
+  employmentType: "Full_Time", status: "Active", employeeCategory: "Fresher",
+  qualification: "", specialization: "", skills: "",
+  collegeName: "", graduationYear: "", cgpa: "", internshipDetails: "", certifications: "",
+  totalExperienceYears: "", totalExperienceMonths: "", previousCompany: "", previousDesignation: "",
+  previousCtc: "", expectedCtc: "", lastWorkingDate: "", noticePeriod: "", relevantExperience: "",
+  mobile: "", alternateMobile: "", email: "",
   password: "", confirmPassword: "",
   address: "", pan: "", aadhaar: "", bankName: "", accountNumber: "",
 };
 
-export default function AddEmployeePage() {
+function AddEmployeeContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { user, isLoading, hasPermission } = useAuth();
+  const editId = searchParams.get("edit");
+  const isEditMode = Boolean(editId);
+
+  useEffect(() => {
+    if (!isLoading && user && !hasPermission("Employee Management")) {
+      toast.error("You do not have permission to manage employees");
+      router.replace("/dashboard");
+    }
+  }, [user, isLoading, hasPermission, router]);
+
   const [step, setStep] = useState(0);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
+  const [loadingEmployee, setLoadingEmployee] = useState(isEditMode);
   const [departments, setDepartments] = useState([]);
   const [designations, setDesignations] = useState([]);
   const [pendingFiles, setPendingFiles] = useState({});
@@ -55,6 +85,64 @@ export default function AddEmployeePage() {
     api.departments().then((d) => setDepartments(d.departments || [])).catch(() => {});
     api.designations().then((d) => setDesignations(d.designations || [])).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (!editId) return;
+    setLoadingEmployee(true);
+    api.employee(editId)
+      .then((data) => {
+        const emp = data.employee;
+        if (!emp) throw new Error("Employee not found");
+        setForm({
+          employeeCode: emp.employeeCode || "",
+          firstName: emp.firstName || "",
+          lastName: emp.lastName || "",
+          dob: emp.dob || "",
+          gender: emp.gender || "",
+          bloodGroup: emp.bloodGroup || "",
+          emergencyContact: emp.emergencyContact || "",
+          departmentId: emp.departmentId ? String(emp.departmentId) : "",
+          designationId: emp.designationId ? String(emp.designationId) : "",
+          joiningDate: emp.joiningDate || "",
+          employmentType: emp.employmentTypeValue || "Full_Time",
+          status: emp.statusValue || "Active",
+          employeeCategory: emp.employeeCategory || "Fresher",
+          qualification: emp.qualification || "",
+          specialization: emp.specialization || "",
+          skills: emp.skills || "",
+          collegeName: emp.collegeName || "",
+          graduationYear: emp.graduationYear ? String(emp.graduationYear) : "",
+          cgpa: emp.cgpa || "",
+          internshipDetails: emp.internshipDetails || "",
+          certifications: emp.certifications || "",
+          totalExperienceYears: emp.totalExperienceYears != null ? String(emp.totalExperienceYears) : "",
+          totalExperienceMonths: emp.totalExperienceMonths != null ? String(emp.totalExperienceMonths) : "",
+          previousCompany: emp.previousCompany || "",
+          previousDesignation: emp.previousDesignation || "",
+          previousCtc: emp.previousCtc != null ? String(emp.previousCtc) : "",
+          expectedCtc: emp.expectedCtc != null ? String(emp.expectedCtc) : "",
+          lastWorkingDate: emp.lastWorkingDate || "",
+          noticePeriod: emp.noticePeriod || "",
+          relevantExperience: emp.relevantExperience || "",
+          mobile: emp.mobile || "",
+          alternateMobile: emp.alternateMobile || "",
+          email: emp.email || "",
+          password: "",
+          confirmPassword: "",
+          address: emp.address || "",
+          pan: emp.pan || "",
+          aadhaar: emp.aadhaar || "",
+          bankName: emp.bankName || "",
+          accountNumber: emp.accountNumber || "",
+        });
+        if (emp.photo) setProfilePreview(emp.photo);
+      })
+      .catch((err) => {
+        toast.error(err.message || "Failed to load employee");
+        router.push("/employees");
+      })
+      .finally(() => setLoadingEmployee(false));
+  }, [editId, router]);
 
   const activeSection = sections[step].id;
   const set = (field, value) => setForm((f) => ({ ...f, [field]: value }));
@@ -108,17 +196,39 @@ export default function AddEmployeePage() {
     if (!form.departmentId) { toast.error("Department is required"); setStep(1); return false; }
     if (!form.designationId) { toast.error("Designation is required"); setStep(1); return false; }
     if (!form.joiningDate) { toast.error("Joining Date is required"); setStep(1); return false; }
-    if (!form.mobile?.trim()) { toast.error("Mobile is required"); setStep(2); return false; }
-    if (!form.email?.trim()) { toast.error("Email is required"); setStep(2); return false; }
-    if (!form.password || form.password.length < 6) {
-      toast.error("Password is required (minimum 6 characters)");
+    if (!form.employeeCategory) { toast.error("Employee Category is required"); setStep(1); return false; }
+
+    const categoryCheck = validateEmployeeCategory(form);
+    if (!categoryCheck.valid) {
+      toast.error(categoryCheck.errors[0]);
       setStep(2);
       return false;
     }
-    if (form.password !== form.confirmPassword) {
-      toast.error("Password and Confirm Password do not match");
-      setStep(2);
-      return false;
+
+    if (!form.mobile?.trim()) { toast.error("Mobile is required"); setStep(3); return false; }
+    if (!form.email?.trim()) { toast.error("Email is required"); setStep(3); return false; }
+    if (!isEditMode) {
+      if (!form.password || form.password.length < 6) {
+        toast.error("Password is required (minimum 6 characters)");
+        setStep(3);
+        return false;
+      }
+      if (form.password !== form.confirmPassword) {
+        toast.error("Password and Confirm Password do not match");
+        setStep(3);
+        return false;
+      }
+    } else if (form.password) {
+      if (form.password.length < 6) {
+        toast.error("Password must be at least 6 characters");
+        setStep(3);
+        return false;
+      }
+      if (form.password !== form.confirmPassword) {
+        toast.error("Password and Confirm Password do not match");
+        setStep(3);
+        return false;
+      }
     }
     return true;
   };
@@ -128,15 +238,33 @@ export default function AddEmployeePage() {
 
     setSaving(true);
     try {
-      const { confirmPassword, ...payload } = form;
-      const { employee } = await api.createEmployee(payload);
-      const employeeId = employee?.id;
+      const { confirmPassword, password, ...rest } = form;
+      const payload = { ...rest };
+      if (password) payload.password = password;
+
+      let employeeId = editId;
+
+      if (isEditMode) {
+        await api.updateEmployee(editId, payload);
+      } else {
+        const { employee } = await api.createEmployee(payload);
+        employeeId = employee?.id;
+      }
 
       if (employeeId) {
         for (const doc of DOCUMENT_UPLOADS) {
           const file = pendingFiles[doc.type];
           if (file) {
             await api.uploadEmployeeDocument(employeeId, doc.type, file);
+          }
+        }
+
+        if (form.employeeCategory === "Experienced") {
+          for (const doc of EXPERIENCE_DOC_UPLOADS) {
+            const file = pendingFiles[doc.key];
+            if (file) {
+              await api.uploadEmployeeDocument(employeeId, doc.type, file);
+            }
           }
         }
 
@@ -148,7 +276,7 @@ export default function AddEmployeePage() {
         }
       }
 
-      toast.success("Employee added successfully");
+      toast.success(isEditMode ? "Employee updated successfully" : "Employee added successfully");
       router.push("/employees");
     } catch (err) {
       toast.error(err.message);
@@ -156,13 +284,23 @@ export default function AddEmployeePage() {
     setSaving(false);
   };
 
+  if (loadingEmployee) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-royal border-t-transparent" />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
         <Link href="/employees"><Button variant="ghost" size="icon"><ArrowLeft className="h-5 w-5" /></Button></Link>
         <div>
-          <h1 className="text-2xl font-bold lg:text-3xl">Add Employee</h1>
-          <p className="text-muted-foreground">Create a new employee record</p>
+          <h1 className="text-2xl font-bold lg:text-3xl">{isEditMode ? "Edit Employee" : "Add Employee"}</h1>
+          <p className="text-muted-foreground">
+            {isEditMode ? "Update employee record" : "Create a new employee record"}
+          </p>
         </div>
       </div>
 
@@ -336,12 +474,164 @@ export default function AddEmployeePage() {
                     <Select value={form.status} onValueChange={(v) => set("status", v)}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Active">Active</SelectItem>
-                        <SelectItem value="On_Hold">On Hold</SelectItem>
-                        <SelectItem value="Terminated">Terminated</SelectItem>
+                        {EMPLOYEE_FORM_STATUS_OPTIONS.map((opt) => (
+                          <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
+                  <div className="space-y-3 sm:col-span-2">
+                    <Label>Employee Category *</Label>
+                    <div className="flex flex-wrap gap-6">
+                      {["Fresher", "Experienced"].map((cat) => (
+                        <label
+                          key={cat}
+                          className="flex cursor-pointer items-center gap-2 text-sm font-medium"
+                        >
+                          <input
+                            type="radio"
+                            name="employeeCategory"
+                            value={cat}
+                            checked={form.employeeCategory === cat}
+                            onChange={() => set("employeeCategory", cat)}
+                            className="h-4 w-4 accent-royal"
+                          />
+                          {cat}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+
+          {activeSection === "category" && (
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+              <Card className="glass-card">
+                <CardHeader>
+                  <CardTitle>
+                    {form.employeeCategory === "Fresher" ? "Education Details" : "Experience Details"}
+                  </CardTitle>
+                  <CardDescription>
+                    {form.employeeCategory === "Fresher"
+                      ? "Academic background for fresher employees"
+                      : "Previous employment history"}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="grid gap-4 sm:grid-cols-2">
+                  {form.employeeCategory === "Fresher" ? (
+                    <>
+                      <div className="space-y-2 sm:col-span-2">
+                        <Label>Highest Qualification *</Label>
+                        <Input value={form.qualification} onChange={(e) => set("qualification", e.target.value)} placeholder="e.g. B.Tech" />
+                      </div>
+                      <div className="space-y-2 sm:col-span-2">
+                        <Label>College / University *</Label>
+                        <Input value={form.collegeName} onChange={(e) => set("collegeName", e.target.value)} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Specialization</Label>
+                        <Input value={form.specialization} onChange={(e) => set("specialization", e.target.value)} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Graduation Year *</Label>
+                        <Input type="number" min="1950" max="2100" value={form.graduationYear} onChange={(e) => set("graduationYear", e.target.value)} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Percentage / CGPA</Label>
+                        <Input value={form.cgpa} onChange={(e) => set("cgpa", e.target.value)} placeholder="e.g. 8.5 or 75%" />
+                      </div>
+                      <div className="space-y-2 sm:col-span-2">
+                        <Label>Internship Experience (Optional)</Label>
+                        <Textarea rows={2} value={form.internshipDetails} onChange={(e) => set("internshipDetails", e.target.value)} />
+                      </div>
+                      <div className="space-y-2 sm:col-span-2">
+                        <Label>Skills</Label>
+                        <Textarea rows={2} value={form.skills} onChange={(e) => set("skills", e.target.value)} placeholder="e.g. JavaScript, React" />
+                      </div>
+                      <div className="space-y-2 sm:col-span-2">
+                        <Label>Certifications (Optional)</Label>
+                        <Textarea rows={2} value={form.certifications} onChange={(e) => set("certifications", e.target.value)} />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="space-y-2">
+                        <Label>Total Experience (Years) *</Label>
+                        <Input type="number" min="0" value={form.totalExperienceYears} onChange={(e) => set("totalExperienceYears", e.target.value)} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Total Experience (Months) *</Label>
+                        <Input type="number" min="0" max="11" value={form.totalExperienceMonths} onChange={(e) => set("totalExperienceMonths", e.target.value)} />
+                      </div>
+                      <div className="space-y-2 sm:col-span-2">
+                        <Label>Previous Company Name *</Label>
+                        <Input value={form.previousCompany} onChange={(e) => set("previousCompany", e.target.value)} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Previous Designation *</Label>
+                        <Input value={form.previousDesignation} onChange={(e) => set("previousDesignation", e.target.value)} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Previous CTC *</Label>
+                        <Input type="number" min="0" step="0.01" value={form.previousCtc} onChange={(e) => set("previousCtc", e.target.value)} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Expected CTC</Label>
+                        <Input type="number" min="0" step="0.01" value={form.expectedCtc} onChange={(e) => set("expectedCtc", e.target.value)} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Last Working Date</Label>
+                        <Input type="date" value={form.lastWorkingDate} onChange={(e) => set("lastWorkingDate", e.target.value)} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Notice Period</Label>
+                        <Input value={form.noticePeriod} onChange={(e) => set("noticePeriod", e.target.value)} placeholder="e.g. 30 days" />
+                      </div>
+                      <div className="space-y-2 sm:col-span-2">
+                        <Label>Relevant Experience</Label>
+                        <Textarea rows={2} value={form.relevantExperience} onChange={(e) => set("relevantExperience", e.target.value)} />
+                      </div>
+                      <div className="space-y-2 sm:col-span-2">
+                        <Label>Skills</Label>
+                        <Textarea rows={2} value={form.skills} onChange={(e) => set("skills", e.target.value)} />
+                      </div>
+                      <div className="space-y-4 sm:col-span-2">
+                        <Label>Previous Employment Documents</Label>
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          {EXPERIENCE_DOC_UPLOADS.map((doc) => {
+                            const file = pendingFiles[doc.key];
+                            return (
+                              <div key={doc.key} className="flex items-center justify-between rounded-lg border p-3">
+                                <div className="min-w-0">
+                                  <span className="text-sm font-medium">{doc.label}</span>
+                                  {file && (
+                                    <p className="mt-1 flex items-center gap-1 text-xs text-emerald-600">
+                                      <Check className="h-3 w-3" /> {file.name}
+                                    </p>
+                                  )}
+                                </div>
+                                <div>
+                                  <input
+                                    ref={(el) => { fileInputRefs.current[doc.key] = el; }}
+                                    type="file"
+                                    accept="image/jpeg,image/jpg,image/png,application/pdf"
+                                    className="hidden"
+                                    onChange={(e) => handleFileSelect(doc.key, e)}
+                                  />
+                                  <Button variant="outline" size="sm" type="button" onClick={() => fileInputRefs.current[doc.key]?.click()}>
+                                    <Upload className="mr-1 h-3 w-3" />
+                                    {file ? "Change" : "Upload"}
+                                  </Button>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
@@ -368,16 +658,16 @@ export default function AddEmployeePage() {
                     <Input type="email" value={form.email} onChange={(e) => set("email", e.target.value)} />
                   </div>
                   <div className="space-y-2">
-                    <Label>Password *</Label>
+                    <Label>{isEditMode ? "New Password (optional)" : "Password *"}</Label>
                     <Input
                       type="password"
-                      placeholder="Login password (min 6 characters)"
+                      placeholder={isEditMode ? "Leave blank to keep current password" : "Login password (min 6 characters)"}
                       value={form.password}
                       onChange={(e) => set("password", e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Confirm Password *</Label>
+                    <Label>{isEditMode ? "Confirm New Password" : "Confirm Password *"}</Label>
                     <Input
                       type="password"
                       placeholder="Re-enter password"
@@ -478,7 +768,12 @@ export default function AddEmployeePage() {
                 </Button>
               ) : (
                 <Button variant="premium" className="w-full sm:w-auto" onClick={handleSave} disabled={saving}>
-                  {saving ? "Saving..." : <><Save className="h-4 w-4" /> Save Employee</>}
+                  {saving ? "Saving..." : (
+                    <>
+                      <Save className="h-4 w-4" />
+                      {isEditMode ? "Update Employee" : "Save Employee"}
+                    </>
+                  )}
                 </Button>
               )}
             </div>
@@ -486,5 +781,17 @@ export default function AddEmployeePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AddEmployeePage() {
+  return (
+    <Suspense fallback={
+      <div className="flex h-64 items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-royal border-t-transparent" />
+      </div>
+    }>
+      <AddEmployeeContent />
+    </Suspense>
   );
 }

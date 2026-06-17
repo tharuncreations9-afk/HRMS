@@ -1,52 +1,46 @@
 import { prisma } from "@/lib/prisma";
-import { requireAuth, requirePermission } from "@/lib/auth-server";
+import { requireAuth, requirePermission, hashPassword, canManageEmployees, hasFullAccess, forbiddenResponse } from "@/lib/auth-server";
 import { createAuditLog } from "@/lib/audit";
 import { createNotification } from "@/lib/notifications";
-
-function mapEmployee(emp) {
-  return {
-    id: String(emp.id),
-    employeeCode: emp.employeeCode,
-    firstName: emp.firstName,
-    lastName: emp.lastName,
-    name: emp.fullName,
-    photo: emp.profilePhoto || `https://api.dicebear.com/7.x/avataaars/svg?seed=${emp.employeeCode}`,
-    dob: emp.dob?.toISOString().split("T")[0],
-    gender: emp.gender,
-    bloodGroup: emp.bloodGroup,
-    mobile: emp.mobile,
-    alternateMobile: emp.alternateMobile,
-    email: emp.email,
-    address: emp.address,
-    department: emp.department?.departmentName,
-    departmentId: emp.departmentId,
-    designation: emp.designation?.designationName,
-    designationId: emp.designationId,
-    reportingManager: emp.reportingManager?.fullName,
-    reportingManagerId: emp.reportingManagerId,
-    roleId: emp.roleId,
-    roleName: emp.role?.roleName?.replace("_", " "),
-    joiningDate: emp.joiningDate?.toISOString().split("T")[0],
-    employmentType: emp.employmentType?.replace("_", " "),
-    employmentTypeValue: emp.employmentType,
-    status: emp.status?.replace("_", " "),
-    statusValue: emp.status,
-    emergencyContact: emp.emergencyContact,
-    bankName: emp.bankName,
-    accountNumber: emp.accountNumber,
-    pan: emp.pan,
-    aadhaar: emp.aadhaar,
-  };
-}
+import { mapEmployee } from "@/lib/employee-mapper";
+import { validateEmployeeCategory, buildCategoryData } from "@/lib/employee-category";
+import {
+  getEmployeeIdsOnLeaveToday,
+  parseStatusInput,
+  isValidDbStatus,
+} from "@/lib/employee-status";
 
 function canEditEmployee(user, employeeId) {
-  const isOwn = user.employeeId === employeeId;
+  const isOwn = user.id === employeeId || user.employeeId === employeeId;
   return (
-    user.permissions.includes("Employee Management") ||
-    user.permissions.includes("Full System Access") ||
+    canManageEmployees(user) ||
+    hasFullAccess(user) ||
     (isOwn && user.permissions.includes("Edit Profile"))
   );
 }
+
+function getEditScope(user, employeeId) {
+  if (canManageEmployees(user) || hasFullAccess(user)) return "full";
+  if (canEditEmployee(user, employeeId)) return "self";
+  return null;
+}
+
+const SELF_EDIT_FIELDS = new Set([
+  "firstName",
+  "lastName",
+  "mobile",
+  "alternateMobile",
+  "email",
+  "address",
+  "emergencyContact",
+  "dob",
+  "gender",
+  "bloodGroup",
+  "bankName",
+  "accountNumber",
+  "profilePhoto",
+  "skills",
+]);
 
 export async function GET(request, { params }) {
   const { user, error } = await requireAuth(request);
@@ -59,6 +53,10 @@ export async function GET(request, { params }) {
   });
 
   if (!employee) return Response.json({ error: "Not found" }, { status: 404 });
+
+  if (!canManageEmployees(user) && user.id !== id) {
+    return forbiddenResponse();
+  }
 
   const canEdit = canEditEmployee(user, id);
   let lookups = null;
@@ -111,7 +109,9 @@ export async function GET(request, { params }) {
   ]);
 
   return Response.json({
-    employee: mapEmployee(employee),
+    employee: mapEmployee(employee, await getEmployeeIdsOnLeaveToday(prisma)),
+    canEdit: Boolean(getEditScope(user, id)),
+    editScope: getEditScope(user, id),
     lookups,
     attendance: attendance.map((a) => ({
       date: a.attendanceDate.toISOString().split("T")[0],
@@ -145,50 +145,86 @@ export async function PATCH(request, { params }) {
   if (error) return error;
 
   const id = parseInt(params.id, 10);
-  const isOwn = user.employeeId === id;
-  const canEdit =
-    user.permissions.includes("Employee Management") ||
-    user.permissions.includes("Full System Access") ||
-    (isOwn && user.permissions.includes("Edit Profile"));
+  const editScope = getEditScope(user, id);
 
-  if (!canEdit) {
-    return Response.json({ error: "Forbidden" }, { status: 403 });
+  if (!editScope) {
+    return forbiddenResponse();
   }
 
   const existing = await prisma.employee.findUnique({ where: { id } });
   if (!existing) return Response.json({ error: "Not found" }, { status: 404 });
 
   const body = await request.json();
+  const isSelfOnly = editScope === "self";
+
+  if (!isSelfOnly && body.employeeCategory) {
+    const categoryValidation = validateEmployeeCategory(body);
+    if (!categoryValidation.valid) {
+      return Response.json({ error: categoryValidation.errors.join("; ") }, { status: 400 });
+    }
+  }
+
   const updateData = {};
 
   const fields = [
     "firstName", "lastName", "gender", "bloodGroup", "mobile", "alternateMobile",
     "email", "address", "emergencyContact", "bankName", "accountNumber", "pan", "aadhaar", "profilePhoto",
   ];
-  fields.forEach((f) => { if (body[f] !== undefined) updateData[f] = body[f]; });
-  if (body.dob) updateData.dob = new Date(body.dob);
-  if (body.departmentId) updateData.departmentId = parseInt(body.departmentId, 10);
-  if (body.designationId) updateData.designationId = parseInt(body.designationId, 10);
-  if (body.roleId) updateData.roleId = parseInt(body.roleId, 10);
-  if (body.joiningDate) updateData.joiningDate = new Date(body.joiningDate);
-  if (body.employmentType) {
-    updateData.employmentType = String(body.employmentType).replace(/ /g, "_");
-  }
-  if (body.status) updateData.status = String(body.status).replace(/ /g, "_");
-  if (body.reportingManagerId === null || body.reportingManagerId === "") {
-    updateData.reportingManagerId = null;
-  } else if (body.reportingManagerId !== undefined) {
-    updateData.reportingManagerId = parseInt(body.reportingManagerId, 10);
-  }
-  if (body.employeeCode?.trim() && body.employeeCode.trim() !== existing.employeeCode) {
-    updateData.employeeCode = body.employeeCode.trim();
-    updateData.camAttendanceId = body.employeeCode.trim();
+  fields.forEach((f) => {
+    if (body[f] !== undefined) {
+      if (!isSelfOnly || SELF_EDIT_FIELDS.has(f)) {
+        updateData[f] = body[f];
+      }
+    }
+  });
+  if (body.dob && (!isSelfOnly || SELF_EDIT_FIELDS.has("dob"))) updateData.dob = new Date(body.dob);
+
+  if (!isSelfOnly) {
+    if (body.departmentId) updateData.departmentId = parseInt(body.departmentId, 10);
+    if (body.designationId) updateData.designationId = parseInt(body.designationId, 10);
+    if (body.roleId) updateData.roleId = parseInt(body.roleId, 10);
+    if (body.joiningDate) updateData.joiningDate = new Date(body.joiningDate);
+    if (body.employmentType) {
+      updateData.employmentType = String(body.employmentType).replace(/ /g, "_");
+    }
+    if (body.status) {
+      const parsedStatus = parseStatusInput(body.status);
+      if (!parsedStatus || !isValidDbStatus(parsedStatus)) {
+        return Response.json({ error: "Invalid employee status" }, { status: 400 });
+      }
+      updateData.status = parsedStatus;
+    }
+    if (body.reportingManagerId === null || body.reportingManagerId === "") {
+      updateData.reportingManagerId = null;
+    } else if (body.reportingManagerId !== undefined) {
+      updateData.reportingManagerId = parseInt(body.reportingManagerId, 10);
+    }
+    if (body.employeeCode?.trim() && body.employeeCode.trim() !== existing.employeeCode) {
+      updateData.employeeCode = body.employeeCode.trim();
+      updateData.camAttendanceId = body.employeeCode.trim();
+    }
+    if (body.employeeCategory) {
+      Object.assign(updateData, buildCategoryData(body));
+    } else if (body.qualification !== undefined || body.skills !== undefined) {
+      if (body.qualification !== undefined) updateData.qualification = body.qualification?.trim() || null;
+      if (body.specialization !== undefined) updateData.specialization = body.specialization?.trim() || null;
+      if (body.skills !== undefined) updateData.skills = body.skills?.trim() || null;
+    }
+  } else if (body.skills !== undefined && SELF_EDIT_FIELDS.has("skills")) {
+    updateData.skills = body.skills?.trim() || null;
   }
   if (body.firstName !== undefined || body.lastName !== undefined) {
     updateData.firstName = body.firstName ?? existing.firstName;
     updateData.lastName = body.lastName ?? existing.lastName;
     updateData.fullName = `${updateData.firstName} ${updateData.lastName}`.trim();
   }
+  if (body.password?.trim() && !isSelfOnly) {
+    if (body.password.length < 6) {
+      return Response.json({ error: "Password must be at least 6 characters" }, { status: 400 });
+    }
+    updateData.passwordHash = await hashPassword(body.password);
+  }
+
   updateData.updatedBy = user.id;
 
   const employee = await prisma.employee.update({
@@ -212,5 +248,64 @@ export async function PATCH(request, { params }) {
     module: "Employee Self-Service",
   });
 
-  return Response.json({ employee: mapEmployee(employee) });
+  return Response.json({ employee: mapEmployee(employee, await getEmployeeIdsOnLeaveToday(prisma)) });
+}
+
+export async function DELETE(request, { params }) {
+  const { user, error } = await requirePermission(request, "Employee Management");
+  if (error) return error;
+
+  const id = parseInt(params.id, 10);
+  if (Number.isNaN(id)) {
+    return Response.json({ error: "Invalid employee id" }, { status: 400 });
+  }
+
+  if (id === user.id) {
+    return Response.json({ error: "You cannot delete your own account" }, { status: 400 });
+  }
+
+  const existing = await prisma.employee.findUnique({
+    where: { id },
+    include: { role: true },
+  });
+  if (!existing) {
+    return Response.json({ error: "Employee not found" }, { status: 404 });
+  }
+
+  try {
+    await prisma.$transaction(async (tx) => {
+      await tx.attendanceCorrection.deleteMany({ where: { employeeId: id } });
+      await tx.attendance.deleteMany({ where: { employeeId: id } });
+      await tx.leaveRequest.deleteMany({ where: { employeeId: id } });
+      await tx.reportDownloadLog.deleteMany({ where: { generatedBy: id } });
+      await tx.employee.updateMany({
+        where: { reportingManagerId: id },
+        data: { reportingManagerId: null },
+      });
+      await tx.employee.delete({ where: { id } });
+    });
+
+    try {
+      await createAuditLog({
+        userId: user.id,
+        moduleName: "Employee Management",
+        actionType: "DELETE",
+        oldValue: {
+          employeeCode: existing.employeeCode,
+          name: existing.fullName,
+          email: existing.email,
+        },
+      });
+    } catch (auditErr) {
+      console.error("Employee delete audit log failed:", auditErr);
+    }
+
+    return Response.json({ success: true });
+  } catch (err) {
+    console.error("Delete employee error:", err);
+    return Response.json(
+      { error: err.message || "Failed to delete employee. Remove related records and try again." },
+      { status: 400 }
+    );
+  }
 }

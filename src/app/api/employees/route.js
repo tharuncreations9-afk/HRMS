@@ -1,49 +1,40 @@
 import { prisma } from "@/lib/prisma";
-import { requireAuth, requirePermission, hashPassword } from "@/lib/auth-server";
+import {
+  requireAuth,
+  requirePermission,
+  hashPassword,
+  canManageEmployees,
+} from "@/lib/auth-server";
 import { createAuditLog } from "@/lib/audit";
 import { createNotification, getUsersByRole, notifyUsers } from "@/lib/notifications";
-
-function mapEmployee(emp) {
-  return {
-    id: String(emp.id),
-    employeeCode: emp.employeeCode,
-    name: emp.fullName,
-    photo: emp.profilePhoto || `https://api.dicebear.com/7.x/avataaars/svg?seed=${emp.employeeCode}`,
-    dob: emp.dob?.toISOString().split("T")[0],
-    gender: emp.gender,
-    bloodGroup: emp.bloodGroup,
-    mobile: emp.mobile,
-    alternateMobile: emp.alternateMobile,
-    email: emp.email,
-    address: emp.address,
-    department: emp.department?.departmentName,
-    departmentId: emp.departmentId,
-    designation: emp.designation?.designationName,
-    designationId: emp.designationId,
-    reportingManager: emp.reportingManager?.fullName || null,
-    reportingManagerId: emp.reportingManagerId,
-    joiningDate: emp.joiningDate?.toISOString().split("T")[0],
-    employmentType: emp.employmentType?.replace("_", " "),
-    status: emp.status?.replace("_", " "),
-    emergencyContact: emp.emergencyContact,
-    bankName: emp.bankName,
-    accountNumber: emp.accountNumber,
-    pan: emp.pan,
-    aadhaar: emp.aadhaar,
-  };
-}
+import { mapEmployee } from "@/lib/employee-mapper";
+import { validateEmployeeCategory, buildCategoryData } from "@/lib/employee-category";
+import {
+  getEmployeeIdsOnLeaveToday,
+  applyStatusFilter,
+  parseStatusInput,
+  isValidDbStatus,
+} from "@/lib/employee-status";
 
 export async function GET(request) {
   const { user, error } = await requireAuth(request);
   if (error) return error;
 
+  try {
   const { searchParams } = new URL(request.url);
   const search = searchParams.get("search") || "";
   const department = searchParams.get("department");
   const designation = searchParams.get("designation");
   const status = searchParams.get("status");
+  const employeeCategory = searchParams.get("employeeCategory");
+
+  const onLeaveIds = await getEmployeeIdsOnLeaveToday(prisma);
 
   const where = { AND: [] };
+
+  if (!canManageEmployees(user)) {
+    where.AND.push({ id: user.id });
+  }
 
   if (search) {
     where.AND.push({
@@ -62,7 +53,12 @@ export async function GET(request) {
     where.AND.push({ designation: { designationName: designation } });
   }
   if (status && status !== "all") {
-    where.AND.push({ status: status.replace(" ", "_") });
+    applyStatusFilter(where, status, onLeaveIds);
+  }
+  if (employeeCategory && employeeCategory !== "all") {
+    if (["Fresher", "Experienced"].includes(employeeCategory)) {
+      where.AND.push({ employeeCategory });
+    }
   }
 
   const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
@@ -86,7 +82,7 @@ export async function GET(request) {
   ]);
 
   return Response.json({
-    employees: employees.map(mapEmployee),
+    employees: employees.map((emp) => mapEmployee(emp, onLeaveIds)),
     pagination: {
       page,
       limit,
@@ -95,6 +91,13 @@ export async function GET(request) {
       hasMore: skip + employees.length < total,
     },
   });
+  } catch (err) {
+    console.error("List employees error:", err);
+    return Response.json(
+      { error: err.message || "Failed to load employees" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(request) {
@@ -117,6 +120,11 @@ export async function POST(request) {
       return Response.json({ error: `Required fields missing: ${missing.join(", ")}` }, { status: 400 });
     }
 
+    const categoryValidation = validateEmployeeCategory(body);
+    if (!categoryValidation.valid) {
+      return Response.json({ error: categoryValidation.errors.join("; ") }, { status: 400 });
+    }
+
     if (!body.password || body.password.length < 6) {
       return Response.json({ error: "Password is required (minimum 6 characters)" }, { status: 400 });
     }
@@ -127,6 +135,12 @@ export async function POST(request) {
     }
 
     const passwordHash = await hashPassword(body.password);
+    const categoryData = buildCategoryData(body);
+
+    const statusInput = parseStatusInput(body.status) || "Active";
+    if (!isValidDbStatus(statusInput)) {
+      return Response.json({ error: "Invalid employee status" }, { status: 400 });
+    }
 
     const employee = await prisma.employee.create({
       data: {
@@ -150,12 +164,13 @@ export async function POST(request) {
         reportingManagerId: body.reportingManagerId ? parseInt(body.reportingManagerId, 10) : null,
         joiningDate: new Date(body.joiningDate),
         employmentType: body.employmentType || "Full_Time",
-        status: body.status || "Active",
+        status: statusInput,
         emergencyContact: body.emergencyContact,
         bankName: body.bankName,
         accountNumber: body.accountNumber,
         pan: body.pan,
         aadhaar: body.aadhaar,
+        ...categoryData,
         createdBy: user.id,
       },
       include: { department: true, designation: true },
@@ -192,7 +207,7 @@ export async function POST(request) {
       module: "Employee Management",
     });
 
-    return Response.json({ employee: mapEmployee(employee) }, { status: 201 });
+    return Response.json({ employee: mapEmployee(employee, new Set()) }, { status: 201 });
   } catch (err) {
     console.error("Create employee error:", err);
     if (err.code === "P2002") {

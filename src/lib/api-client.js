@@ -34,6 +34,7 @@ export const api = {
   employee: (id) => apiFetch(`/employees/${id}`),
   createEmployee: (body) => apiFetch("/employees", { method: "POST", body: JSON.stringify(body) }),
   updateEmployee: (id, body) => apiFetch(`/employees/${id}`, { method: "PATCH", body: JSON.stringify(body) }),
+  deleteEmployee: (id) => apiFetch(`/employees/${id}`, { method: "DELETE" }),
   uploadEmployeeDocument: async (employeeId, documentType, file) => {
     const token = getToken();
     const formData = new FormData();

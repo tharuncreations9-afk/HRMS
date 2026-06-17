@@ -100,7 +100,7 @@ export function DashboardLayout({ children }) {
 
   return (
 
-    <div className="min-h-screen overflow-x-hidden bg-background">
+    <div className="min-h-screen bg-background">
 
       <div className="hidden lg:block">
 

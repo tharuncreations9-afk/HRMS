@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/dialog";
 import { formatDate } from "@/lib/utils";
 import { api } from "@/lib/api-client";
+import { EMPLOYEE_LIST_STATUS_FILTERS } from "@/lib/employee-status";
 import { useAuth } from "@/context/auth-context";
 import { toast } from "sonner";
 
@@ -34,15 +35,23 @@ const PAGE_SIZE = 25;
 
 function EmployeeListContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const initialSearch = searchParams.get("search") || "";
-  const { hasPermission } = useAuth();
+  const { user, hasPermission } = useAuth();
   const canManageEmployees = hasPermission("Employee Management");
+
+  useEffect(() => {
+    if (user && !canManageEmployees && user.id) {
+      router.replace(`/employees/${user.id}`);
+    }
+  }, [user, canManageEmployees, router]);
 
   const [search, setSearch] = useState(initialSearch);
   const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
   const [department, setDepartment] = useState("all");
   const [designation, setDesignation] = useState("all");
   const [status, setStatus] = useState("all");
+  const [employeeCategory, setEmployeeCategory] = useState("all");
   const [employees, setEmployees] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -56,6 +65,8 @@ function EmployeeListContent() {
   const [bulkFile, setBulkFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadResult, setUploadResult] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const fileInputRef = useRef(null);
   const sentinelRef = useRef(null);
@@ -79,9 +90,10 @@ function EmployeeListContent() {
       if (department !== "all") params.department = department;
       if (designation !== "all") params.designation = designation;
       if (status !== "all") params.status = status;
+      if (employeeCategory !== "all") params.employeeCategory = employeeCategory;
       return params;
     },
-    [debouncedSearch, department, designation, status]
+    [debouncedSearch, department, designation, status, employeeCategory]
   );
 
   const fetchPage = useCallback(
@@ -98,8 +110,12 @@ function EmployeeListContent() {
         setTotal(data.pagination?.total ?? rows.length);
         setHasMore(!!data.pagination?.hasMore);
         setPage(pageNum);
-      } catch {
-        if (!append) setEmployees([]);
+      } catch (err) {
+        if (!append) {
+          setEmployees([]);
+          setTotal(0);
+        }
+        toast.error(err?.message || "Failed to load employees");
       } finally {
         setLoading(false);
         setLoadingMore(false);
@@ -142,12 +158,15 @@ function EmployeeListContent() {
   const statusVariant = (s) => {
     if (s === "Active") return "success";
     if (s === "On Leave") return "warning";
+    if (s === "On Hold") return "warning";
+    if (s === "Inactive" || s === "Terminated") return "secondary";
     return "secondary";
   };
 
   const statusAccent = (s) => {
     if (s === "Active") return "from-emerald-500 to-emerald-600";
     if (s === "On Leave") return "from-amber-500 to-amber-600";
+    if (s === "On Hold") return "from-amber-500 to-amber-600";
     return "from-slate-400 to-slate-500";
   };
 
@@ -157,6 +176,22 @@ function EmployeeListContent() {
       toast.success("Template downloaded");
     } catch (err) {
       toast.error(err.message);
+    }
+  };
+
+  const handleDeleteEmployee = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    try {
+      await api.deleteEmployee(deleteTarget.id);
+      toast.success(`${deleteTarget.name} deleted successfully`);
+      setDeleteTarget(null);
+      setEmployees((prev) => prev.filter((e) => e.id !== deleteTarget.id));
+      setTotal((t) => Math.max(0, t - 1));
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -190,12 +225,23 @@ function EmployeeListContent() {
           <Eye className="h-4 w-4" />
         </Button>
       </Link>
-      <Button variant="ghost" size="icon" className="h-8 w-8">
-        <Pencil className="h-4 w-4" />
-      </Button>
-      <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive">
-        <Trash2 className="h-4 w-4" />
-      </Button>
+      {canManageEmployees && (
+        <>
+          <Link href={`/employees/add?edit=${emp.id}`}>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Pencil className="h-4 w-4" />
+            </Button>
+          </Link>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-destructive"
+            onClick={() => setDeleteTarget(emp)}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </>
+      )}
     </div>
   );
 
@@ -212,11 +258,13 @@ function EmployeeListContent() {
               <Upload className="h-4 w-4" /> Bulk Upload
             </Button>
           )}
-          <Link href="/employees/add">
-            <Button variant="premium">
-              <Plus className="h-4 w-4" /> Add Employee
-            </Button>
-          </Link>
+          {canManageEmployees && (
+            <Link href="/employees/add">
+              <Button variant="premium">
+                <Plus className="h-4 w-4" /> Add Employee
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
 
@@ -253,6 +301,27 @@ function EmployeeListContent() {
             </Button>
             <Button variant="premium" onClick={handleBulkUpload} disabled={uploading || !bulkFile}>
               {uploading ? "Uploading..." : "Upload"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete Employee</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete{" "}
+              <span className="font-medium text-foreground">{deleteTarget?.name}</span>
+              ({deleteTarget?.employeeCode})? This will permanently remove the employee and all related records.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteTarget(null)} disabled={deleting}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteEmployee} disabled={deleting}>
+              {deleting ? "Deleting..." : "Delete"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -364,10 +433,19 @@ function EmployeeListContent() {
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="Active">Active</SelectItem>
-                  <SelectItem value="On Leave">On Leave</SelectItem>
-                  <SelectItem value="Inactive">Inactive</SelectItem>
+                  {EMPLOYEE_LIST_STATUS_FILTERS.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={employeeCategory} onValueChange={setEmployeeCategory}>
+                <SelectTrigger className="w-full sm:w-[140px]">
+                  <SelectValue placeholder="Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  <SelectItem value="Fresher">Fresher</SelectItem>
+                  <SelectItem value="Experienced">Experienced</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -422,6 +500,14 @@ function EmployeeListContent() {
                             <p className="font-medium">{emp.designation || "—"}</p>
                           </div>
                           <div>
+                            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Category</p>
+                            <p className="font-medium">{emp.employeeCategory || "—"}</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Experience</p>
+                            <p className="font-medium">{emp.experienceSummary || "—"}</p>
+                          </div>
+                          <div>
                             <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Mobile</p>
                             <p className="font-medium">{emp.mobile || "—"}</p>
                           </div>
@@ -452,12 +538,14 @@ function EmployeeListContent() {
                 onScroll={handleTableScroll}
                 className="hidden max-h-[min(32rem,55vh)] overflow-auto rounded-lg border lg:block"
               >
-                <table className="w-full min-w-[880px] text-sm">
+                <table className="w-full min-w-[1000px] text-sm">
                   <thead>
                     <tr className="border-b bg-muted/50">
                       <th className="sticky top-0 z-10 bg-muted/95 px-4 py-3 text-left font-medium backdrop-blur-sm">Photo</th>
                       <th className="sticky top-0 z-10 bg-muted/95 px-4 py-3 text-left font-medium backdrop-blur-sm">Employee ID</th>
                       <th className="sticky top-0 z-10 bg-muted/95 px-4 py-3 text-left font-medium backdrop-blur-sm">Name</th>
+                      <th className="sticky top-0 z-10 bg-muted/95 px-4 py-3 text-left font-medium backdrop-blur-sm">Category</th>
+                      <th className="sticky top-0 z-10 bg-muted/95 px-4 py-3 text-left font-medium backdrop-blur-sm">Experience</th>
                       <th className="sticky top-0 z-10 bg-muted/95 px-4 py-3 text-left font-medium backdrop-blur-sm">Department</th>
                       <th className="sticky top-0 z-10 bg-muted/95 px-4 py-3 text-left font-medium backdrop-blur-sm">Designation</th>
                       <th className="sticky top-0 z-10 bg-muted/95 px-4 py-3 text-left font-medium backdrop-blur-sm">Mobile</th>
@@ -480,6 +568,8 @@ function EmployeeListContent() {
                         </td>
                         <td className="px-4 py-3 font-mono text-xs">{emp.employeeCode}</td>
                         <td className="px-4 py-3 font-medium">{emp.name}</td>
+                        <td className="px-4 py-3">{emp.employeeCategory || "—"}</td>
+                        <td className="px-4 py-3">{emp.experienceSummary || "—"}</td>
                         <td className="px-4 py-3">{emp.department}</td>
                         <td className="px-4 py-3">{emp.designation}</td>
                         <td className="px-4 py-3">{emp.mobile}</td>

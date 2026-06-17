@@ -1,14 +1,37 @@
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { prisma } from "@/lib/prisma";
-import { requireAuth, requirePermission } from "@/lib/auth-server";
+import {
+  requireAuth,
+  canManageEmployees,
+  hasFullAccess,
+  forbiddenResponse,
+} from "@/lib/auth-server";
 
-const ALLOWED_TYPES = ["PAN", "Aadhaar", "Bank_Passbook", "Offer_Letter", "Agreement", "Other"];
+const ALLOWED_TYPES = [
+  "PAN",
+  "Aadhaar",
+  "Bank_Passbook",
+  "Offer_Letter",
+  "Agreement",
+  "Experience_Letter",
+  "Relieving_Letter",
+  "Payslip",
+  "Other",
+];
 const MAX_SIZE = 2 * 1024 * 1024;
 const ALLOWED_MIME = ["image/jpeg", "image/jpg", "image/png", "application/pdf"];
+const PHOTO_MIME = ["image/jpeg", "image/jpg", "image/png"];
+
+function canUploadDocument(user, employeeId, documentType) {
+  if (canManageEmployees(user) || hasFullAccess(user)) return true;
+  const isOwn = user.id === employeeId || user.employeeId === employeeId;
+  if (!isOwn || !user.permissions?.includes("Edit Profile")) return false;
+  return documentType === "Other";
+}
 
 export async function POST(request, { params }) {
-  const { user, error } = await requirePermission(request, "Employee Management");
+  const { user, error } = await requireAuth(request);
   if (error) return error;
 
   const employeeId = parseInt(params.id, 10);
@@ -21,6 +44,10 @@ export async function POST(request, { params }) {
   const file = formData.get("file");
   const documentType = String(formData.get("documentType") || "");
 
+  if (!canUploadDocument(user, employeeId, documentType)) {
+    return forbiddenResponse();
+  }
+
   if (!file || typeof file === "string") {
     return Response.json({ error: "File is required" }, { status: 400 });
   }
@@ -30,7 +57,12 @@ export async function POST(request, { params }) {
   if (file.size > MAX_SIZE) {
     return Response.json({ error: "File must be under 2MB" }, { status: 400 });
   }
-  if (!ALLOWED_MIME.includes(file.type)) {
+
+  const isPhotoUpload = documentType === "Other";
+  if (isPhotoUpload && !PHOTO_MIME.includes(file.type)) {
+    return Response.json({ error: "Profile photo must be JPG or PNG" }, { status: 400 });
+  }
+  if (!isPhotoUpload && !ALLOWED_MIME.includes(file.type)) {
     return Response.json({ error: "Only JPG, PNG, and PDF files are allowed" }, { status: 400 });
   }
 
@@ -63,6 +95,25 @@ export async function POST(request, { params }) {
         },
       });
 
+  const employeeUpdate = {};
+  if (documentType === "Experience_Letter") {
+    employeeUpdate.experienceLetterUrl = publicPath;
+  } else if (documentType === "Relieving_Letter") {
+    employeeUpdate.relievingLetterUrl = publicPath;
+  } else if (documentType === "Payslip") {
+    const current = Array.isArray(employee.payslipUrls) ? employee.payslipUrls : [];
+    employeeUpdate.payslipUrls = [...current, publicPath].slice(-3);
+  } else if (documentType === "Other" && !canManageEmployees(user) && !hasFullAccess(user)) {
+    employeeUpdate.profilePhoto = publicPath;
+  }
+
+  if (Object.keys(employeeUpdate).length) {
+    await prisma.employee.update({
+      where: { id: employeeId },
+      data: employeeUpdate,
+    });
+  }
+
   return Response.json({
     document: {
       id: doc.id,
@@ -70,5 +121,7 @@ export async function POST(request, { params }) {
       fileName: doc.fileName,
       url: doc.filePath,
     },
+    employeeUrls: employeeUpdate,
+    profilePhoto: employeeUpdate.profilePhoto || undefined,
   });
 }

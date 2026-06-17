@@ -172,7 +172,7 @@ export function Header({ onMenuToggle }) {
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => router.push("/employees/1")}>
+            <DropdownMenuItem onClick={() => user?.id && router.push(`/employees/${user.id}`)}>
               <User className="mr-2 h-4 w-4" /> Profile
             </DropdownMenuItem>
             <DropdownMenuItem>

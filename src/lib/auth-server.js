@@ -192,6 +192,38 @@ export function hasFullAccess(user) {
 
 
 
+export function canManageEmployees(user) {
+
+  if (!user) return false;
+
+  return hasFullAccess(user) || user.permissions?.includes("Employee Management");
+
+}
+
+
+
+export function canViewOrgDashboard(user) {
+
+  if (!user) return false;
+
+  if (hasFullAccess(user)) return true;
+
+  return [
+
+    "Employee Management",
+
+    "User Management",
+
+    "Attendance Monitoring",
+
+    "Generate Reports",
+
+  ].some((p) => user.permissions?.includes(p));
+
+}
+
+
+
 export function canMarkAttendance(user) {
 
   if (!user) return false;

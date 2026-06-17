@@ -48,7 +48,7 @@ const navItems = [
 
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
 
-  { href: "/employees", label: "Employees", icon: Users, perm: ["Employee Management", "View Profile"] },
+  { href: "/employees", label: "Employees", icon: Users, perm: ["Employee Management", "User Management"] },
 
   { href: "/employees/add", label: "Add Employee", icon: UserPlus, perm: ["Employee Management"] },
 
@@ -153,22 +153,13 @@ export function Sidebar({ collapsed, onToggle, mobile = false, onClose }) {
         {navItems.filter((item) => canAccessNavItem(item, user)).map((item) => {
 
           const activeCheck =
-
             item.href === "/employees/add"
-
               ? pathname === "/employees/add"
-
               : item.href === "/employees"
-
                 ? pathname === "/employees" || (pathname.startsWith("/employees/") && !pathname.includes("/add"))
-
                 : item.href === "/attendance"
-
                   ? pathname === "/attendance"
-
                   : pathname === item.href;
-
-
 
           return (
 

@@ -94,11 +94,24 @@
   .print-page {
     page-break-after: always;
     page-break-inside: avoid;
+    width: 210mm !important;
+    min-height: 297mm !important;
+    padding: 2rem !important;
+    margin-bottom: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+  .attendance-register-page table {
+    min-width: 0 !important;
+    font-size: 0.75rem !important;
   }
   .print-page:last-child {
     page-break-after: auto;
   }
   .no-print {
     display: none !important;
+  }
+  .report-preview-scaler-inner {
+    transform: none !important;
   }
 }
