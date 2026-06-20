@@ -26,6 +26,10 @@ import {
 
   Building2,
 
+  Clock,
+
+  AlarmClock,
+
   ChevronLeft,
 
   ChevronRight,
@@ -54,11 +58,15 @@ const navItems = [
 
   { href: "/organization", label: "Departments & Designations", icon: Building2, perm: ["Department Management", "Employee Management"] },
 
+  { href: "/shifts", label: "Shift Management", icon: Clock, perm: ["Shift Management", "Department Management"] },
+
   { href: "/attendance", label: "Daily Attendance", icon: CalendarCheck, perm: ["View Attendance", "Mark Attendance", "Attendance Monitoring", "View Team Attendance"] },
 
   { href: "/leaves", label: "Leave Management", icon: CalendarDays, perm: ["Apply Leave", "View Leave Requests", "View Team Leave Requests", "Final Leave Approval", "Leave Approval"] },
 
   { href: "/reports", label: "Reports", icon: FileBarChart, perm: ["Generate Reports", "View Team Reports"] },
+
+  { href: "/reports/late-comers", label: "Late Comers Report", icon: AlarmClock, perm: ["Generate Reports", "View Team Reports"] },
 
   { href: "/roles", label: "Roles & Permissions", icon: Shield, roles: ["admin", "super_admin"] },
 
@@ -159,7 +167,13 @@ export function Sidebar({ collapsed, onToggle, mobile = false, onClose }) {
                 ? pathname === "/employees" || (pathname.startsWith("/employees/") && !pathname.includes("/add"))
                 : item.href === "/attendance"
                   ? pathname === "/attendance"
-                  : pathname === item.href;
+                  : item.href === "/reports"
+                    ? pathname === "/reports"
+                    : item.href === "/reports/late-comers"
+                      ? pathname === "/reports/late-comers"
+                      : item.href === "/shifts"
+                        ? pathname === "/shifts"
+                        : pathname === item.href;
 
           return (
 

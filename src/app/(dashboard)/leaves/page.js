@@ -40,43 +40,98 @@ import { formatDate, getLocalDateString, isDateBeforeToday } from "@/lib/utils";
 import { toast } from "sonner";
 import { api } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
+import { useLookups } from "@/hooks/use-lookups";
+import { ListPagination } from "@/components/ui/list-pagination";
 
-const leaveCards = [
-  { key: "casualLeave", label: "Casual Leave", icon: Palmtree, color: "text-emerald-500", bg: "bg-emerald-500/10" },
-  { key: "sickLeave", label: "Sick Leave", icon: Heart, color: "text-red-500", bg: "bg-red-500/10" },
-  { key: "earnedLeave", label: "Earned Leave", icon: Star, color: "text-amber-500", bg: "bg-amber-500/10" },
-  { key: "optionalHoliday", label: "Optional Holiday", icon: Gift, color: "text-purple-500", bg: "bg-purple-500/10" },
-  { key: "compOff", label: "Comp Off", icon: RefreshCw, color: "text-blue-500", bg: "bg-blue-500/10" },
-];
+const LEAVE_ICON_MAP = {
+  Palmtree,
+  Heart,
+  Star,
+  Gift,
+  RefreshCw,
+  CalendarDays,
+  Clock,
+};
 
 export default function LeavesPage() {
   const { user, hasPermission } = useAuth();
+  const isSuperAdmin = user?.role === "super_admin";
+
   const [requests, setRequests] = useState([]);
   const [leaveBalances, setLeaveBalances] = useState({});
   const [leaveTypeBalances, setLeaveTypeBalances] = useState({});
   const [holidays, setHolidays] = useState([]);
   const [leaveTypes, setLeaveTypes] = useState([]);
-  const [viewMode, setViewMode] = useState("self");
+  const [leaveTypeMeta, setLeaveTypeMeta] = useState([]);
+  const [viewMode, setViewMode] = useState(isSuperAdmin ? "all" : "self");
   const [canApplyLeave, setCanApplyLeave] = useState(false);
   const [employeeLeaveBalances, setEmployeeLeaveBalances] = useState([]);
   const [applyOpen, setApplyOpen] = useState(false);
   const [leaveForm, setLeaveForm] = useState({ leaveType: "", fromDate: "", toDate: "", reason: "" });
+  const [loading, setLoading] = useState(true);
+  const [requestPage, setRequestPage] = useState(1);
+  const [requestLimit, setRequestLimit] = useState(null);
+  const [requestStatus, setRequestStatus] = useState("all");
+  const [requestPagination, setRequestPagination] = useState(null);
+  const [leaveRequestStatusFilters, setLeaveRequestStatusFilters] = useState([]);
+  const [balancePage, setBalancePage] = useState(1);
+  const [balanceLimit, setBalanceLimit] = useState(null);
+  const [balancePagination, setBalancePagination] = useState(null);
+  const { lookups } = useLookups();
 
-  const loadLeaves = () => {
-    api.leaves().then((data) => {
-      setRequests(data.leaveRequests || []);
-      setLeaveBalances(data.leaveBalances || {});
-      setLeaveTypeBalances(data.leaveTypeBalances || {});
-      setEmployeeLeaveBalances(data.employeeLeaveBalances || []);
-      setViewMode(data.viewMode || "self");
-      setCanApplyLeave(!!data.canApply);
-      setHolidays(data.holidays || []);
-      setLeaveTypes(data.leaveTypes || []);
-    }).catch(() => {});
+  useEffect(() => {
+    if (lookups?.pagination?.defaultLimit) {
+      if (requestLimit === null) setRequestLimit(lookups.pagination.defaultLimit);
+      if (balanceLimit === null) setBalanceLimit(lookups.pagination.defaultLimit);
+    }
+  }, [lookups, requestLimit, balanceLimit]);
+
+  const loadLeaves = (silent = false) => {
+    if (!requestLimit || !balanceLimit) return;
+    if (!silent) setLoading(true);
+    api.leaves({
+      page: String(requestPage),
+      limit: String(requestLimit),
+      status: requestStatus,
+      balancePage: String(balancePage),
+      balanceLimit: String(balanceLimit),
+    })
+      .then((data) => {
+        setRequests(data.leaveRequests || []);
+        setLeaveBalances(data.leaveBalances || {});
+        setLeaveTypeBalances(data.leaveTypeBalances || {});
+        setEmployeeLeaveBalances(data.employeeLeaveBalances || []);
+        setViewMode(data.viewMode || (isSuperAdmin ? "all" : "self"));
+        setCanApplyLeave(!!data.canApply);
+        setHolidays(data.holidays || []);
+        setLeaveTypes(data.leaveTypes || []);
+        setLeaveTypeMeta(data.leaveTypeMeta || []);
+        setRequestPagination(data.leaveRequestPagination || null);
+        setBalancePagination(data.balancePagination || null);
+        setLeaveRequestStatusFilters(
+          data.leaveRequestStatusFilters || lookups?.leaveRequestStatusFilters || []
+        );
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!silent) setLoading(false);
+      });
   };
 
-  useEffect(() => { loadLeaves(); }, []);
+  useEffect(() => {
+    setRequestPage(1);
+  }, [requestStatus, requestLimit]);
 
+  useEffect(() => {
+    setBalancePage(1);
+  }, [balanceLimit]);
+
+  useEffect(() => { loadLeaves(); }, [requestPage, requestLimit, requestStatus, balancePage, balanceLimit]);
+
+  const leaveCards = leaveTypeMeta.map((card) => ({
+    ...card,
+    icon: LEAVE_ICON_MAP[card.icon] || CalendarDays,
+  }));
   const isSuperAdminView = viewMode === "all";
   const canApply = canApplyLeave;
   const today = getLocalDateString();
@@ -95,7 +150,7 @@ export default function LeavesPage() {
   const handleApprove = async (id, level) => {
     try {
       await api.updateLeave(id, { action: "approve", level });
-      loadLeaves();
+      loadLeaves(true);
       toast.success("Leave approved");
     } catch (err) { toast.error(err.message); }
   };
@@ -103,7 +158,7 @@ export default function LeavesPage() {
   const handleReject = async (id) => {
     try {
       await api.updateLeave(id, { action: "reject" });
-      loadLeaves();
+      loadLeaves(true);
       toast.success("Leave rejected");
     } catch (err) { toast.error(err.message); }
   };
@@ -149,7 +204,7 @@ export default function LeavesPage() {
       await api.applyLeave(leaveForm);
       setApplyOpen(false);
       setLeaveForm({ leaveType: "", fromDate: "", toDate: "", reason: "" });
-      loadLeaves();
+      loadLeaves(true);
       toast.success("Leave application submitted");
     } catch (err) { toast.error(err.message); }
   };
@@ -172,7 +227,17 @@ export default function LeavesPage() {
         )}
       </div>
 
-      {isSuperAdminView ? (
+      {loading ? (
+        <Card className="glass-card">
+          <CardHeader className="pb-3">
+            <div className="h-6 w-56 animate-pulse rounded bg-muted" />
+            <div className="mt-2 h-4 w-72 animate-pulse rounded bg-muted" />
+          </CardHeader>
+          <CardContent>
+            <div className={`animate-pulse rounded-lg bg-muted/60 ${isSuperAdminView ? "h-48" : "h-36"}`} />
+          </CardContent>
+        </Card>
+      ) : isSuperAdminView ? (
         <Card className="glass-card">
           <CardHeader className="pb-3">
             <CardTitle className="text-lg">Employee Leave Balances ({new Date().getFullYear()})</CardTitle>
@@ -220,6 +285,19 @@ export default function LeavesPage() {
                 </tbody>
               </table>
             </div>
+            <ListPagination
+              page={balancePagination?.page || balancePage}
+              totalPages={balancePagination?.totalPages || 0}
+              total={balancePagination?.total || 0}
+              from={balancePagination?.from || 0}
+              to={balancePagination?.to || 0}
+              limit={balancePagination?.limit || balanceLimit}
+              pageSizeOptions={balancePagination?.pageSizeOptions || lookups?.pagination?.pageSizeOptions || []}
+              loading={loading}
+              onPageChange={setBalancePage}
+              onLimitChange={setBalanceLimit}
+              className="mt-4"
+            />
           </CardContent>
         </Card>
       ) : (
@@ -300,11 +378,30 @@ export default function LeavesPage() {
 
         <TabsContent value="requests">
           <Card className="glass-card">
-            <CardHeader>
-              <CardTitle>Pending & Recent Requests</CardTitle>
-              <CardDescription>Manager and HR approval workflow</CardDescription>
+            <CardHeader className="space-y-4">
+              <div>
+                <CardTitle>Pending & Recent Requests</CardTitle>
+                <CardDescription>Manager and HR approval workflow</CardDescription>
+              </div>
+              <Select value={requestStatus} onValueChange={setRequestStatus}>
+                <SelectTrigger className="w-full sm:w-[180px]">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  {(leaveRequestStatusFilters.length
+                    ? leaveRequestStatusFilters
+                    : lookups?.leaveRequestStatusFilters || []
+                  ).map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
+              {loading ? (
+                <div className="h-48 animate-pulse rounded-lg bg-muted/60" />
+              ) : (
+              <>
               <div className="max-h-[min(28rem,45vh)] overflow-auto rounded-lg border">
                 <table className="w-full min-w-[900px] text-sm">
                   <thead>
@@ -366,6 +463,20 @@ export default function LeavesPage() {
                   </tbody>
                 </table>
               </div>
+              <ListPagination
+                page={requestPagination?.page || requestPage}
+                totalPages={requestPagination?.totalPages || 0}
+                total={requestPagination?.total || 0}
+                from={requestPagination?.from || 0}
+                to={requestPagination?.to || 0}
+                limit={requestPagination?.limit || requestLimit}
+                pageSizeOptions={requestPagination?.pageSizeOptions || lookups?.pagination?.pageSizeOptions || []}
+                loading={loading}
+                onPageChange={setRequestPage}
+                onLimitChange={setRequestLimit}
+              />
+              </>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

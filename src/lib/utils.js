@@ -56,22 +56,3 @@ export const MONTHS = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December",
 ];
-
-export const DEPARTMENTS = [
-  "Engineering", "Human Resources", "Finance", "Marketing",
-  "Operations", "Sales", "IT Support", "Administration",
-];
-
-export const DESIGNATIONS = [
-  "Software Engineer", "Senior Engineer", "Team Lead", "Manager",
-  "HR Executive", "Accountant", "Marketing Executive", "Sales Executive",
-  "Operations Manager", "Admin Assistant", "Director", "VP",
-];
-
-export const ROLES = [
-  { id: "employee", name: "Employee", permissions: ["view_profile", "view_attendance", "apply_leave"] },
-  { id: "manager", name: "Manager", permissions: ["team_attendance", "leave_approval"] },
-  { id: "hr", name: "HR", permissions: ["employee_management", "attendance_correction"] },
-  { id: "admin", name: "Admin", permissions: ["system_administration"] },
-  { id: "super_admin", name: "Super Admin", permissions: ["full_access"] },
-];

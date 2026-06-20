@@ -1,13 +1,26 @@
 import { prisma } from "@/lib/prisma";
 import { requireOrgManagement } from "@/lib/auth-server";
 import { createAuditLog } from "@/lib/audit";
+import { parsePagination, buildListPagination } from "@/lib/pagination";
 
-export async function GET() {
-  const departments = await prisma.department.findMany({
-    orderBy: { departmentName: "asc" },
-    include: { _count: { select: { employees: true } } },
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const { page, limit, skip } = parsePagination(searchParams);
+
+  const [departments, total] = await Promise.all([
+    prisma.department.findMany({
+      orderBy: { departmentName: "asc" },
+      include: { _count: { select: { employees: true } } },
+      skip,
+      take: limit,
+    }),
+    prisma.department.count(),
+  ]);
+
+  return Response.json({
+    departments,
+    pagination: buildListPagination({ page, limit, total }),
   });
-  return Response.json({ departments });
 }
 
 export async function POST(request) {

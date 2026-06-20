@@ -1,21 +1,16 @@
 import { getEmployeeIdsOnLeaveToday } from "@/lib/leave-attendance-sync";
+import {
+  EMPLOYEE_STATUSES,
+  EMPLOYEE_LIST_STATUS_FILTERS as LOOKUP_STATUS_FILTERS,
+} from "@/lib/lookups";
 
 export { getEmployeeIdsOnLeaveToday };
 
-export const EMPLOYEE_DB_STATUSES = ["Active", "Inactive", "On_Hold", "Terminated"];
+export const EMPLOYEE_DB_STATUSES = EMPLOYEE_STATUSES.map((s) => s.value);
 
-export const EMPLOYEE_FORM_STATUS_OPTIONS = [
-  { value: "Active", label: "Active" },
-  { value: "Inactive", label: "Inactive" },
-  { value: "On_Hold", label: "On Hold" },
-  { value: "Terminated", label: "Terminated" },
-];
+export const EMPLOYEE_FORM_STATUS_OPTIONS = EMPLOYEE_STATUSES;
 
-export const EMPLOYEE_LIST_STATUS_FILTERS = [
-  { value: "all", label: "All Status" },
-  ...EMPLOYEE_FORM_STATUS_OPTIONS,
-  { value: "On Leave", label: "On Leave" },
-];
+export const EMPLOYEE_LIST_STATUS_FILTERS = LOOKUP_STATUS_FILTERS;
 
 export const ON_LEAVE_FILTER = "On Leave";
 

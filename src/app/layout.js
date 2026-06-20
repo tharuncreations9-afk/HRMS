@@ -7,8 +7,8 @@ import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata = {
-  title: "VLJ Treasures HRMS - Employee Management System",
-  description: "VLJ Treasures Employee Management System",
+  title: "VLJ HRMS - Employee Management System",
+  description: "VLJ Employee Management System",
   icons: { icon: "/images/vlj-logo.png" },
 };
 

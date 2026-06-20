@@ -318,4 +318,4 @@ export const activityLogs = [
   { action: "Document Uploaded", by: "Employee", date: "2026-02-10", details: "PAN card uploaded" },
 ];
 
-export const COMPANY_NAME = "VLJ Treasures Pvt. Ltd.";
+export const COMPANY_NAME = "VLJ HRMS";

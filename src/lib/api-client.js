@@ -81,9 +81,28 @@ export const api = {
     if (!res.ok) throw new Error(data.error || "Upload failed");
     return data;
   },
-  attendance: (date) => apiFetch(`/attendance?date=${date || ""}`),
-  saveAttendance: (body) => apiFetch("/attendance", { method: "POST", body: JSON.stringify(body) }),
-  leaves: () => apiFetch("/leaves"),
+  attendance: (params) => {
+    const query = new URLSearchParams();
+    if (typeof params === "string") {
+      query.set("date", params);
+    } else if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== "") {
+          query.set(key, String(value));
+        }
+      });
+    }
+    return apiFetch(`/attendance?${query}`);
+  },
+  markAttendance: (body) => apiFetch("/attendance", { method: "POST", body: JSON.stringify(body) }),
+  attendanceMarkSheet: (params) => apiFetch(`/attendance/mark-sheet?${new URLSearchParams(params || {})}`),
+  bulkMarkAttendance: (body) => apiFetch("/attendance/bulk", { method: "POST", body: JSON.stringify(body) }),
+  attendanceMarkStatuses: () => apiFetch("/attendance/mark-statuses"),
+  submitAttendanceCorrection: (body) =>
+    apiFetch("/attendance/corrections", { method: "POST", body: JSON.stringify(body) }),
+  processAttendanceCorrection: (id, body) =>
+    apiFetch(`/attendance/corrections/${id}`, { method: "PATCH", body: JSON.stringify(body) }),
+  leaves: (params) => apiFetch(`/leaves?${new URLSearchParams(params || {})}`),
   applyLeave: (body) => apiFetch("/leaves", { method: "POST", body: JSON.stringify(body) }),
   updateLeave: (id, body) => apiFetch(`/leaves/${id}`, { method: "PATCH", body: JSON.stringify(body) }),
   roles: () => apiFetch("/roles"),
@@ -93,11 +112,18 @@ export const api = {
   deletePermission: (id) => apiFetch(`/permissions/${id}`, { method: "DELETE" }),
   assignRolePermission: (body) => apiFetch("/role-permissions", { method: "POST", body: JSON.stringify(body) }),
   removeRolePermission: (body) => apiFetch("/role-permissions", { method: "DELETE", body: JSON.stringify(body) }),
-  departments: () => apiFetch("/departments"),
+  departments: (params) => apiFetch(`/departments?${new URLSearchParams(params || {})}`),
   createDepartment: (body) => apiFetch("/departments", { method: "POST", body: JSON.stringify(body) }),
   updateDepartment: (id, body) => apiFetch(`/departments/${id}`, { method: "PATCH", body: JSON.stringify(body) }),
-  designations: () => apiFetch("/designations"),
+  designations: (params) => apiFetch(`/designations?${new URLSearchParams(params || {})}`),
   createDesignation: (body) => apiFetch("/designations", { method: "POST", body: JSON.stringify(body) }),
   updateDesignation: (id, body) => apiFetch(`/designations/${id}`, { method: "PATCH", body: JSON.stringify(body) }),
   reportEmployees: (department) => apiFetch(`/reports/employees?department=${encodeURIComponent(department || "")}`),
+  lateComersReport: (params) => apiFetch(`/reports/late-comers?${new URLSearchParams(params || {})}`),
+  shifts: (params) => apiFetch(`/shifts?${new URLSearchParams(params || {})}`),
+  shiftDepartments: (params) => apiFetch(`/shifts/departments?${new URLSearchParams(params || {})}`),
+  createShift: (body) => apiFetch("/shifts", { method: "POST", body: JSON.stringify(body) }),
+  updateShift: (id, body) => apiFetch(`/shifts/${id}`, { method: "PATCH", body: JSON.stringify(body) }),
+  deleteShift: (id) => apiFetch(`/shifts/${id}`, { method: "DELETE" }),
+  lookups: () => apiFetch("/lookups"),
 };

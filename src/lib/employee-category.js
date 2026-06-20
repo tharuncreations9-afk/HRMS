@@ -1,3 +1,7 @@
+import { EMPLOYEE_CATEGORIES } from "@/lib/lookups";
+
+const VALID_CATEGORIES = EMPLOYEE_CATEGORIES.map((c) => c.value);
+
 const FRESHER_NULL_FIELDS = {
   totalExperienceYears: null,
   totalExperienceMonths: null,
@@ -41,7 +45,7 @@ export function validateEmployeeCategory(body) {
     errors.push("Employee Category is required");
     return { valid: false, errors };
   }
-  if (!["Fresher", "Experienced"].includes(category)) {
+  if (!VALID_CATEGORIES.includes(category)) {
     errors.push("Invalid Employee Category");
     return { valid: false, errors };
   }

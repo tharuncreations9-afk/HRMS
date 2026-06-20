@@ -35,7 +35,7 @@ import { formatDate } from "@/lib/utils";
 import { toast } from "sonner";
 import { api } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
-import { EMPLOYEE_FORM_STATUS_OPTIONS } from "@/lib/employee-status";
+import { useLookups } from "@/hooks/use-lookups";
 
 const MAX_PHOTO_SIZE = 2 * 1024 * 1024;
 
@@ -110,6 +110,7 @@ export default function EmployeeProfilePage() {
 
   const [employee, setEmployee] = useState(null);
   const [lookups, setLookups] = useState(null);
+  const { lookups: formLookups } = useLookups();
   const [canEdit, setCanEdit] = useState(false);
   const [editScope, setEditScope] = useState(null);
   const [attendance, setAttendance] = useState([]);
@@ -378,9 +379,9 @@ export default function EmployeeProfilePage() {
                       <Select value={editForm.gender || ""} onValueChange={(v) => set("gender", v)}>
                         <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Male">Male</SelectItem>
-                          <SelectItem value="Female">Female</SelectItem>
-                          <SelectItem value="Other">Other</SelectItem>
+                          {(formLookups?.genders || []).map((opt) => (
+                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </EditField>
@@ -388,8 +389,8 @@ export default function EmployeeProfilePage() {
                       <Select value={editForm.bloodGroup || ""} onValueChange={(v) => set("bloodGroup", v)}>
                         <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
                         <SelectContent>
-                          {["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"].map((bg) => (
-                            <SelectItem key={bg} value={bg}>{bg}</SelectItem>
+                          {(formLookups?.bloodGroups || []).map((bg) => (
+                            <SelectItem key={bg.value} value={bg.value}>{bg.label}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -515,10 +516,9 @@ export default function EmployeeProfilePage() {
                       <Select value={editForm.employmentType} onValueChange={(v) => set("employmentType", v)}>
                         <SelectTrigger><SelectValue /></SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Full_Time">Full Time</SelectItem>
-                          <SelectItem value="Part_Time">Part Time</SelectItem>
-                          <SelectItem value="Contract">Contract</SelectItem>
-                          <SelectItem value="Intern">Intern</SelectItem>
+                          {(formLookups?.employmentTypes || []).map((opt) => (
+                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </EditField>
@@ -526,7 +526,7 @@ export default function EmployeeProfilePage() {
                       <Select value={editForm.status} onValueChange={(v) => set("status", v)}>
                         <SelectTrigger><SelectValue /></SelectTrigger>
                         <SelectContent>
-                          {EMPLOYEE_FORM_STATUS_OPTIONS.map((opt) => (
+                          {(formLookups?.employeeStatuses || []).map((opt) => (
                             <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
                           ))}
                         </SelectContent>

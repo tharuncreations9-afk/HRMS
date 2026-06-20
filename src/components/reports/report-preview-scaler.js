@@ -3,10 +3,10 @@
 import { useRef, useEffect, useState } from "react";
 
 /**
- * Scales wide print-layout previews (e.g. A4 register) to fit narrow screens.
- * On wide screens scale stays 1 — full-size preview.
+ * Scales wide print-layout previews (e.g. A4 register) to fit container width.
+ * When scrollContainer is true, height is not forced on the parent — scrolling happens in the outer box.
  */
-export function ReportPreviewScaler({ children }) {
+export function ReportPreviewScaler({ children, scrollContainer = false }) {
   const outerRef = useRef(null);
   const innerRef = useRef(null);
   const [scale, setScale] = useState(1);
@@ -34,11 +34,19 @@ export function ReportPreviewScaler({ children }) {
     ro.observe(inner);
 
     return () => ro.disconnect();
-  }, [children]);
+  }, [children, scrollContainer]);
 
   return (
     <div ref={outerRef} className="w-full max-w-full">
-      <div style={{ height: scaledHeight > 0 ? scaledHeight : "auto" }}>
+      <div
+        style={
+          scrollContainer
+            ? scale < 1 && scaledHeight > 0
+              ? { height: scaledHeight }
+              : undefined
+            : { height: scaledHeight > 0 ? scaledHeight : "auto" }
+        }
+      >
         <div
           ref={innerRef}
           className="report-preview-scaler-inner origin-top-left"

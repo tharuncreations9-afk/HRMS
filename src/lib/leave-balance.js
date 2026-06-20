@@ -1,10 +1,4 @@
-export const LEAVE_TYPE_KEYS = {
-  "Casual Leave": "casualLeave",
-  "Sick Leave": "sickLeave",
-  "Earned Leave": "earnedLeave",
-  "Optional Holiday": "optionalHoliday",
-  "Comp Off": "compOff",
-};
+import { leaveNameToKey } from "@/lib/lookups";
 
 /** Used/pending come from leave requests — single source of truth with the table below. */
 export function buildLeaveBalancesFromRows(
@@ -12,18 +6,12 @@ export function buildLeaveBalancesFromRows(
   approvedByTypeId = {},
   pendingByTypeId = {}
 ) {
-  const leaveBalances = Object.fromEntries(
-    Object.values(LEAVE_TYPE_KEYS).map((key) => [
-      key,
-      { total: 0, used: 0, remaining: 0, pending: 0, available: 0 },
-    ])
-  );
-
+  const leaveBalances = {};
   const leaveTypeBalances = {};
 
   balanceRows.forEach((b) => {
     const name = b.leaveType.leaveName;
-    const camelKey = LEAVE_TYPE_KEYS[name];
+    const camelKey = leaveNameToKey(name);
     if (!camelKey) return;
 
     const total = Number(b.totalLeave);

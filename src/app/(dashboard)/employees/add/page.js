@@ -13,9 +13,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { api } from "@/lib/api-client";
-import { EMPLOYEE_FORM_STATUS_OPTIONS } from "@/lib/employee-status";
 import { validateEmployeeCategory } from "@/lib/employee-category";
 import { useAuth } from "@/context/auth-context";
+import { useLookups } from "@/hooks/use-lookups";
 
 const sections = [
   { id: "personal", title: "Personal Information" },
@@ -46,6 +46,7 @@ const emptyForm = {
   employeeCode: "", firstName: "", lastName: "", dob: "", gender: "",
   bloodGroup: "", emergencyContact: "", departmentId: "", designationId: "", joiningDate: "",
   employmentType: "Full_Time", status: "Active", employeeCategory: "Fresher",
+  roleId: "", reportingManagerId: "",
   qualification: "", specialization: "", skills: "",
   collegeName: "", graduationYear: "", cgpa: "", internshipDetails: "", certifications: "",
   totalExperienceYears: "", totalExperienceMonths: "", previousCompany: "", previousDesignation: "",
@@ -75,6 +76,7 @@ function AddEmployeeContent() {
   const [loadingEmployee, setLoadingEmployee] = useState(isEditMode);
   const [departments, setDepartments] = useState([]);
   const [designations, setDesignations] = useState([]);
+  const { lookups } = useLookups();
   const [pendingFiles, setPendingFiles] = useState({});
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [profilePreview, setProfilePreview] = useState(null);
@@ -82,9 +84,10 @@ function AddEmployeeContent() {
   const photoInputRef = useRef(null);
 
   useEffect(() => {
-    api.departments().then((d) => setDepartments(d.departments || [])).catch(() => {});
-    api.designations().then((d) => setDesignations(d.designations || [])).catch(() => {});
-  }, []);
+    if (!lookups) return;
+    setDepartments(lookups.departments || []);
+    setDesignations(lookups.designations || []);
+  }, [lookups]);
 
   useEffect(() => {
     if (!editId) return;
@@ -107,6 +110,8 @@ function AddEmployeeContent() {
           employmentType: emp.employmentTypeValue || "Full_Time",
           status: emp.statusValue || "Active",
           employeeCategory: emp.employeeCategory || "Fresher",
+          roleId: emp.roleId ? String(emp.roleId) : "",
+          reportingManagerId: emp.reportingManagerId ? String(emp.reportingManagerId) : "",
           qualification: emp.qualification || "",
           specialization: emp.specialization || "",
           skills: emp.skills || "",
@@ -400,9 +405,9 @@ function AddEmployeeContent() {
                       <Select value={form.gender} onValueChange={(v) => set("gender", v)}>
                         <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Male">Male</SelectItem>
-                          <SelectItem value="Female">Female</SelectItem>
-                          <SelectItem value="Other">Other</SelectItem>
+                          {(lookups?.genders || []).map((opt) => (
+                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </div>
@@ -411,8 +416,8 @@ function AddEmployeeContent() {
                       <Select value={form.bloodGroup} onValueChange={(v) => set("bloodGroup", v)}>
                         <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
                         <SelectContent>
-                          {["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"].map((bg) => (
-                            <SelectItem key={bg} value={bg}>{bg}</SelectItem>
+                          {(lookups?.bloodGroups || []).map((bg) => (
+                            <SelectItem key={bg.value} value={bg.value}>{bg.label}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -462,10 +467,9 @@ function AddEmployeeContent() {
                     <Select value={form.employmentType} onValueChange={(v) => set("employmentType", v)}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Full_Time">Full Time</SelectItem>
-                        <SelectItem value="Part_Time">Part Time</SelectItem>
-                        <SelectItem value="Contract">Contract</SelectItem>
-                        <SelectItem value="Intern">Intern</SelectItem>
+                        {(lookups?.employmentTypes || []).map((opt) => (
+                          <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -474,8 +478,37 @@ function AddEmployeeContent() {
                     <Select value={form.status} onValueChange={(v) => set("status", v)}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
-                        {EMPLOYEE_FORM_STATUS_OPTIONS.map((opt) => (
+                        {(lookups?.employeeStatuses || []).map((opt) => (
                           <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Role</Label>
+                    <Select value={form.roleId || "none"} onValueChange={(v) => set("roleId", v === "none" ? "" : v)}>
+                      <SelectTrigger><SelectValue placeholder="Default: Employee" /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">Default (Employee)</SelectItem>
+                        {(lookups?.roles || []).map((r) => (
+                          <SelectItem key={r.id} value={String(r.id)}>{r.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Reporting Manager</Label>
+                    <Select
+                      value={form.reportingManagerId || "none"}
+                      onValueChange={(v) => set("reportingManagerId", v === "none" ? "" : v)}
+                    >
+                      <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">None</SelectItem>
+                        {(lookups?.managers || []).map((m) => (
+                          <SelectItem key={m.id} value={String(m.id)}>
+                            {m.fullName} ({m.employeeCode})
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -483,20 +516,20 @@ function AddEmployeeContent() {
                   <div className="space-y-3 sm:col-span-2">
                     <Label>Employee Category *</Label>
                     <div className="flex flex-wrap gap-6">
-                      {["Fresher", "Experienced"].map((cat) => (
+                      {(lookups?.employeeCategories || []).map((cat) => (
                         <label
-                          key={cat}
+                          key={cat.value}
                           className="flex cursor-pointer items-center gap-2 text-sm font-medium"
                         >
                           <input
                             type="radio"
                             name="employeeCategory"
-                            value={cat}
-                            checked={form.employeeCategory === cat}
-                            onChange={() => set("employeeCategory", cat)}
+                            value={cat.value}
+                            checked={form.employeeCategory === cat.value}
+                            onChange={() => set("employeeCategory", cat.value)}
                             className="h-4 w-4 accent-royal"
                           />
-                          {cat}
+                          {cat.label}
                         </label>
                       ))}
                     </div>

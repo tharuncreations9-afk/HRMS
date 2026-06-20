@@ -27,11 +27,10 @@ import {
 } from "@/components/ui/dialog";
 import { formatDate } from "@/lib/utils";
 import { api } from "@/lib/api-client";
-import { EMPLOYEE_LIST_STATUS_FILTERS } from "@/lib/employee-status";
 import { useAuth } from "@/context/auth-context";
+import { useLookups } from "@/hooks/use-lookups";
+import { ListPagination } from "@/components/ui/list-pagination";
 import { toast } from "sonner";
-
-const PAGE_SIZE = 25;
 
 function EmployeeListContent() {
   const searchParams = useSearchParams();
@@ -53,13 +52,16 @@ function EmployeeListContent() {
   const [status, setStatus] = useState("all");
   const [employeeCategory, setEmployeeCategory] = useState("all");
   const [employees, setEmployees] = useState([]);
-  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(false);
+  const [limit, setLimit] = useState(null);
+  const [pagination, setPagination] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [departments, setDepartments] = useState([]);
-  const [designations, setDesignations] = useState([]);
+  const { lookups } = useLookups();
+  const [listFilters, setListFilters] = useState(null);
+  const statusFilters = listFilters?.employeeStatusFilters || lookups?.employeeStatusFilters || [];
+  const categoryFilters = listFilters?.employeeCategoryFilters || lookups?.employeeCategoryFilters || [];
+  const departments = listFilters?.departmentFilters || lookups?.departmentFilters || [];
+  const designations = listFilters?.designationFilters || lookups?.designationFilters || [];
   const [bulkOpen, setBulkOpen] = useState(false);
   const [resultOpen, setResultOpen] = useState(false);
   const [bulkFile, setBulkFile] = useState(null);
@@ -69,23 +71,26 @@ function EmployeeListContent() {
   const [deleting, setDeleting] = useState(false);
 
   const fileInputRef = useRef(null);
-  const sentinelRef = useRef(null);
   const tableScrollRef = useRef(null);
-  const loadingMoreRef = useRef(false);
 
   useEffect(() => {
-    api.departments().then((d) => setDepartments(d.departments || [])).catch(() => {});
-    api.designations().then((d) => setDesignations(d.designations || [])).catch(() => {});
-  }, []);
+    if (lookups?.pagination?.defaultLimit && limit === null) {
+      setLimit(lookups.pagination.defaultLimit);
+    }
+  }, [lookups, limit]);
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search), 300);
     return () => clearTimeout(timer);
   }, [search]);
 
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, department, designation, status, employeeCategory, limit]);
+
   const buildParams = useCallback(
     (pageNum) => {
-      const params = { page: String(pageNum), limit: String(PAGE_SIZE) };
+      const params = { page: String(pageNum), limit: String(limit) };
       if (debouncedSearch) params.search = debouncedSearch;
       if (department !== "all") params.department = department;
       if (designation !== "all") params.designation = designation;
@@ -93,67 +98,34 @@ function EmployeeListContent() {
       if (employeeCategory !== "all") params.employeeCategory = employeeCategory;
       return params;
     },
-    [debouncedSearch, department, designation, status, employeeCategory]
+    [debouncedSearch, department, designation, status, employeeCategory, limit]
   );
 
   const fetchPage = useCallback(
-    async (pageNum, append) => {
-      if (loadingMoreRef.current) return;
-      loadingMoreRef.current = true;
-      if (append) setLoadingMore(true);
-      else setLoading(true);
-
+    async (pageNum) => {
+      if (!limit) return;
+      setLoading(true);
       try {
         const data = await api.employees(buildParams(pageNum));
         const rows = data.employees || [];
-        setEmployees((prev) => (append ? [...prev, ...rows] : rows));
-        setTotal(data.pagination?.total ?? rows.length);
-        setHasMore(!!data.pagination?.hasMore);
+        setEmployees(rows);
+        setListFilters(data.filters || null);
+        setPagination(data.pagination || null);
         setPage(pageNum);
       } catch (err) {
-        if (!append) {
-          setEmployees([]);
-          setTotal(0);
-        }
+        setEmployees([]);
+        setPagination({ page: 1, limit, total: 0, totalPages: 0, from: 0, to: 0 });
         toast.error(err?.message || "Failed to load employees");
       } finally {
         setLoading(false);
-        setLoadingMore(false);
-        loadingMoreRef.current = false;
       }
     },
-    [buildParams]
+    [buildParams, limit]
   );
 
   useEffect(() => {
-    fetchPage(1, false);
-  }, [fetchPage]);
-
-  const loadMore = useCallback(() => {
-    if (!hasMore || loading || loadingMore) return;
-    fetchPage(page + 1, true);
-  }, [hasMore, loading, loadingMore, page, fetchPage]);
-
-  useEffect(() => {
-    const sentinel = sentinelRef.current;
-    if (!sentinel) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) loadMore();
-      },
-      { root: null, rootMargin: "120px" }
-    );
-    observer.observe(sentinel);
-    return () => observer.disconnect();
-  }, [loadMore]);
-
-  const handleTableScroll = (e) => {
-    const el = e.currentTarget;
-    if (el.scrollHeight - el.scrollTop - el.clientHeight < 80) {
-      loadMore();
-    }
-  };
+    fetchPage(page);
+  }, [fetchPage, page]);
 
   const statusVariant = (s) => {
     if (s === "Active") return "success";
@@ -186,8 +158,7 @@ function EmployeeListContent() {
       await api.deleteEmployee(deleteTarget.id);
       toast.success(`${deleteTarget.name} deleted successfully`);
       setDeleteTarget(null);
-      setEmployees((prev) => prev.filter((e) => e.id !== deleteTarget.id));
-      setTotal((t) => Math.max(0, t - 1));
+      fetchPage(page);
     } catch (err) {
       toast.error(err.message);
     } finally {
@@ -411,9 +382,8 @@ function EmployeeListContent() {
                   <SelectValue placeholder="Department" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Departments</SelectItem>
                   {departments.map((d) => (
-                    <SelectItem key={d.id} value={d.departmentName}>{d.departmentName}</SelectItem>
+                    <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -422,9 +392,8 @@ function EmployeeListContent() {
                   <SelectValue placeholder="Designation" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Designations</SelectItem>
                   {designations.map((d) => (
-                    <SelectItem key={d.id} value={d.designationName}>{d.designationName}</SelectItem>
+                    <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -433,7 +402,7 @@ function EmployeeListContent() {
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  {EMPLOYEE_LIST_STATUS_FILTERS.map((opt) => (
+                  {statusFilters.map((opt) => (
                     <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
                   ))}
                 </SelectContent>
@@ -443,9 +412,9 @@ function EmployeeListContent() {
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="Fresher">Fresher</SelectItem>
-                  <SelectItem value="Experienced">Experienced</SelectItem>
+                  {categoryFilters.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -535,7 +504,6 @@ function EmployeeListContent() {
 
               <div
                 ref={tableScrollRef}
-                onScroll={handleTableScroll}
                 className="hidden max-h-[min(32rem,55vh)] overflow-auto rounded-lg border lg:block"
               >
                 <table className="w-full min-w-[1000px] text-sm">
@@ -589,20 +557,21 @@ function EmployeeListContent() {
                 )}
               </div>
 
-              <div ref={sentinelRef} className="h-1" aria-hidden />
-
-              {loadingMore && (
-                <div className="flex justify-center py-4">
-                  <div className="h-6 w-6 animate-spin rounded-full border-2 border-royal border-t-transparent" />
-                </div>
-              )}
+              <ListPagination
+                page={pagination?.page || page}
+                totalPages={pagination?.totalPages || 0}
+                total={pagination?.total || 0}
+                from={pagination?.from || 0}
+                to={pagination?.to || 0}
+                limit={pagination?.limit || limit}
+                pageSizeOptions={pagination?.pageSizeOptions || lookups?.pagination?.pageSizeOptions || []}
+                loading={loading}
+                onPageChange={setPage}
+                onLimitChange={setLimit}
+                className="mt-4"
+              />
             </>
           )}
-
-          <p className="mt-4 text-sm text-muted-foreground">
-            Showing {employees.length} of {total} employees
-            {hasMore ? " — scroll for more" : ""}
-          </p>
         </CardContent>
       </Card>
     </div>

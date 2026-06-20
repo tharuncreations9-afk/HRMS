@@ -1,0 +1,364 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { Clock, Plus, Pencil, Trash2 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ListPagination } from "@/components/ui/list-pagination";
+import { api } from "@/lib/api-client";
+import { useAuth } from "@/context/auth-context";
+import { useLookups } from "@/hooks/use-lookups";
+import { toast } from "sonner";
+
+function canAccessShifts(hasPermission) {
+  return (
+    hasPermission("Shift Management") ||
+    hasPermission("Department Management") ||
+    hasPermission("Full System Access") ||
+    hasPermission("All Permissions")
+  );
+}
+
+const emptyForm = {
+  departmentId: "",
+  shiftName: "",
+  startTime: "",
+  endTime: "",
+  graceMinutes: "0",
+  status: "Active",
+};
+
+export default function ShiftManagementPage() {
+  const router = useRouter();
+  const { user, isLoading, hasPermission } = useAuth();
+  const { lookups } = useLookups();
+  const canManage = canAccessShifts(hasPermission);
+
+  const [shifts, setShifts] = useState([]);
+  const [departmentOptions, setDepartmentOptions] = useState([]);
+  const [pagination, setPagination] = useState(null);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingShift, setEditingShift] = useState(null);
+  const [form, setForm] = useState(emptyForm);
+
+  useEffect(() => {
+    if (!isLoading && user && !canManage) {
+      router.replace("/dashboard");
+    }
+  }, [user, isLoading, router, canManage]);
+
+  useEffect(() => {
+    if (lookups?.pagination?.defaultLimit && limit === null) {
+      setLimit(lookups.pagination.defaultLimit);
+    }
+  }, [lookups, limit]);
+
+  const loadShifts = useCallback(() => {
+    if (!limit) return;
+    setLoading(true);
+    api
+      .shifts({ page: String(page), limit: String(limit) })
+      .then((data) => {
+        setShifts(data.shifts || []);
+        setPagination(data.pagination || null);
+      })
+      .catch((err) => toast.error(err.message || "Failed to load shifts"))
+      .finally(() => setLoading(false));
+  }, [page, limit]);
+
+  const loadDepartments = useCallback(async (excludeShiftId = null) => {
+    try {
+      const params = excludeShiftId ? { excludeShiftId: String(excludeShiftId) } : {};
+      const data = await api.shiftDepartments(params);
+      setDepartmentOptions(data.departments || []);
+    } catch (err) {
+      toast.error(err.message || "Failed to load departments");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!user || !canManage || !limit) return;
+    loadShifts();
+  }, [user, canManage, limit, loadShifts]);
+
+  const openDialog = async (shift = null) => {
+    setEditingShift(shift);
+    await loadDepartments(shift?.id || null);
+    setForm(
+      shift
+        ? {
+            departmentId: String(shift.departmentId),
+            shiftName: shift.shiftName,
+            startTime: shift.startTime,
+            endTime: shift.endTime,
+            graceMinutes: String(shift.graceMinutes ?? 0),
+            status: shift.status,
+          }
+        : emptyForm
+    );
+    setDialogOpen(true);
+  };
+
+  const handleSave = async () => {
+    if (!form.departmentId || !form.shiftName.trim() || !form.startTime || !form.endTime) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const payload = {
+        departmentId: Number(form.departmentId),
+        shiftName: form.shiftName.trim(),
+        startTime: form.startTime,
+        endTime: form.endTime,
+        graceMinutes: Number(form.graceMinutes || 0),
+        status: form.status,
+      };
+
+      if (editingShift) {
+        await api.updateShift(editingShift.id, payload);
+        toast.success("Shift updated");
+      } else {
+        await api.createShift(payload);
+        toast.success("Shift created");
+      }
+
+      setDialogOpen(false);
+      loadShifts();
+    } catch (err) {
+      toast.error(err.message || "Failed to save shift");
+    }
+    setSaving(false);
+  };
+
+  const handleDelete = async (shift) => {
+    if (!window.confirm(`Delete shift "${shift.shiftName}" for ${shift.departmentName}?`)) return;
+    try {
+      await api.deleteShift(shift.id);
+      toast.success("Shift deleted");
+      loadShifts();
+    } catch (err) {
+      toast.error(err.message || "Failed to delete shift");
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold lg:text-3xl">Shift Management</h1>
+          <p className="text-muted-foreground">
+            Assign one active shift per department. Employees follow their department shift automatically.
+          </p>
+        </div>
+        <Button onClick={() => openDialog()}>
+          <Plus className="h-4 w-4" /> Add Shift
+        </Button>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Clock className="h-5 w-5" /> Shift List
+          </CardTitle>
+          <CardDescription>Departments are loaded from the existing Departments master.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {loading ? (
+            <div className="space-y-3">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="h-12 animate-pulse rounded-lg bg-muted/60" />
+              ))}
+            </div>
+          ) : (
+            <>
+              <div className="overflow-x-auto rounded-lg border">
+                <table className="w-full min-w-[900px] text-sm">
+                  <thead>
+                    <tr className="border-b bg-muted/50">
+                      <th className="px-4 py-3 text-left font-medium">Department</th>
+                      <th className="px-4 py-3 text-left font-medium">Shift Name</th>
+                      <th className="px-4 py-3 text-left font-medium">Start Time</th>
+                      <th className="px-4 py-3 text-left font-medium">End Time</th>
+                      <th className="px-4 py-3 text-left font-medium">Grace Time</th>
+                      <th className="px-4 py-3 text-left font-medium">Status</th>
+                      <th className="px-4 py-3 text-left font-medium">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {shifts.length === 0 ? (
+                      <tr>
+                        <td colSpan={7} className="px-4 py-10 text-center text-muted-foreground">
+                          No shifts configured yet. Create a department first, then add a shift.
+                        </td>
+                      </tr>
+                    ) : (
+                      shifts.map((shift) => (
+                        <tr key={shift.id} className="border-b hover:bg-muted/20">
+                          <td className="px-4 py-3">{shift.departmentName}</td>
+                          <td className="px-4 py-3 font-medium">{shift.shiftName}</td>
+                          <td className="px-4 py-3">{shift.startTimeDisplay}</td>
+                          <td className="px-4 py-3">{shift.endTimeDisplay}</td>
+                          <td className="px-4 py-3">{shift.graceDisplay}</td>
+                          <td className="px-4 py-3">
+                            <Badge variant={shift.status === "Active" ? "success" : "secondary"}>
+                              {shift.statusLabel}
+                            </Badge>
+                          </td>
+                          <td className="px-4 py-3">
+                            <div className="flex gap-2">
+                              <Button size="sm" variant="outline" onClick={() => openDialog(shift)}>
+                                <Pencil className="h-3.5 w-3.5" /> Edit
+                              </Button>
+                              <Button size="sm" variant="outline" onClick={() => handleDelete(shift)}>
+                                <Trash2 className="h-3.5 w-3.5" /> Delete
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              <ListPagination
+                page={pagination?.page || page}
+                totalPages={pagination?.totalPages || 0}
+                total={pagination?.total || 0}
+                from={pagination?.from || 0}
+                to={pagination?.to || 0}
+                limit={pagination?.limit || limit}
+                pageSizeOptions={pagination?.pageSizeOptions || lookups?.pagination?.pageSizeOptions || []}
+                loading={loading}
+                onPageChange={setPage}
+                onLimitChange={setLimit}
+              />
+            </>
+          )}
+        </CardContent>
+      </Card>
+
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{editingShift ? "Edit Shift" : "Add Shift"}</DialogTitle>
+            <DialogDescription>
+              Select a department from the master list. Only one active shift is allowed per department.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="grid gap-4 py-2">
+            <div className="space-y-2">
+              <Label>Department</Label>
+              <Select
+                value={form.departmentId}
+                onValueChange={(v) => setForm((prev) => ({ ...prev, departmentId: v }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select department" />
+                </SelectTrigger>
+                <SelectContent>
+                  {departmentOptions.map((dept) => (
+                    <SelectItem key={dept.id} value={dept.value} disabled={dept.disabled}>
+                      {dept.label}
+                      {dept.disabled ? " (Active shift exists)" : ""}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Shift Name</Label>
+              <Input
+                value={form.shiftName}
+                onChange={(e) => setForm((prev) => ({ ...prev, shiftName: e.target.value }))}
+                placeholder="e.g. General Shift"
+              />
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label>Start Time</Label>
+                <Input
+                  type="time"
+                  value={form.startTime}
+                  onChange={(e) => setForm((prev) => ({ ...prev, startTime: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>End Time</Label>
+                <Input
+                  type="time"
+                  value={form.endTime}
+                  onChange={(e) => setForm((prev) => ({ ...prev, endTime: e.target.value }))}
+                />
+              </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label>Grace Time (Minutes)</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  value={form.graceMinutes}
+                  onChange={(e) => setForm((prev) => ({ ...prev, graceMinutes: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Select
+                  value={form.status}
+                  onValueChange={(v) => setForm((prev) => ({ ...prev, status: v }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Active">Active</SelectItem>
+                    <SelectItem value="Inactive">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDialogOpen(false)} disabled={saving}>
+              Cancel
+            </Button>
+            <Button onClick={handleSave} disabled={saving}>
+              {saving ? "Saving..." : editingShift ? "Update Shift" : "Create Shift"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}

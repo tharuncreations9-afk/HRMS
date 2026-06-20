@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
 import { getEmployeePermissions } from "@/lib/permissions-server";
+import { getLocalDateString } from "@/lib/utils";
 
 
 
@@ -202,6 +203,24 @@ export function canManageEmployees(user) {
 
 
 
+export function canManageShifts(user) {
+  if (!user) return false;
+  return (
+    hasFullAccess(user) ||
+    user.permissions?.includes("Shift Management") ||
+    user.permissions?.includes("Department Management")
+  );
+}
+
+export async function requireShiftManagement(request) {
+  const { user, error } = await requireAuth(request);
+  if (error) return { user: null, error };
+  if (!canManageShifts(user)) return { user: null, error: forbiddenResponse() };
+  return { user, error: null };
+}
+
+
+
 export function canViewOrgDashboard(user) {
 
   if (!user) return false;
@@ -261,6 +280,26 @@ export function canViewAttendance(user) {
 }
 
 
+
+export function canApproveAttendanceCorrection(user) {
+  if (!user) return false;
+  return user.role === "super_admin" || hasFullAccess(user);
+}
+
+export function canRequestAttendanceCorrection(user) {
+  if (!user) return false;
+  return (
+    canApproveAttendanceCorrection(user) ||
+    user.permissions?.includes("Attendance Corrections") ||
+    canMarkAttendance(user) ||
+    user.permissions?.includes("Attendance Monitoring")
+  );
+}
+
+export function canEditAttendanceForDate(user, dateStr) {
+  if (!canMarkAttendance(user)) return false;
+  return dateStr === getLocalDateString();
+}
 
 export async function requireAuth(request) {
 

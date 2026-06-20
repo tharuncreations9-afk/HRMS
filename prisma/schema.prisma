@@ -101,6 +101,11 @@ enum ReportType {
   Leave_Summary
 }
 
+enum ShiftStatus {
+  Active
+  Inactive
+}
+
 enum AuditActionType {
   CREATE
   UPDATE
@@ -111,6 +116,9 @@ enum AuditActionType {
   REJECT
   EXPORT
   SYNC
+  CORRECTION_REQUEST
+  CORRECTION_APPROVED
+  CORRECTION_REJECTED
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -198,12 +206,40 @@ model Department {
   updatedBy      Int?     @map("updated_by")
 
   employees Employee[]
+  shifts    DepartmentShift[]
 
   creator Employee? @relation("DepartmentCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
   updater Employee? @relation("DepartmentUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
 
   @@index([departmentName])
   @@map("departments")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DEPARTMENT SHIFTS — one active shift per department (enforced in application)
+// ─────────────────────────────────────────────────────────────────────────────
+
+model DepartmentShift {
+  id           Int         @id @default(autoincrement())
+  departmentId Int         @map("department_id")
+  shiftName    String      @map("shift_name") @db.VarChar(100)
+  startTime    String      @map("start_time") @db.VarChar(5)
+  endTime      String      @map("end_time") @db.VarChar(5)
+  graceMinutes Int         @default(0) @map("grace_minutes")
+  status       ShiftStatus @default(Active)
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+  createdBy    Int?        @map("created_by")
+  updatedBy    Int?        @map("updated_by")
+
+  department Department @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  creator    Employee?  @relation("DepartmentShiftCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updater    Employee?  @relation("DepartmentShiftUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@index([departmentId])
+  @@index([status])
+  @@index([departmentId, status])
+  @@map("department_shifts")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -314,6 +350,8 @@ model Employee {
   rolePermissionsUpdated RolePermission[]       @relation("RolePermissionUpdatedBy")
   departmentsCreated     Department[]           @relation("DepartmentCreatedBy")
   departmentsUpdated     Department[]           @relation("DepartmentUpdatedBy")
+  shiftsCreated          DepartmentShift[]      @relation("DepartmentShiftCreatedBy")
+  shiftsUpdated          DepartmentShift[]      @relation("DepartmentShiftUpdatedBy")
   designationsCreated    Designation[]          @relation("DesignationCreatedBy")
   designationsUpdated    Designation[]          @relation("DesignationUpdatedBy")
   documentsCreated       EmployeeDocument[]     @relation("EmployeeDocumentCreatedBy")
@@ -395,6 +433,8 @@ model Attendance {
   workingHours     Decimal?         @map("working_hours") @db.Decimal(5, 2)
   overtimeHours    Decimal?         @map("overtime_hours") @db.Decimal(5, 2)
   attendanceStatus AttendanceStatus @map("attendance_status")
+  lateMinutes      Int?             @map("late_minutes")
+  attendanceRemark String?          @map("attendance_remark") @db.VarChar(50)
   createdAt        DateTime         @default(now()) @map("created_at")
   updatedAt        DateTime         @updatedAt @map("updated_at")
   createdBy        Int?             @map("created_by")
@@ -464,6 +504,28 @@ model AttendanceException {
   @@index([issueType])
   @@index([resolved])
   @@map("attendance_exceptions")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE 11b: ATTENDANCE STATUS SETTINGS (master)
+// ─────────────────────────────────────────────────────────────────────────────
+
+model AttendanceStatusSetting {
+  id             Int              @id @default(autoincrement())
+  code           String           @unique @db.VarChar(30)
+  label          String           @db.VarChar(50)
+  dbEnum         AttendanceStatus @map("db_enum")
+  sortOrder      Int              @default(0) @map("sort_order")
+  isMarkable     Boolean          @default(true) @map("is_markable")
+  isFilterable   Boolean          @default(true) @map("is_filterable")
+  requiresInTime Boolean          @default(false) @map("requires_in_time")
+  badgeVariant   String           @default("secondary") @map("badge_variant") @db.VarChar(20)
+  isActive       Boolean          @default(true) @map("is_active")
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+
+  @@index([isActive, sortOrder])
+  @@map("attendance_status_settings")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -580,7 +642,10 @@ model Holiday {
 model AttendanceCorrection {
   id               Int                        @id @default(autoincrement())
   employeeId       Int                        @map("employee_id")
-  attendanceId     Int                        @map("attendance_id")
+  attendanceId     Int?                       @map("attendance_id")
+  attendanceDate   DateTime                   @map("attendance_date") @db.Date
+  currentStatus    AttendanceStatus?          @map("current_status")
+  requestedStatus  AttendanceStatus           @map("requested_status")
   requestedInTime  DateTime?                  @map("requested_in_time")
   requestedOutTime DateTime?                  @map("requested_out_time")
   reason           String?                    @db.Text
@@ -591,8 +656,8 @@ model AttendanceCorrection {
   createdBy        Int?                       @map("created_by")
   updatedBy        Int?                       @map("updated_by")
 
-  employee   Employee   @relation(fields: [employeeId], references: [id], onDelete: Restrict)
-  attendance Attendance @relation(fields: [attendanceId], references: [id], onDelete: Cascade)
+  employee   Employee    @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  attendance Attendance? @relation(fields: [attendanceId], references: [id], onDelete: SetNull)
   approver   Employee?  @relation("AttendanceCorrectionApprovedBy", fields: [approvedBy], references: [id], onDelete: SetNull)
   creator    Employee?  @relation("AttendanceCorrectionCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
   updater    Employee?  @relation("AttendanceCorrectionUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)

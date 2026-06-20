@@ -75,12 +75,19 @@ export async function getEmployeeLeaveBalanceSummary(prisma, employeeId, year) {
   return buildLeaveBalancesFromRows(balances, approvedByTypeId, pendingByTypeId);
 }
 
-export async function getAllEmployeesLeaveBalances(prisma, year) {
-  const employees = await prisma.employee.findMany({
-    where: { status: "Active" },
-    include: { department: true },
-    orderBy: { fullName: "asc" },
-  });
+export async function getPaginatedEmployeesLeaveBalances(prisma, year, skip, limit) {
+  const where = { status: "Active" };
+
+  const [employees, total] = await Promise.all([
+    prisma.employee.findMany({
+      where,
+      include: { department: true },
+      orderBy: { fullName: "asc" },
+      skip,
+      take: limit,
+    }),
+    prisma.employee.count({ where }),
+  ]);
 
   const rows = [];
   for (const emp of employees) {
@@ -93,7 +100,8 @@ export async function getAllEmployeesLeaveBalances(prisma, year) {
       balances: leaveBalances,
     });
   }
-  return rows;
+
+  return { rows, total };
 }
 
 export async function getAvailableLeaveDays(prisma, employeeId, leaveTypeId, year) {

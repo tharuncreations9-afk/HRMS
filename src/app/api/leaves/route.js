@@ -3,9 +3,11 @@ import { getAuthUser } from "@/lib/auth-server";
 import { createAuditLog } from "@/lib/audit";
 import { createNotification, getUsersByRole, notifyUsers } from "@/lib/notifications";
 import { countLeaveDays } from "@/lib/leave-balance";
+import { buildLeaveTypeMeta, LEAVE_REQUEST_STATUS_FILTERS } from "@/lib/lookups";
 import { isDateBeforeToday } from "@/lib/utils";
+import { parsePagination, buildListPagination } from "@/lib/pagination";
 import {
-  getAllEmployeesLeaveBalances,
+  getPaginatedEmployeesLeaveBalances,
   getAvailableLeaveDays,
   getEmployeeLeaveBalanceSummary,
 } from "@/lib/leave-balance-server";
@@ -23,24 +25,31 @@ export async function GET(request) {
   const user = await getAuthUser(request);
   if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
-  const year = new Date().getFullYear();
+  const { searchParams } = new URL(request.url);
+  const { page, limit, skip } = parsePagination(searchParams);
+  const statusFilter = searchParams.get("status") || "all";
+  const balancePage = Math.max(1, parseInt(searchParams.get("balancePage") || "1", 10));
+  const balanceLimit = Math.min(100, Math.max(1, parseInt(searchParams.get("balanceLimit") || "25", 10)));
+  const balanceSkip = (balancePage - 1) * balanceLimit;
 
+  const year = new Date().getFullYear();
   const superAdmin = isSuperAdmin(user);
 
-  const [leaveTypes, requests, holidays, balanceSummary, employeeLeaveBalances] =
+  const [leaveTypes, requestData, holidays, balanceSummary, balancePageData] =
     await Promise.all([
       prisma.leaveType.findMany(),
-      getLeaveRequestsForUser(user),
+      getLeaveRequestsForUser(user, { statusFilter, skip, limit }),
       prisma.holiday.findMany({ orderBy: { holidayDate: "asc" } }),
       !superAdmin && user.employeeId
         ? getEmployeeLeaveBalanceSummary(prisma, user.employeeId, year)
         : Promise.resolve({ leaveBalances: {}, leaveTypeBalances: {} }),
       superAdmin
-        ? getAllEmployeesLeaveBalances(prisma, year)
-        : Promise.resolve([]),
+        ? getPaginatedEmployeesLeaveBalances(prisma, year, balanceSkip, balanceLimit)
+        : Promise.resolve({ rows: [], total: 0 }),
     ]);
 
   const { leaveBalances, leaveTypeBalances } = balanceSummary;
+  const employeeLeaveBalances = balancePageData.rows;
 
   return Response.json({
     viewMode: superAdmin ? "all" : "self",
@@ -48,63 +57,81 @@ export async function GET(request) {
     leaveBalances,
     leaveTypeBalances,
     employeeLeaveBalances,
-    leaveRequests: requests,
+    balancePagination: buildListPagination({
+      page: balancePage,
+      limit: balanceLimit,
+      total: balancePageData.total,
+    }),
+    leaveRequests: requestData.rows,
+    leaveRequestPagination: requestData.pagination,
+    leaveRequestStatusFilters: LEAVE_REQUEST_STATUS_FILTERS,
     holidays: holidays.map((h) => ({
       date: h.holidayDate.toISOString().split("T")[0],
       name: h.holidayName,
     })),
     leaveTypes: leaveTypes.map((t) => t.leaveName),
+    leaveTypeMeta: buildLeaveTypeMeta(leaveTypes),
+    leaveTypeOptions: leaveTypes.map((t) => ({
+      id: t.id,
+      leaveName: t.leaveName,
+      yearlyLimit: t.yearlyLimit,
+    })),
   });
 }
 
-async function getLeaveRequestsForUser(user) {
+async function getLeaveRequestsForUser(user, { statusFilter = "all", skip = 0, limit = 25 } = {}) {
   const include = {
     employee: { include: { department: true } },
     leaveType: true,
   };
+
+  const statusWhere =
+    statusFilter && statusFilter !== "all"
+      ? { finalStatus: statusFilter }
+      : {};
+
+  let where = statusWhere;
 
   if (
     user.permissions.includes("Full System Access") ||
     user.permissions.includes("All Permissions") ||
     user.permissions.includes("Approve Any Leave")
   ) {
-    const rows = await prisma.leaveRequest.findMany({ include, orderBy: { createdAt: "desc" } });
-    return rows.map(mapLeaveRequest);
-  }
-
-  if (user.permissions.includes("View Team Leave Requests") && user.employeeId) {
+    // all requests
+  } else if (user.permissions.includes("View Team Leave Requests") && user.employeeId) {
     const team = await prisma.employee.findMany({
       where: { reportingManagerId: user.employeeId },
       select: { id: true },
     });
     const teamIds = team.map((t) => t.id);
-    const rows = await prisma.leaveRequest.findMany({
-      where: { employeeId: { in: teamIds } },
-      include,
-      orderBy: { createdAt: "desc" },
-    });
-    return rows.map(mapLeaveRequest);
-  }
-
-  if (
+    where = { ...statusWhere, employeeId: { in: teamIds } };
+  } else if (
     user.permissions.includes("View Leave Requests") ||
     user.permissions.includes("Final Leave Approval") ||
     user.role === "hr"
   ) {
-    const rows = await prisma.leaveRequest.findMany({ include, orderBy: { createdAt: "desc" } });
-    return rows.map(mapLeaveRequest);
+    // all requests
+  } else if (user.employeeId) {
+    where = { ...statusWhere, employeeId: user.employeeId };
+  } else {
+    return { rows: [], pagination: buildListPagination({ page: 1, limit, total: 0 }) };
   }
 
-  if (user.employeeId) {
-    const rows = await prisma.leaveRequest.findMany({
-      where: { employeeId: user.employeeId },
+  const [rows, total] = await Promise.all([
+    prisma.leaveRequest.findMany({
+      where,
       include,
       orderBy: { createdAt: "desc" },
-    });
-    return rows.map(mapLeaveRequest);
-  }
+      skip,
+      take: limit,
+    }),
+    prisma.leaveRequest.count({ where }),
+  ]);
 
-  return [];
+  return {
+    rows: rows.map(mapLeaveRequest),
+    pagination: buildListPagination({ page: Math.floor(skip / limit) + 1, limit, total }),
+  };
 }
 
 function mapLeaveRequest(r) {

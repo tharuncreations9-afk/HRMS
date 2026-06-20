@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth-server";
-
+import { BRAND } from "@/lib/brand";
 export async function GET(request) {
   const { error } = await requireAuth(request);
   if (error) return error;
@@ -25,6 +25,5 @@ export async function GET(request) {
       employeeCode: e.employeeCode,
       department: e.department.departmentName,
     })),
-    companyName: "VLJ Treasures Pvt. Ltd.",
-  });
+    companyName: BRAND.legalName,  });
 }

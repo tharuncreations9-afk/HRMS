@@ -56,6 +56,8 @@ const PERMISSIONS = [
 
   { permissionName: "Department Management", moduleName: "Admin" },
 
+  { permissionName: "Shift Management", moduleName: "Admin" },
+
   { permissionName: "Leave Approval", moduleName: "Admin" },
 
   { permissionName: "Role Management", moduleName: "Admin" },
@@ -82,9 +84,9 @@ const ROLE_PERMISSION_MAP = {
 
   manager: ["View Profile", "Edit Profile", "View Attendance", "Apply Leave", "View Leave Status", "View Team Attendance", "View Team Reports", "View Team Leave Requests"],
 
-  hr: ["View Profile", "Apply Leave", "View Leave Status", "Employee Management", "Attendance Corrections", "Generate Reports", "View Leave Requests", "Final Leave Approval", "Attendance Monitoring"],
+  hr: ["View Profile", "Apply Leave", "View Leave Status", "Employee Management", "Attendance Corrections", "Generate Reports", "View Leave Requests", "Final Leave Approval", "Attendance Monitoring", "Shift Management"],
 
-  admin: ["View Profile", "User Management", "Department Management", "Leave Approval", "Role Management", "Attendance Monitoring", "View Attendance", "Apply Leave", "Generate Reports"],
+  admin: ["View Profile", "User Management", "Department Management", "Shift Management", "Leave Approval", "Role Management", "Attendance Monitoring", "View Attendance", "Apply Leave", "Generate Reports"],
 
   security: ["View Profile", "View Attendance", "Mark Attendance"],
 
@@ -422,6 +424,9 @@ async function main() {
   await prisma.$executeRawUnsafe(
     "UPDATE attendance a INNER JOIN employees e ON a.employee_id = e.id SET a.cam_attendance_id = e.employee_code, a.employee_code = e.employee_code"
   );
+
+  const { seedAttendanceStatuses } = require("./seed-attendance-statuses");
+  await seedAttendanceStatuses(prisma);
 
   console.log("\n✅ Seed complete!");
 

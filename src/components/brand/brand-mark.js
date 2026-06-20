@@ -114,7 +114,7 @@ export function BrandMark({
     return (
       <div className={cn("flex flex-col items-center gap-2", className)}>
         <LogoIcon size="lg" />
-        <p className="text-lg font-bold">{BRAND.legalName}</p>
+        <p className="text-lg font-bold">{BRAND.displayName} {BRAND.productName}</p>
       </div>
     );
   }

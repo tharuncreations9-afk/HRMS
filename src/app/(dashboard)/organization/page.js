@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/dialog";
 import { api } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
+import { ListPagination } from "@/components/ui/list-pagination";
+import { useLookups } from "@/hooks/use-lookups";
 import { toast } from "sonner";
 
 function canAccessOrg(hasPermission) {
@@ -29,9 +31,16 @@ export default function OrganizationPage() {
   const { user, isLoading, hasPermission } = useAuth();
   const canManage = canAccessOrg(hasPermission);
 
+  const { lookups } = useLookups();
   const [departments, setDepartments] = useState([]);
   const [designations, setDesignations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deptPage, setDeptPage] = useState(1);
+  const [deptLimit, setDeptLimit] = useState(null);
+  const [deptPagination, setDeptPagination] = useState(null);
+  const [desigPage, setDesigPage] = useState(1);
+  const [desigLimit, setDesigLimit] = useState(null);
+  const [desigPagination, setDesigPagination] = useState(null);
 
   const [deptDialogOpen, setDeptDialogOpen] = useState(false);
   const [desigDialogOpen, setDesigDialogOpen] = useState(false);
@@ -47,16 +56,29 @@ export default function OrganizationPage() {
     }
   }, [user, isLoading, router, hasPermission]);
 
+  useEffect(() => {
+    if (lookups?.pagination?.defaultLimit) {
+      if (deptLimit === null) setDeptLimit(lookups.pagination.defaultLimit);
+      if (desigLimit === null) setDesigLimit(lookups.pagination.defaultLimit);
+    }
+  }, [lookups, deptLimit, desigLimit]);
+
   const loadData = useCallback(() => {
+    if (!deptLimit || !desigLimit) return;
     setLoading(true);
-    Promise.all([api.departments(), api.designations()])
+    Promise.all([
+      api.departments({ page: String(deptPage), limit: String(deptLimit) }),
+      api.designations({ page: String(desigPage), limit: String(desigLimit) }),
+    ])
       .then(([deptRes, desigRes]) => {
         setDepartments(deptRes.departments || []);
         setDesignations(desigRes.designations || []);
+        setDeptPagination(deptRes.pagination || null);
+        setDesigPagination(desigRes.pagination || null);
       })
       .catch(() => toast.error("Failed to load data"))
       .finally(() => setLoading(false));
-  }, []);
+  }, [deptPage, deptLimit, desigPage, desigLimit]);
 
   useEffect(() => {
     if (!user || !canAccessOrg(hasPermission)) return;
@@ -203,6 +225,19 @@ export default function OrganizationPage() {
                   )}
                 </div>
               )}
+              <ListPagination
+                page={deptPagination?.page || deptPage}
+                totalPages={deptPagination?.totalPages || 0}
+                total={deptPagination?.total || 0}
+                from={deptPagination?.from || 0}
+                to={deptPagination?.to || 0}
+                limit={deptPagination?.limit || deptLimit}
+                pageSizeOptions={deptPagination?.pageSizeOptions || lookups?.pagination?.pageSizeOptions || []}
+                loading={loading}
+                onPageChange={setDeptPage}
+                onLimitChange={setDeptLimit}
+                className="mt-4"
+              />
             </CardContent>
           </Card>
         </TabsContent>
@@ -253,6 +288,19 @@ export default function OrganizationPage() {
                   )}
                 </div>
               )}
+              <ListPagination
+                page={desigPagination?.page || desigPage}
+                totalPages={desigPagination?.totalPages || 0}
+                total={desigPagination?.total || 0}
+                from={desigPagination?.from || 0}
+                to={desigPagination?.to || 0}
+                limit={desigPagination?.limit || desigLimit}
+                pageSizeOptions={desigPagination?.pageSizeOptions || lookups?.pagination?.pageSizeOptions || []}
+                loading={loading}
+                onPageChange={setDesigPage}
+                onLimitChange={setDesigLimit}
+                className="mt-4"
+              />
             </CardContent>
           </Card>
         </TabsContent>

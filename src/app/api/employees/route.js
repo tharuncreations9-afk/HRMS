@@ -15,6 +15,13 @@ import {
   parseStatusInput,
   isValidDbStatus,
 } from "@/lib/employee-status";
+import {
+  EMPLOYEE_LIST_STATUS_FILTERS,
+  EMPLOYEE_CATEGORY_FILTERS,
+  buildDepartmentFilterOptions,
+  buildDesignationFilterOptions,
+} from "@/lib/lookups";
+import { parsePagination, buildListPagination } from "@/lib/pagination";
 
 export async function GET(request) {
   const { user, error } = await requireAuth(request);
@@ -66,7 +73,7 @@ export async function GET(request) {
   const skip = (page - 1) * limit;
   const whereClause = where.AND.length ? where : undefined;
 
-  const [employees, total] = await Promise.all([
+  const [employees, total, departmentRows, designationRows] = await Promise.all([
     prisma.employee.findMany({
       where: whereClause,
       include: {
@@ -79,17 +86,34 @@ export async function GET(request) {
       take: limit,
     }),
     prisma.employee.count({ where: whereClause }),
+    prisma.department.findMany({ orderBy: { departmentName: "asc" } }),
+    prisma.designation.findMany({ orderBy: { designationName: "asc" } }),
   ]);
+
+  const departmentOptions = departmentRows.map((d) => ({
+    id: d.id,
+    value: d.departmentName,
+    label: d.departmentName,
+    departmentName: d.departmentName,
+  }));
+  const designationOptions = designationRows.map((d) => ({
+    id: d.id,
+    value: d.designationName,
+    label: d.designationName,
+    designationName: d.designationName,
+  }));
 
   return Response.json({
     employees: employees.map((emp) => mapEmployee(emp, onLeaveIds)),
-    pagination: {
-      page,
-      limit,
-      total,
-      totalPages: Math.ceil(total / limit) || 0,
-      hasMore: skip + employees.length < total,
-    },
+    pagination: buildListPagination({ page, limit, total }),
+    filters: canManageEmployees(user)
+      ? {
+          departmentFilters: buildDepartmentFilterOptions(departmentOptions),
+          designationFilters: buildDesignationFilterOptions(designationOptions),
+          employeeStatusFilters: EMPLOYEE_LIST_STATUS_FILTERS,
+          employeeCategoryFilters: EMPLOYEE_CATEGORY_FILTERS,
+        }
+      : null,
   });
   } catch (err) {
     console.error("List employees error:", err);
