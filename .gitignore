@@ -30,6 +30,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# uploaded files (stored in Cloudinary; keep local folder out of git)
+/public/uploads/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

@@ -1,5 +1,3 @@
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
 import { prisma } from "@/lib/prisma";
 import {
   requireAuth,
@@ -7,6 +5,7 @@ import {
   hasFullAccess,
   forbiddenResponse,
 } from "@/lib/auth-server";
+import { uploadEmployeeFile, isCloudStorageConfigured } from "@/lib/cloud-storage";
 
 const ALLOWED_TYPES = [
   "PAN",
@@ -33,6 +32,16 @@ function canUploadDocument(user, employeeId, documentType) {
 export async function POST(request, { params }) {
   const { user, error } = await requireAuth(request);
   if (error) return error;
+
+  if (!isCloudStorageConfigured()) {
+    return Response.json(
+      {
+        error:
+          "File storage is not configured. Add Cloudinary keys to .env (free account at cloudinary.com).",
+      },
+      { status: 503 }
+    );
+  }
 
   const employeeId = parseInt(params.id, 10);
   const employee = await prisma.employee.findUnique({ where: { id: employeeId } });
@@ -66,15 +75,24 @@ export async function POST(request, { params }) {
     return Response.json({ error: "Only JPG, PNG, and PDF files are allowed" }, { status: 400 });
   }
 
-  const ext = path.extname(file.name) || (file.type === "application/pdf" ? ".pdf" : ".jpg");
-  const storedName = `${documentType}_${Date.now()}${ext}`;
-  const uploadDir = path.join(process.cwd(), "public", "uploads", "employees", String(employeeId));
-  await mkdir(uploadDir, { recursive: true });
-
   const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(path.join(uploadDir, storedName), buffer);
 
-  const publicPath = `/uploads/employees/${employeeId}/${storedName}`;
+  let storedUrl;
+  try {
+    const uploaded = await uploadEmployeeFile(buffer, {
+      employeeId,
+      documentType,
+      fileName: file.name,
+      mimeType: file.type,
+    });
+    storedUrl = uploaded.url;
+  } catch (uploadErr) {
+    console.error("Cloud upload failed:", uploadErr);
+    return Response.json(
+      { error: uploadErr.message || "Failed to upload file to cloud storage" },
+      { status: 500 }
+    );
+  }
 
   const existing = await prisma.employeeDocument.findFirst({
     where: { employeeId, documentType },
@@ -83,28 +101,28 @@ export async function POST(request, { params }) {
   const doc = existing
     ? await prisma.employeeDocument.update({
         where: { id: existing.id },
-        data: { fileName: file.name, filePath: publicPath, updatedBy: user.id },
+        data: { fileName: file.name, filePath: storedUrl, updatedBy: user.id },
       })
     : await prisma.employeeDocument.create({
         data: {
           employeeId,
           documentType,
           fileName: file.name,
-          filePath: publicPath,
+          filePath: storedUrl,
           createdBy: user.id,
         },
       });
 
   const employeeUpdate = {};
   if (documentType === "Experience_Letter") {
-    employeeUpdate.experienceLetterUrl = publicPath;
+    employeeUpdate.experienceLetterUrl = storedUrl;
   } else if (documentType === "Relieving_Letter") {
-    employeeUpdate.relievingLetterUrl = publicPath;
+    employeeUpdate.relievingLetterUrl = storedUrl;
   } else if (documentType === "Payslip") {
     const current = Array.isArray(employee.payslipUrls) ? employee.payslipUrls : [];
-    employeeUpdate.payslipUrls = [...current, publicPath].slice(-3);
+    employeeUpdate.payslipUrls = [...current, storedUrl].slice(-3);
   } else if (documentType === "Other" && !canManageEmployees(user) && !hasFullAccess(user)) {
-    employeeUpdate.profilePhoto = publicPath;
+    employeeUpdate.profilePhoto = storedUrl;
   }
 
   if (Object.keys(employeeUpdate).length) {
