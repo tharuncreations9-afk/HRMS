@@ -1,9 +1,13 @@
 import { PrismaClient, AuditActionType } from "@prisma/client";
+import { PrismaMariaDb } from "@prisma/adapter-mariadb";
+import { parseDatabaseUrl } from "@/lib/database-url";
 
 const globalForPrisma = globalThis;
 
 function createPrismaClient() {
+  const adapter = new PrismaMariaDb(parseDatabaseUrl(process.env.DATABASE_URL));
   return new PrismaClient({
+    adapter,
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   });
 }

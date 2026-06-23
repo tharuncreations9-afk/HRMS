@@ -1,5 +1,5 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const { createPrismaClient } = require("./db");
+const prisma = createPrismaClient();
 
 async function main() {
   const role = await prisma.role.findUnique({ where: { roleName: "super_admin" } });

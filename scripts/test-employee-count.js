@@ -1,5 +1,5 @@
-const { PrismaClient } = require("@prisma/client");
-const p = new PrismaClient();
+const { createPrismaClient } = require("../prisma/db");
+const p = createPrismaClient();
 
 async function main() {
   const total = await p.employee.count();

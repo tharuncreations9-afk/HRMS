@@ -3,9 +3,9 @@
  * (roles, permissions, departments, designations, leave types).
  */
 
-const { PrismaClient } = require("@prisma/client");
+const { createPrismaClient } = require("./db");
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 async function main() {
   console.log("🧹 Resetting transactional data (keeping employees)...\n");

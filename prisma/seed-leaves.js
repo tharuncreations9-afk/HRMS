@@ -4,9 +4,9 @@
  * Run: npm run db:seed-leaves
  */
 
-const { PrismaClient } = require("@prisma/client");
+const { createPrismaClient } = require("./db");
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 const LEAVE_TYPE_LIMITS = {
   "Casual Leave": 12,

@@ -6,13 +6,10 @@
 
 
 
-const { PrismaClient } = require("@prisma/client");
-
+const { createPrismaClient } = require("./db");
 const bcrypt = require("bcryptjs");
 
-
-
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 const DEFAULT_PASSWORD = "Admin@123";
 
