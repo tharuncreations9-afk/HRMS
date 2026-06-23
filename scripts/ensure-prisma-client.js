@@ -1,10 +1,10 @@
 /**
  * Ensures Prisma Client is generated before dev/build/start.
- * On Synology NAS, postinstall may fail silently — this script re-runs generate when needed.
+ * Uses node directly (no npx) for Synology NAS and minimal Docker images.
  */
 const fs = require("fs");
 const path = require("path");
-const { execSync } = require("child_process");
+const { execFileSync } = require("child_process");
 
 const root = path.join(__dirname, "..");
 const clientIndex = path.join(root, "node_modules", ".prisma", "client", "index.js");
@@ -13,7 +13,6 @@ const clientDir = path.join(root, "node_modules", ".prisma", "client");
 function isClientGenerated() {
   try {
     const indexStat = fs.statSync(clientIndex);
-    // Ungenerated stub is tiny; a real client is much larger.
     if (indexStat.size < 50000) return false;
 
     const files = fs.readdirSync(clientDir);
@@ -23,9 +22,34 @@ function isClientGenerated() {
   }
 }
 
+function getPrismaCliPath() {
+  const candidates = [
+    path.join(root, "node_modules", "prisma", "build", "index.js"),
+    path.join(root, "node_modules", "prisma", "cli", "build", "index.js"),
+    path.join(root, "node_modules", ".bin", "prisma"),
+  ];
+
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) return candidate;
+  }
+
+  throw new Error("Prisma CLI not found. Run npm install first.");
+}
+
 function generateClient() {
+  const prismaCli = getPrismaCliPath();
   console.log("→ Prisma Client not found. Running prisma generate...");
-  execSync("npx prisma generate", {
+
+  if (prismaCli.endsWith(".js")) {
+    execFileSync(process.execPath, [prismaCli, "generate"], {
+      stdio: "inherit",
+      cwd: root,
+      env: process.env,
+    });
+    return;
+  }
+
+  execFileSync(prismaCli, ["generate"], {
     stdio: "inherit",
     cwd: root,
     env: process.env,
@@ -39,7 +63,7 @@ function printNasHelp() {
 If you see "Segmentation fault" on Synology NAS, generate on your laptop instead:
 
   1. On laptop (in project folder):
-     npx prisma generate
+     npm run db:generate
 
   2. Copy these folders to the server:
      node_modules/.prisma/
@@ -58,7 +82,7 @@ function main() {
 
   try {
     generateClient();
-  } catch (err) {
+  } catch {
     printNasHelp();
     process.exit(1);
   }
