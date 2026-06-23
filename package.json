@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/ensure-prisma-client.js",
+    "prebuild": "node scripts/ensure-prisma-client.js",
+    "prestart": "node scripts/ensure-prisma-client.js",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -11,7 +14,7 @@
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
-    "postinstall": "prisma generate",
+    "postinstall": "node scripts/ensure-prisma-client.js",
     "db:reset-data": "node prisma/reset-data.js",
     "db:seed-leaves": "node prisma/seed-leaves.js",
     "logo:transparent": "node scripts/remove-logo-bg.js",

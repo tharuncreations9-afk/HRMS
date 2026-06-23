@@ -14,7 +14,16 @@ function createPrismaClient() {
 
 function getPrismaClient() {
   if (!globalForPrisma.prisma) {
-    globalForPrisma.prisma = createPrismaClient();
+    try {
+      globalForPrisma.prisma = createPrismaClient();
+    } catch (err) {
+      if (String(err?.message || err).includes("did not initialize yet")) {
+        throw new Error(
+          'Prisma Client is not generated. Run: npx prisma generate  (or: npm run db:generate)'
+        );
+      }
+      throw err;
+    }
   }
   return globalForPrisma.prisma;
 }
