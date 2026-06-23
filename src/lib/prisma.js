@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@/generated/prisma";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { parseDatabaseUrl } from "@/lib/database-url";
 

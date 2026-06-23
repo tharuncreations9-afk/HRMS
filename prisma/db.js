@@ -2,7 +2,7 @@
  * Shared Prisma client factory (CommonJS) for seed/scripts.
  * Uses driver adapter — no Rust query engine binary (Synology/NAS compatible).
  */
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient } = require("../src/generated/prisma");
 const { PrismaMariaDb } = require("@prisma/adapter-mariadb");
 
 function parseDatabaseUrl(databaseUrl) {
