@@ -130,3 +130,58 @@ export async function submitAttendanceCorrection(
   const mapped = await finalizeCorrectionRecord(correction, prisma);
   return { correction: mapped, record };
 }
+
+export async function approveAttendanceCorrection(prisma, authUser, correctionId) {
+  const correction = await prisma.attendanceCorrection.findUnique({
+    where: { id: correctionId },
+    include: { employee: true },
+  });
+  if (!correction) throw new Error("Correction request not found");
+  if (correction.status !== "Pending") {
+    throw new Error("This correction has already been processed");
+  }
+
+  const dateStr = correction.attendanceDate.toISOString().split("T")[0];
+  const requestedStatus = await resolveDbEnumToMarkApi(prisma, correction.requestedStatus);
+  const record = await markEmployeeAttendance(prisma, authUser, {
+    date: dateStr,
+    employeeCode: correction.employee.employeeCode,
+    statusApi: requestedStatus,
+  });
+
+  const updated = await prisma.attendanceCorrection.update({
+    where: { id: correctionId },
+    data: {
+      status: "Approved",
+      approvedBy: authUser.id,
+      updatedBy: authUser.id,
+      attendanceId: typeof record.id === "number" ? record.id : correction.attendanceId,
+    },
+    include: { employee: true, creator: { select: { fullName: true } } },
+  });
+
+  return {
+    correction: await finalizeCorrectionRecord(updated, prisma),
+    record,
+  };
+}
+
+export async function rejectAttendanceCorrection(prisma, authUser, correctionId, rejectReason) {
+  const correction = await prisma.attendanceCorrection.findUnique({ where: { id: correctionId } });
+  if (!correction) throw new Error("Correction request not found");
+  if (correction.status !== "Pending") {
+    throw new Error("This correction has already been processed");
+  }
+
+  await prisma.attendanceCorrection.update({
+    where: { id: correctionId },
+    data: {
+      status: "Rejected",
+      reason: rejectReason
+        ? `${correction.reason} (Rejected: ${String(rejectReason).trim()})`
+        : correction.reason,
+      approvedBy: authUser.id,
+      updatedBy: authUser.id,
+    },
+  });
+}

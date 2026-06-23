@@ -17,18 +17,32 @@ function shouldRefreshClient() {
   return globalForPrisma.prismaSchemaRevision !== hasCorrectionActions;
 }
 
-if (process.env.NODE_ENV !== "production" && globalForPrisma.prisma && shouldRefreshClient()) {
-  void globalForPrisma.prisma.$disconnect();
-  globalForPrisma.prisma = undefined;
+function getPrismaClient() {
+  if (process.env.NODE_ENV !== "production" && globalForPrisma.prisma && shouldRefreshClient()) {
+    void globalForPrisma.prisma.$disconnect();
+    globalForPrisma.prisma = undefined;
+  }
+
+  if (!globalForPrisma.prisma) {
+    globalForPrisma.prisma = createPrismaClient();
+    if (process.env.NODE_ENV !== "production") {
+      globalForPrisma.prismaSchemaRevision = Object.values(AuditActionType).includes(
+        "CORRECTION_REQUEST"
+      );
+    }
+  }
+
+  return globalForPrisma.prisma;
 }
 
-export const prisma =
-  globalForPrisma.prisma ??
-  createPrismaClient();
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-  globalForPrisma.prismaSchemaRevision = Object.values(AuditActionType).includes(
-    "CORRECTION_REQUEST"
-  );
-}
+/** Lazy proxy — avoids DB connection during `next build` when env is not loaded yet. */
+export const prisma = new Proxy(
+  {},
+  {
+    get(_target, prop) {
+      const client = getPrismaClient();
+      const value = client[prop];
+      return typeof value === "function" ? value.bind(client) : value;
+    },
+  }
+);
