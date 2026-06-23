@@ -1,14 +1,14 @@
-import { AuditActionType } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import { AUDIT_ACTION, AUDIT_ACTION_VALUES } from "@/lib/audit-action-types";
 
 const CORRECTION_ACTION_FALLBACK = {
-  CORRECTION_REQUEST: AuditActionType.CREATE,
-  CORRECTION_APPROVED: AuditActionType.APPROVE,
-  CORRECTION_REJECTED: AuditActionType.REJECT,
+  CORRECTION_REQUEST: AUDIT_ACTION.CREATE,
+  CORRECTION_APPROVED: AUDIT_ACTION.APPROVE,
+  CORRECTION_REJECTED: AUDIT_ACTION.REJECT,
 };
 
 function resolveAuditActionType(actionType) {
-  const allowed = new Set(Object.values(AuditActionType));
+  const allowed = new Set(AUDIT_ACTION_VALUES);
   if (allowed.has(actionType)) {
     return { actionType, auditAction: null };
   }

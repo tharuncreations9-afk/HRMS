@@ -1,4 +1,4 @@
-import { PrismaClient, AuditActionType } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { parseDatabaseUrl } from "@/lib/database-url";
 
@@ -12,26 +12,10 @@ function createPrismaClient() {
   });
 }
 
-function shouldRefreshClient() {
-  const hasCorrectionActions = Object.values(AuditActionType).includes("CORRECTION_REQUEST");
-  return globalForPrisma.prismaSchemaRevision !== hasCorrectionActions;
-}
-
 function getPrismaClient() {
-  if (process.env.NODE_ENV !== "production" && globalForPrisma.prisma && shouldRefreshClient()) {
-    void globalForPrisma.prisma.$disconnect();
-    globalForPrisma.prisma = undefined;
-  }
-
   if (!globalForPrisma.prisma) {
     globalForPrisma.prisma = createPrismaClient();
-    if (process.env.NODE_ENV !== "production") {
-      globalForPrisma.prismaSchemaRevision = Object.values(AuditActionType).includes(
-        "CORRECTION_REQUEST"
-      );
-    }
   }
-
   return globalForPrisma.prisma;
 }
 
