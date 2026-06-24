@@ -494,7 +494,6 @@ exports.Prisma.EmployeeOrderByRelevanceFieldEnum = {
   firstName: 'firstName',
   lastName: 'lastName',
   fullName: 'fullName',
-  profilePhoto: 'profilePhoto',
   gender: 'gender',
   bloodGroup: 'bloodGroup',
   mobile: 'mobile',

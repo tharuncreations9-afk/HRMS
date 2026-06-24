@@ -173,7 +173,6 @@ export async function POST(request) {
         firstName: body.firstName || fullName.split(" ")[0],
         lastName: body.lastName || fullName.split(" ").slice(1).join(" ") || "",
         fullName,
-        profilePhoto: body.profilePhoto,
         dob: body.dob ? new Date(body.dob) : null,
         gender: body.gender,
         bloodGroup: body.bloodGroup,

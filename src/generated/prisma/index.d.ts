@@ -9995,7 +9995,7 @@ export namespace Prisma {
     firstName: string | null
     lastName: string | null
     fullName: string | null
-    profilePhoto: string | null
+    profilePhoto: Bytes | null
     dob: Date | null
     gender: string | null
     bloodGroup: string | null
@@ -10050,7 +10050,7 @@ export namespace Prisma {
     firstName: string | null
     lastName: string | null
     fullName: string | null
-    profilePhoto: string | null
+    profilePhoto: Bytes | null
     dob: Date | null
     gender: string | null
     bloodGroup: string | null
@@ -10446,7 +10446,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto: string | null
+    profilePhoto: Bytes | null
     dob: Date | null
     gender: string | null
     bloodGroup: string | null
@@ -10810,7 +10810,7 @@ export namespace Prisma {
       firstName: string
       lastName: string
       fullName: string
-      profilePhoto: string | null
+      profilePhoto: Prisma.Bytes | null
       dob: Date | null
       gender: string | null
       bloodGroup: string | null
@@ -11287,7 +11287,7 @@ export namespace Prisma {
     readonly firstName: FieldRef<"Employee", 'String'>
     readonly lastName: FieldRef<"Employee", 'String'>
     readonly fullName: FieldRef<"Employee", 'String'>
-    readonly profilePhoto: FieldRef<"Employee", 'String'>
+    readonly profilePhoto: FieldRef<"Employee", 'Bytes'>
     readonly dob: FieldRef<"Employee", 'DateTime'>
     readonly gender: FieldRef<"Employee", 'String'>
     readonly bloodGroup: FieldRef<"Employee", 'String'>
@@ -29560,7 +29560,6 @@ export namespace Prisma {
     firstName: 'firstName',
     lastName: 'lastName',
     fullName: 'fullName',
-    profilePhoto: 'profilePhoto',
     gender: 'gender',
     bloodGroup: 'bloodGroup',
     mobile: 'mobile',
@@ -29712,6 +29711,13 @@ export namespace Prisma {
    * Reference to a field of type 'ShiftStatus'
    */
   export type EnumShiftStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ShiftStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'Bytes'
+   */
+  export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
     
 
 
@@ -30314,7 +30320,7 @@ export namespace Prisma {
     firstName?: StringFilter<"Employee"> | string
     lastName?: StringFilter<"Employee"> | string
     fullName?: StringFilter<"Employee"> | string
-    profilePhoto?: StringNullableFilter<"Employee"> | string | null
+    profilePhoto?: BytesNullableFilter<"Employee"> | Bytes | null
     dob?: DateTimeNullableFilter<"Employee"> | Date | string | null
     gender?: StringNullableFilter<"Employee"> | string | null
     bloodGroup?: StringNullableFilter<"Employee"> | string | null
@@ -30541,7 +30547,7 @@ export namespace Prisma {
     firstName?: StringFilter<"Employee"> | string
     lastName?: StringFilter<"Employee"> | string
     fullName?: StringFilter<"Employee"> | string
-    profilePhoto?: StringNullableFilter<"Employee"> | string | null
+    profilePhoto?: BytesNullableFilter<"Employee"> | Bytes | null
     dob?: DateTimeNullableFilter<"Employee"> | Date | string | null
     gender?: StringNullableFilter<"Employee"> | string | null
     bloodGroup?: StringNullableFilter<"Employee"> | string | null
@@ -30715,7 +30721,7 @@ export namespace Prisma {
     firstName?: StringWithAggregatesFilter<"Employee"> | string
     lastName?: StringWithAggregatesFilter<"Employee"> | string
     fullName?: StringWithAggregatesFilter<"Employee"> | string
-    profilePhoto?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    profilePhoto?: BytesNullableWithAggregatesFilter<"Employee"> | Bytes | null
     dob?: DateTimeNullableWithAggregatesFilter<"Employee"> | Date | string | null
     gender?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     bloodGroup?: StringNullableWithAggregatesFilter<"Employee"> | string | null
@@ -32542,7 +32548,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -32647,7 +32653,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -32751,7 +32757,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32856,7 +32862,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32961,7 +32967,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -33016,7 +33022,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33066,7 +33072,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34937,6 +34943,24 @@ export namespace Prisma {
     updatedBy?: SortOrder
   }
 
+  export type BytesNullableFilter<$PrismaModel = never> = {
+    equals?: Bytes | BytesFieldRefInput<$PrismaModel> | null
+    in?: Bytes[] | null
+    notIn?: Bytes[] | null
+    not?: NestedBytesNullableFilter<$PrismaModel> | Bytes | null
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -34950,17 +34974,6 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     search?: string
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type EnumEmploymentTypeFilter<$PrismaModel = never> = {
@@ -35395,6 +35408,30 @@ export namespace Prisma {
     updatedBy?: SortOrder
   }
 
+  export type BytesNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Bytes | BytesFieldRefInput<$PrismaModel> | null
+    in?: Bytes[] | null
+    notIn?: Bytes[] | null
+    not?: NestedBytesNullableWithAggregatesFilter<$PrismaModel> | Bytes | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBytesNullableFilter<$PrismaModel>
+    _max?: NestedBytesNullableFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -35411,20 +35448,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type EnumEmploymentTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -37909,12 +37932,16 @@ export namespace Prisma {
     connect?: EmployeePermissionWhereUniqueInput | EmployeePermissionWhereUniqueInput[]
   }
 
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
+  export type NullableBytesFieldUpdateOperationsInput = {
+    set?: Bytes | null
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
   }
 
   export type EnumEmploymentTypeFieldUpdateOperationsInput = {
@@ -40276,6 +40303,24 @@ export namespace Prisma {
     _max?: NestedEnumShiftStatusFilter<$PrismaModel>
   }
 
+  export type NestedBytesNullableFilter<$PrismaModel = never> = {
+    equals?: Bytes | BytesFieldRefInput<$PrismaModel> | null
+    in?: Bytes[] | null
+    notIn?: Bytes[] | null
+    not?: NestedBytesNullableFilter<$PrismaModel> | Bytes | null
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedStringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -40289,17 +40334,6 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     search?: string
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedEnumEmploymentTypeFilter<$PrismaModel = never> = {
@@ -40334,6 +40368,30 @@ export namespace Prisma {
     not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
+  export type NestedBytesNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Bytes | BytesFieldRefInput<$PrismaModel> | null
+    in?: Bytes[] | null
+    notIn?: Bytes[] | null
+    not?: NestedBytesNullableWithAggregatesFilter<$PrismaModel> | Bytes | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBytesNullableFilter<$PrismaModel>
+    _max?: NestedBytesNullableFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -40350,20 +40408,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumEmploymentTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -40651,7 +40695,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -40755,7 +40799,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -40895,7 +40939,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -40999,7 +41043,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -41107,7 +41151,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -41211,7 +41255,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -41339,7 +41383,7 @@ export namespace Prisma {
     firstName?: StringFilter<"Employee"> | string
     lastName?: StringFilter<"Employee"> | string
     fullName?: StringFilter<"Employee"> | string
-    profilePhoto?: StringNullableFilter<"Employee"> | string | null
+    profilePhoto?: BytesNullableFilter<"Employee"> | Bytes | null
     dob?: DateTimeNullableFilter<"Employee"> | Date | string | null
     gender?: StringNullableFilter<"Employee"> | string | null
     bloodGroup?: StringNullableFilter<"Employee"> | string | null
@@ -41434,7 +41478,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -41538,7 +41582,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -41652,7 +41696,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -41756,7 +41800,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -41913,7 +41957,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -42017,7 +42061,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -42125,7 +42169,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -42229,7 +42273,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -42393,7 +42437,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -42497,7 +42541,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -42611,7 +42655,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -42715,7 +42759,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -42868,7 +42912,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -42972,7 +43016,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -43080,7 +43124,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -43184,7 +43228,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -43365,7 +43409,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43469,7 +43513,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43583,7 +43627,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43687,7 +43731,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43790,7 +43834,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -43894,7 +43938,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -44042,7 +44086,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -44146,7 +44190,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -44254,7 +44298,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -44358,7 +44402,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -44526,7 +44570,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44630,7 +44674,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44744,7 +44788,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44848,7 +44892,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44977,7 +45021,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -45081,7 +45125,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -45189,7 +45233,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -45293,7 +45337,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -45444,7 +45488,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45548,7 +45592,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45662,7 +45706,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45766,7 +45810,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45869,7 +45913,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -45973,7 +46017,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -46086,7 +46130,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -46190,7 +46234,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -46298,7 +46342,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -46402,7 +46446,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -46537,7 +46581,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46641,7 +46685,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46755,7 +46799,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46859,7 +46903,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47034,7 +47078,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -47138,7 +47182,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -47246,7 +47290,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -47350,7 +47394,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -47811,7 +47855,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -47915,7 +47959,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -48023,7 +48067,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -48127,7 +48171,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -48235,7 +48279,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -48339,7 +48383,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -48452,7 +48496,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -48556,7 +48600,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -49968,7 +50012,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50072,7 +50116,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50517,7 +50561,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50621,7 +50665,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50735,7 +50779,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50839,7 +50883,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51658,7 +51702,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -51762,7 +51806,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -51870,7 +51914,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -51974,7 +52018,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -52082,7 +52126,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -52186,7 +52230,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -52305,7 +52349,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52409,7 +52453,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52523,7 +52567,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52627,7 +52671,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52741,7 +52785,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52845,7 +52889,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52948,7 +52992,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -53052,7 +53096,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -53203,7 +53247,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -53307,7 +53351,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -53415,7 +53459,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -53519,7 +53563,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -53638,7 +53682,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53742,7 +53786,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53872,7 +53916,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53976,7 +54020,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54090,7 +54134,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54194,7 +54238,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54297,7 +54341,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -54401,7 +54445,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -54509,7 +54553,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -54613,7 +54657,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -54732,7 +54776,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54836,7 +54880,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54950,7 +54994,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55054,7 +55098,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55157,7 +55201,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -55261,7 +55305,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -55369,7 +55413,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -55473,7 +55517,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -55581,7 +55625,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -55685,7 +55729,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -55804,7 +55848,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -55908,7 +55952,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56022,7 +56066,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56126,7 +56170,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56240,7 +56284,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56344,7 +56388,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56523,7 +56567,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -56627,7 +56671,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -56735,7 +56779,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -56839,7 +56883,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -56990,7 +57034,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57094,7 +57138,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57208,7 +57252,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57312,7 +57356,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57415,7 +57459,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -57519,7 +57563,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -57653,7 +57697,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -57757,7 +57801,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -57865,7 +57909,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -57969,7 +58013,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -58088,7 +58132,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58192,7 +58236,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58338,7 +58382,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58442,7 +58486,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58556,7 +58600,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58660,7 +58704,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58763,7 +58807,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -58867,7 +58911,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -59001,7 +59045,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -59105,7 +59149,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -59213,7 +59257,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -59317,7 +59361,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -59436,7 +59480,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59540,7 +59584,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59686,7 +59730,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59790,7 +59834,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59904,7 +59948,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60008,7 +60052,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60111,7 +60155,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -60215,7 +60259,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -60323,7 +60367,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -60427,7 +60471,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -60546,7 +60590,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60650,7 +60694,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60764,7 +60808,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60868,7 +60912,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60971,7 +61015,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -61075,7 +61119,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -61225,7 +61269,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -61329,7 +61373,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -61437,7 +61481,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -61541,7 +61585,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -61649,7 +61693,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -61753,7 +61797,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -61872,7 +61916,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61976,7 +62020,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62138,7 +62182,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62242,7 +62286,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62356,7 +62400,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62460,7 +62504,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62574,7 +62618,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62678,7 +62722,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62781,7 +62825,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -62885,7 +62929,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -62993,7 +63037,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -63097,7 +63141,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -63205,7 +63249,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -63309,7 +63353,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -63428,7 +63472,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -63532,7 +63576,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -63646,7 +63690,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -63750,7 +63794,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -63864,7 +63908,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -63968,7 +64012,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64071,7 +64115,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -64175,7 +64219,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -64294,7 +64338,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64398,7 +64442,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64501,7 +64545,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -64605,7 +64649,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -64724,7 +64768,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64828,7 +64872,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64931,7 +64975,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -65035,7 +65079,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -65154,7 +65198,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65258,7 +65302,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65361,7 +65405,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -65465,7 +65509,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -65599,7 +65643,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -65703,7 +65747,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -65811,7 +65855,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -65915,7 +65959,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -66034,7 +66078,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66138,7 +66182,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66284,7 +66328,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66388,7 +66432,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66502,7 +66546,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66606,7 +66650,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66710,7 +66754,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -66773,7 +66817,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66877,7 +66921,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66981,7 +67025,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67132,7 +67176,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -67199,7 +67243,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67303,7 +67347,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67407,7 +67451,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67500,7 +67544,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -67554,7 +67598,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67658,7 +67702,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67762,7 +67806,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67817,7 +67861,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -68000,7 +68044,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -68055,7 +68099,7 @@ export namespace Prisma {
     firstName: string
     lastName: string
     fullName: string
-    profilePhoto?: string | null
+    profilePhoto?: Bytes | null
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
@@ -68526,7 +68570,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -68630,7 +68674,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -68734,7 +68778,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69164,7 +69208,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69268,7 +69312,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69372,7 +69416,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69426,7 +69470,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69530,7 +69574,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69634,7 +69678,7 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
-    profilePhoto?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePhoto?: NullableBytesFieldUpdateOperationsInput | Bytes | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null

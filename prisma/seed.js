@@ -321,7 +321,6 @@ async function main() {
 
         fullName: `${u.firstName} ${u.lastName}`,
 
-        profilePhoto: `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.code}`,
 
         mobile: `9876543${u.code.slice(-3)}`,
 

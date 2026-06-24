@@ -1,5 +1,6 @@
 import { formatExperienceSummary } from "@/lib/employee-category";
 import { computeDisplayStatus, formatDbStatus } from "@/lib/employee-status";
+import { profilePhotoToDataUri, resolveEmployeePhoto } from "@/lib/profile-photo";
 
 function parsePayslipUrls(value) {
   if (!value) return [];
@@ -16,6 +17,7 @@ export function mapEmployee(emp, onLeaveIds = null) {
   const payslipUrls = parsePayslipUrls(emp.payslipUrls);
   const isOnLeaveToday = onLeaveIds ? onLeaveIds.has(emp.id) : false;
   const displayStatus = computeDisplayStatus(emp.status, isOnLeaveToday);
+  const profile_photo = profilePhotoToDataUri(emp.profilePhoto);
 
   return {
     id: String(emp.id),
@@ -23,7 +25,8 @@ export function mapEmployee(emp, onLeaveIds = null) {
     firstName: emp.firstName,
     lastName: emp.lastName,
     name: emp.fullName,
-    photo: emp.profilePhoto || `https://api.dicebear.com/7.x/avataaars/svg?seed=${emp.employeeCode}`,
+    profile_photo,
+    photo: resolveEmployeePhoto(emp),
     dob: emp.dob?.toISOString().split("T")[0],
     gender: emp.gender,
     bloodGroup: emp.bloodGroup,

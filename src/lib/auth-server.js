@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 
 import { getEmployeePermissions } from "@/lib/permissions-server";
 import { getLocalDateString } from "@/lib/utils";
+import { resolveEmployeePhoto } from "@/lib/profile-photo";
 
 
 
@@ -115,7 +116,7 @@ export async function getAuthUser(request) {
 
     name: employee.fullName,
 
-    avatar: employee.profilePhoto || `https://api.dicebear.com/7.x/avataaars/svg?seed=${employee.employeeCode}`,
+    avatar: resolveEmployeePhoto(employee),
 
     department: employee.department?.departmentName || null,
 

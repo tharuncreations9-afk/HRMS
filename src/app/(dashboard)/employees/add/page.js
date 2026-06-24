@@ -274,10 +274,7 @@ function AddEmployeeContent() {
         }
 
         if (profilePhoto) {
-          const { document } = await api.uploadEmployeeDocument(employeeId, "Other", profilePhoto);
-          if (document?.url) {
-            await api.updateEmployee(employeeId, { profilePhoto: document.url });
-          }
+          await api.uploadEmployeePhoto(employeeId, profilePhoto);
         }
       }
 

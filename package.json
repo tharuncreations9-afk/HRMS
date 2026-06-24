@@ -13,6 +13,7 @@
     "lint": "next lint",
     "db:generate": "prisma generate",
     "db:test": "node scripts/test-db-connection.js",
+    "db:fix-profile-photos": "node scripts/fix-legacy-profile-photos.js",
     "stop:3000": "sh scripts/stop-port.sh 3000",
     "stop:3001": "sh scripts/stop-port.sh 3001",
     "db:migrate": "prisma migrate dev",

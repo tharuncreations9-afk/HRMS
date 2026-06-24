@@ -49,6 +49,21 @@ export const api = {
     if (!res.ok) throw new Error(data.error || "Upload failed");
     return data;
   },
+  uploadEmployeePhoto: async (employeeId, file) => {
+    const token = getToken();
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await fetch(`${API_BASE}/employees/${employeeId}/photo`, {
+      method: "POST",
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: formData,
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || "Photo upload failed");
+    return data;
+  },
+  deleteEmployeePhoto: (employeeId) =>
+    apiFetch(`/employees/${employeeId}/photo`, { method: "DELETE" }),
   downloadEmployeeBulkTemplate: async () => {
     const token = getToken();
     const res = await fetch(`${API_BASE}/employees/bulk-upload/template`, {

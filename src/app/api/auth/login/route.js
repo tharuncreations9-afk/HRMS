@@ -5,6 +5,7 @@ import { verifyPassword, signToken } from "@/lib/auth-server";
 import { getEmployeePermissions } from "@/lib/permissions-server";
 
 import { createAuditLog } from "@/lib/audit";
+import { resolveEmployeePhoto } from "@/lib/profile-photo";
 
 
 
@@ -118,7 +119,7 @@ export async function POST(request) {
 
         employeeCode: employee.employeeCode,
 
-        avatar: employee.profilePhoto || `https://api.dicebear.com/7.x/avataaars/svg?seed=${employee.employeeCode}`,
+        avatar: resolveEmployeePhoto(employee),
 
         department: employee.department.departmentName,
 

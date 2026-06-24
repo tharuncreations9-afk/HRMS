@@ -6,6 +6,7 @@ import {
   forbiddenResponse,
 } from "@/lib/auth-server";
 import { uploadEmployeeFile, isCloudStorageConfigured } from "@/lib/cloud-storage";
+import { profilePhotoToDataUri } from "@/lib/profile-photo";
 
 const ALLOWED_TYPES = [
   "PAN",
@@ -32,16 +33,6 @@ function canUploadDocument(user, employeeId, documentType) {
 export async function POST(request, { params }) {
   const { user, error } = await requireAuth(request);
   if (error) return error;
-
-  if (!isCloudStorageConfigured()) {
-    return Response.json(
-      {
-        error:
-          "File storage is not configured. Add Cloudinary keys to .env (free account at cloudinary.com).",
-      },
-      { status: 503 }
-    );
-  }
 
   const employeeId = parseInt(params.id, 10);
   const employee = await prisma.employee.findUnique({ where: { id: employeeId } });
@@ -76,6 +67,37 @@ export async function POST(request, { params }) {
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());
+
+  if (isPhotoUpload) {
+    const updated = await prisma.employee.update({
+      where: { id: employeeId },
+      data: {
+        profilePhoto: buffer,
+        updatedBy: user.id,
+      },
+    });
+
+    const profile_photo = profilePhotoToDataUri(updated.profilePhoto, file.type);
+
+    return Response.json({
+      document: {
+        name: "Other",
+        fileName: file.name,
+        url: profile_photo,
+      },
+      profile_photo,
+    });
+  }
+
+  if (!isCloudStorageConfigured()) {
+    return Response.json(
+      {
+        error:
+          "File storage is not configured. Add Cloudinary keys to .env (free account at cloudinary.com).",
+      },
+      { status: 503 }
+    );
+  }
 
   let storedUrl;
   try {
@@ -121,8 +143,6 @@ export async function POST(request, { params }) {
   } else if (documentType === "Payslip") {
     const current = Array.isArray(employee.payslipUrls) ? employee.payslipUrls : [];
     employeeUpdate.payslipUrls = [...current, storedUrl].slice(-3);
-  } else if (documentType === "Other" && !canManageEmployees(user) && !hasFullAccess(user)) {
-    employeeUpdate.profilePhoto = storedUrl;
   }
 
   if (Object.keys(employeeUpdate).length) {
@@ -140,6 +160,5 @@ export async function POST(request, { params }) {
       url: doc.filePath,
     },
     employeeUrls: employeeUpdate,
-    profilePhoto: employeeUpdate.profilePhoto || undefined,
   });
 }

@@ -174,20 +174,12 @@ export default function EmployeeProfilePage() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      let profilePhotoUrl = employee.photo;
-
       if (pendingPhoto) {
-        const { document } = await api.uploadEmployeeDocument(
-          params.id,
-          "Other",
-          pendingPhoto
-        );
-        profilePhotoUrl = document?.url || profilePhotoUrl;
+        await api.uploadEmployeePhoto(params.id, pendingPhoto);
       }
 
       const payload = {
         ...editForm,
-        profilePhoto: profilePhotoUrl,
         reportingManagerId:
           editForm.reportingManagerId === "none" ? null : editForm.reportingManagerId,
       };

@@ -1,15 +1,17 @@
 import { PrismaClient } from "@/generated/prisma";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { parseDatabaseUrl } from "@/lib/database-url";
+import { employeeProfilePhotoExtension } from "@/lib/employee-photo-db";
 
 const globalForPrisma = globalThis;
 
 function createPrismaClient() {
   const adapter = new PrismaMariaDb(parseDatabaseUrl(process.env.DATABASE_URL));
-  return new PrismaClient({
+  const base = new PrismaClient({
     adapter,
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   });
+  return base.$extends(employeeProfilePhotoExtension(base));
 }
 
 function getPrismaClient() {

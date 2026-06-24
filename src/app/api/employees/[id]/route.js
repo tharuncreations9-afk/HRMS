@@ -168,7 +168,7 @@ export async function PATCH(request, { params }) {
 
   const fields = [
     "firstName", "lastName", "gender", "bloodGroup", "mobile", "alternateMobile",
-    "email", "address", "emergencyContact", "bankName", "accountNumber", "pan", "aadhaar", "profilePhoto",
+    "email", "address", "emergencyContact", "bankName", "accountNumber", "pan", "aadhaar",
   ];
   fields.forEach((f) => {
     if (body[f] !== undefined) {
@@ -177,6 +177,9 @@ export async function PATCH(request, { params }) {
       }
     }
   });
+  if (body.profilePhoto === null && (!isSelfOnly || SELF_EDIT_FIELDS.has("profilePhoto"))) {
+    updateData.profilePhoto = null;
+  }
   if (body.dob && (!isSelfOnly || SELF_EDIT_FIELDS.has("dob"))) updateData.dob = new Date(body.dob);
 
   if (!isSelfOnly) {
