@@ -204,7 +204,7 @@ export default function EmployeeProfilePage() {
         }
       }
 
-      toast.success("Profile updated successfully");
+      toast.success("Employee updated successfully.");
     } catch (err) {
       toast.error(err.message);
     }

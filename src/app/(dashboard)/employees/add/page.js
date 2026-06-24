@@ -14,6 +14,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { api } from "@/lib/api-client";
 import { validateEmployeeCategory } from "@/lib/employee-category";
+import {
+  validateEmployeeForm,
+  REQUIRED_DOCUMENT_TYPES,
+} from "@/lib/employee-validation";
 import { useAuth } from "@/context/auth-context";
 import { useLookups } from "@/hooks/use-lookups";
 
@@ -26,10 +30,10 @@ const sections = [
 ];
 
 const DOCUMENT_UPLOADS = [
-  { label: "PAN Card", type: "PAN" },
-  { label: "Aadhaar Card", type: "Aadhaar" },
-  { label: "Bank Passbook", type: "Bank_Passbook" },
-  { label: "Offer Letter", type: "Offer_Letter" },
+  { label: "PAN Card", type: "PAN", required: true },
+  { label: "Aadhaar Card", type: "Aadhaar", required: true },
+  { label: "Bank Passbook", type: "Bank_Passbook", required: true },
+  { label: "Offer Letter", type: "Offer_Letter", required: false },
 ];
 
 const EXPERIENCE_DOC_UPLOADS = [
@@ -41,6 +45,15 @@ const EXPERIENCE_DOC_UPLOADS = [
 ];
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
+
+function fieldClass(errors, field) {
+  return errors[field] ? "border-destructive focus-visible:ring-destructive" : "";
+}
+
+function FieldError({ message }) {
+  if (!message) return null;
+  return <p className="text-xs text-destructive mt-1">{message}</p>;
+}
 
 const emptyForm = {
   employeeCode: "", firstName: "", lastName: "", dob: "", gender: "",
@@ -80,6 +93,8 @@ function AddEmployeeContent() {
   const [pendingFiles, setPendingFiles] = useState({});
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [profilePreview, setProfilePreview] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [existingDocs, setExistingDocs] = useState({});
   const fileInputRefs = useRef({});
   const photoInputRef = useRef(null);
 
@@ -141,6 +156,11 @@ function AddEmployeeContent() {
           accountNumber: emp.accountNumber || "",
         });
         if (emp.photo) setProfilePreview(emp.photo);
+        const docsByType = {};
+        (data.documents || []).forEach((doc) => {
+          if (doc.documentType) docsByType[doc.documentType] = doc;
+        });
+        setExistingDocs(docsByType);
       })
       .catch((err) => {
         toast.error(err.message || "Failed to load employee");
@@ -150,7 +170,15 @@ function AddEmployeeContent() {
   }, [editId, router]);
 
   const activeSection = sections[step].id;
-  const set = (field, value) => setForm((f) => ({ ...f, [field]: value }));
+  const set = (field, value) => {
+    setForm((f) => ({ ...f, [field]: value }));
+    setFieldErrors((prev) => {
+      if (!prev[field]) return prev;
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
+  };
 
   const validateFile = (file) => {
     if (!file) return false;
@@ -173,6 +201,13 @@ function AddEmployeeContent() {
       return;
     }
     setPendingFiles((prev) => ({ ...prev, [type]: file }));
+    setFieldErrors((prev) => {
+      const key = typeof type === "string" && type.startsWith("Payslip") ? null : `doc_${type}`;
+      if (!key || !prev[key]) return prev;
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
     event.target.value = "";
   };
 
@@ -195,47 +230,58 @@ function AddEmployeeContent() {
   };
 
   const validateForm = () => {
-    if (!form.employeeCode?.trim()) { toast.error("Employee Code is required"); setStep(0); return false; }
-    if (!form.firstName?.trim()) { toast.error("First Name is required"); setStep(0); return false; }
-    if (!form.lastName?.trim()) { toast.error("Last Name is required"); setStep(0); return false; }
-    if (!form.departmentId) { toast.error("Department is required"); setStep(1); return false; }
-    if (!form.designationId) { toast.error("Designation is required"); setStep(1); return false; }
-    if (!form.joiningDate) { toast.error("Joining Date is required"); setStep(1); return false; }
-    if (!form.employeeCategory) { toast.error("Employee Category is required"); setStep(1); return false; }
+    const validation = validateEmployeeForm({ ...form, confirmPassword: form.confirmPassword }, {
+      isEdit: isEditMode,
+    });
+    const errors = { ...validation.fieldErrors };
 
     const categoryCheck = validateEmployeeCategory(form);
     if (!categoryCheck.valid) {
-      toast.error(categoryCheck.errors[0]);
-      setStep(2);
+      errors.employeeCategory = categoryCheck.errors[0];
+    }
+
+    REQUIRED_DOCUMENT_TYPES.forEach((type) => {
+      const label = DOCUMENT_UPLOADS.find((d) => d.type === type)?.label || type;
+      if (!pendingFiles[type] && !(isEditMode && existingDocs[type])) {
+        errors[`doc_${type}`] = `${label} upload is required.`;
+      }
+    });
+
+    if (Object.keys(errors).length) {
+      setFieldErrors(errors);
+      const firstKey = Object.keys(errors)[0];
+      const stepMap = {
+        employeeCode: 0, firstName: 0, lastName: 0,
+        departmentId: 1, designationId: 1, joiningDate: 1, employeeCategory: 1,
+        qualification: 2, collegeName: 2, graduationYear: 2,
+        totalExperienceYears: 2, previousCompany: 2,
+        mobile: 3, email: 3, password: 3, confirmPassword: 3,
+        pan: 4, aadhaar: 4, doc_PAN: 4, doc_Aadhaar: 4, doc_Bank_Passbook: 4,
+      };
+      const errorStep = stepMap[firstKey] ?? (firstKey.startsWith("doc_") ? 4 : 0);
+      setStep(errorStep);
+      toast.error(
+        Object.keys(errors).length > 1
+          ? "Please correct the highlighted fields."
+          : errors[firstKey]
+      );
       return false;
     }
 
-    if (!form.mobile?.trim()) { toast.error("Mobile is required"); setStep(3); return false; }
-    if (!form.email?.trim()) { toast.error("Email is required"); setStep(3); return false; }
-    if (!isEditMode) {
-      if (!form.password || form.password.length < 6) {
-        toast.error("Password is required (minimum 6 characters)");
-        setStep(3);
-        return false;
-      }
-      if (form.password !== form.confirmPassword) {
-        toast.error("Password and Confirm Password do not match");
-        setStep(3);
-        return false;
-      }
-    } else if (form.password) {
-      if (form.password.length < 6) {
-        toast.error("Password must be at least 6 characters");
-        setStep(3);
-        return false;
-      }
-      if (form.password !== form.confirmPassword) {
-        toast.error("Password and Confirm Password do not match");
-        setStep(3);
-        return false;
-      }
-    }
+    setFieldErrors({});
     return true;
+  };
+
+  const handleApiError = (err) => {
+    if (err.fields) {
+      setFieldErrors(err.fields);
+      toast.error(err.message || "Please correct the highlighted fields.");
+      return;
+    }
+    if (err.field) {
+      setFieldErrors({ [err.field]: err.message });
+    }
+    toast.error(err.message || "Request failed");
   };
 
   const handleSave = async () => {
@@ -278,10 +324,10 @@ function AddEmployeeContent() {
         }
       }
 
-      toast.success(isEditMode ? "Employee updated successfully" : "Employee added successfully");
+      toast.success(isEditMode ? "Employee updated successfully." : "Employee created successfully.");
       router.push("/employees");
     } catch (err) {
-      toast.error(err.message);
+      handleApiError(err);
     }
     setSaving(false);
   };
@@ -382,16 +428,19 @@ function AddEmployeeContent() {
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2 sm:col-span-2">
                       <Label>Employee ID (EMP Code) *</Label>
-                      <Input placeholder="EMP009" value={form.employeeCode} onChange={(e) => set("employeeCode", e.target.value)} />
+                      <Input className={fieldClass(fieldErrors, "employeeCode")} placeholder="EMP009" value={form.employeeCode} onChange={(e) => set("employeeCode", e.target.value)} />
+                      <FieldError message={fieldErrors.employeeCode} />
                       <p className="text-xs text-muted-foreground">Used for login reference, attendance &amp; payroll</p>
                     </div>
                     <div className="space-y-2">
                       <Label>First Name *</Label>
-                      <Input value={form.firstName} onChange={(e) => set("firstName", e.target.value)} />
+                      <Input className={fieldClass(fieldErrors, "firstName")} value={form.firstName} onChange={(e) => set("firstName", e.target.value)} />
+                      <FieldError message={fieldErrors.firstName} />
                     </div>
                     <div className="space-y-2">
                       <Label>Last Name *</Label>
-                      <Input value={form.lastName} onChange={(e) => set("lastName", e.target.value)} />
+                      <Input className={fieldClass(fieldErrors, "lastName")} value={form.lastName} onChange={(e) => set("lastName", e.target.value)} />
+                      <FieldError message={fieldErrors.lastName} />
                     </div>
                     <div className="space-y-2">
                       <Label>Date of Birth</Label>
@@ -440,24 +489,27 @@ function AddEmployeeContent() {
                   <div className="space-y-2">
                     <Label>Department *</Label>
                     <Select value={form.departmentId} onValueChange={(v) => set("departmentId", v)}>
-                      <SelectTrigger><SelectValue placeholder="Select Department" /></SelectTrigger>
+                      <SelectTrigger className={fieldClass(fieldErrors, "departmentId")}><SelectValue placeholder="Select Department" /></SelectTrigger>
                       <SelectContent>
                         {departments.map((d) => <SelectItem key={d.id} value={String(d.id)}>{d.departmentName}</SelectItem>)}
                       </SelectContent>
                     </Select>
+                    <FieldError message={fieldErrors.departmentId} />
                   </div>
                   <div className="space-y-2">
                     <Label>Designation *</Label>
                     <Select value={form.designationId} onValueChange={(v) => set("designationId", v)}>
-                      <SelectTrigger><SelectValue placeholder="Select Designation" /></SelectTrigger>
+                      <SelectTrigger className={fieldClass(fieldErrors, "designationId")}><SelectValue placeholder="Select Designation" /></SelectTrigger>
                       <SelectContent>
                         {designations.map((d) => <SelectItem key={d.id} value={String(d.id)}>{d.designationName}</SelectItem>)}
                       </SelectContent>
                     </Select>
+                    <FieldError message={fieldErrors.designationId} />
                   </div>
                   <div className="space-y-2">
                     <Label>Joining Date *</Label>
-                    <Input type="date" value={form.joiningDate} onChange={(e) => set("joiningDate", e.target.value)} />
+                    <Input className={fieldClass(fieldErrors, "joiningDate")} type="date" value={form.joiningDate} onChange={(e) => set("joiningDate", e.target.value)} />
+                    <FieldError message={fieldErrors.joiningDate} />
                   </div>
                   <div className="space-y-2">
                     <Label>Employment Type</Label>
@@ -677,33 +729,52 @@ function AddEmployeeContent() {
                 <CardContent className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label>Mobile *</Label>
-                    <Input value={form.mobile} onChange={(e) => set("mobile", e.target.value)} />
+                    <Input
+                      className={fieldClass(fieldErrors, "mobile")}
+                      inputMode="numeric"
+                      maxLength={10}
+                      value={form.mobile}
+                      onChange={(e) => set("mobile", e.target.value.replace(/\D/g, "").slice(0, 10))}
+                    />
+                    <FieldError message={fieldErrors.mobile} />
                   </div>
                   <div className="space-y-2">
                     <Label>Alternate Mobile</Label>
-                    <Input value={form.alternateMobile} onChange={(e) => set("alternateMobile", e.target.value)} />
+                    <Input
+                      className={fieldClass(fieldErrors, "alternateMobile")}
+                      inputMode="numeric"
+                      maxLength={10}
+                      value={form.alternateMobile}
+                      onChange={(e) => set("alternateMobile", e.target.value.replace(/\D/g, "").slice(0, 10))}
+                    />
+                    <FieldError message={fieldErrors.alternateMobile} />
                   </div>
                   <div className="space-y-2 sm:col-span-2">
                     <Label>Email *</Label>
-                    <Input type="email" value={form.email} onChange={(e) => set("email", e.target.value)} />
+                    <Input className={fieldClass(fieldErrors, "email")} type="email" value={form.email} onChange={(e) => set("email", e.target.value)} />
+                    <FieldError message={fieldErrors.email} />
                   </div>
                   <div className="space-y-2">
                     <Label>{isEditMode ? "New Password (optional)" : "Password *"}</Label>
                     <Input
+                      className={fieldClass(fieldErrors, "password")}
                       type="password"
                       placeholder={isEditMode ? "Leave blank to keep current password" : "Login password (min 6 characters)"}
                       value={form.password}
                       onChange={(e) => set("password", e.target.value)}
                     />
+                    <FieldError message={fieldErrors.password} />
                   </div>
                   <div className="space-y-2">
                     <Label>{isEditMode ? "Confirm New Password" : "Confirm Password *"}</Label>
                     <Input
+                      className={fieldClass(fieldErrors, "confirmPassword")}
                       type="password"
                       placeholder="Re-enter password"
                       value={form.confirmPassword}
                       onChange={(e) => set("confirmPassword", e.target.value)}
                     />
+                    <FieldError message={fieldErrors.confirmPassword} />
                   </div>
                   <div className="space-y-2 sm:col-span-2">
                     <Label>Address</Label>
@@ -725,11 +796,24 @@ function AddEmployeeContent() {
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
                       <Label>PAN Number</Label>
-                      <Input value={form.pan} onChange={(e) => set("pan", e.target.value)} />
+                      <Input
+                        className={fieldClass(fieldErrors, "pan")}
+                        maxLength={10}
+                        value={form.pan}
+                        onChange={(e) => set("pan", e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10))}
+                      />
+                      <FieldError message={fieldErrors.pan} />
                     </div>
                     <div className="space-y-2">
                       <Label>Aadhaar Number</Label>
-                      <Input value={form.aadhaar} onChange={(e) => set("aadhaar", e.target.value)} />
+                      <Input
+                        className={fieldClass(fieldErrors, "aadhaar")}
+                        inputMode="numeric"
+                        maxLength={12}
+                        value={form.aadhaar}
+                        onChange={(e) => set("aadhaar", e.target.value.replace(/\D/g, "").slice(0, 12))}
+                      />
+                      <FieldError message={fieldErrors.aadhaar} />
                     </div>
                     <div className="space-y-2">
                       <Label>Bank Name</Label>
@@ -743,15 +827,42 @@ function AddEmployeeContent() {
                   <div className="grid gap-4 sm:grid-cols-2">
                     {DOCUMENT_UPLOADS.map((doc) => {
                       const file = pendingFiles[doc.type];
+                      const existing = existingDocs[doc.type];
+                      const docError = fieldErrors[`doc_${doc.type}`];
                       return (
-                        <div key={doc.type} className="flex items-center justify-between rounded-lg border p-4">
-                          <div>
-                            <span className="text-sm font-medium">{doc.label}</span>
+                        <div key={doc.type} className={`flex items-center justify-between rounded-lg border p-4 ${docError ? "border-destructive" : ""}`}>
+                          <div className="min-w-0 pr-2">
+                            <span className="text-sm font-medium">
+                              {doc.label}{doc.required ? " *" : ""}
+                            </span>
                             {file && (
                               <p className="mt-1 flex items-center gap-1 text-xs text-emerald-600">
                                 <Check className="h-3 w-3" /> {file.name}
                               </p>
                             )}
+                            {!file && existing && (
+                              <p className="mt-1 text-xs text-muted-foreground">
+                                Uploaded: {existing.fileName}
+                              </p>
+                            )}
+                            {existing?.isImage && existing.url && !file && (
+                              <img
+                                src={existing.url}
+                                alt={existing.fileName}
+                                className="mt-2 h-14 w-14 rounded object-cover border"
+                              />
+                            )}
+                            {existing?.url && existing?.isPdf && !file && (
+                              <a
+                                href={existing.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="mt-1 inline-block text-xs text-royal hover:underline"
+                              >
+                                View PDF
+                              </a>
+                            )}
+                            <FieldError message={docError} />
                           </div>
                           <div>
                             <input

@@ -5,8 +5,8 @@ import {
   hasFullAccess,
   forbiddenResponse,
 } from "@/lib/auth-server";
-import { uploadEmployeeFile, isCloudStorageConfigured } from "@/lib/cloud-storage";
 import { profilePhotoToDataUri } from "@/lib/profile-photo";
+import { mapEmployeeDocument } from "@/lib/document-mapper";
 
 const ALLOWED_TYPES = [
   "PAN",
@@ -89,76 +89,58 @@ export async function POST(request, { params }) {
     });
   }
 
-  if (!isCloudStorageConfigured()) {
-    return Response.json(
-      {
-        error:
-          "File storage is not configured. Add Cloudinary keys to .env (free account at cloudinary.com).",
-      },
-      { status: 503 }
-    );
-  }
+  const docData = {
+    fileName: file.name,
+    mimeType: file.type,
+    fileData: buffer,
+    filePath: null,
+    updatedBy: user.id,
+  };
 
-  let storedUrl;
-  try {
-    const uploaded = await uploadEmployeeFile(buffer, {
-      employeeId,
-      documentType,
-      fileName: file.name,
-      mimeType: file.type,
+  let doc;
+  if (documentType === "Payslip") {
+    const payslipCount = await prisma.employeeDocument.count({
+      where: { employeeId, documentType: "Payslip" },
     });
-    storedUrl = uploaded.url;
-  } catch (uploadErr) {
-    console.error("Cloud upload failed:", uploadErr);
-    return Response.json(
-      { error: uploadErr.message || "Failed to upload file to cloud storage" },
-      { status: 500 }
-    );
-  }
-
-  const existing = await prisma.employeeDocument.findFirst({
-    where: { employeeId, documentType },
-  });
-
-  const doc = existing
-    ? await prisma.employeeDocument.update({
-        where: { id: existing.id },
-        data: { fileName: file.name, filePath: storedUrl, updatedBy: user.id },
-      })
-    : await prisma.employeeDocument.create({
-        data: {
-          employeeId,
-          documentType,
-          fileName: file.name,
-          filePath: storedUrl,
-          createdBy: user.id,
-        },
+    if (payslipCount >= 3) {
+      const oldest = await prisma.employeeDocument.findFirst({
+        where: { employeeId, documentType: "Payslip" },
+        orderBy: { uploadedAt: "asc" },
       });
-
-  const employeeUpdate = {};
-  if (documentType === "Experience_Letter") {
-    employeeUpdate.experienceLetterUrl = storedUrl;
-  } else if (documentType === "Relieving_Letter") {
-    employeeUpdate.relievingLetterUrl = storedUrl;
-  } else if (documentType === "Payslip") {
-    const current = Array.isArray(employee.payslipUrls) ? employee.payslipUrls : [];
-    employeeUpdate.payslipUrls = [...current, storedUrl].slice(-3);
-  }
-
-  if (Object.keys(employeeUpdate).length) {
-    await prisma.employee.update({
-      where: { id: employeeId },
-      data: employeeUpdate,
+      if (oldest) {
+        await prisma.employeeDocument.delete({ where: { id: oldest.id } });
+      }
+    }
+    doc = await prisma.employeeDocument.create({
+      data: {
+        employeeId,
+        documentType,
+        ...docData,
+        createdBy: user.id,
+      },
     });
+  } else {
+    const existing = await prisma.employeeDocument.findFirst({
+      where: { employeeId, documentType },
+    });
+    doc = existing
+      ? await prisma.employeeDocument.update({
+          where: { id: existing.id },
+          data: docData,
+        })
+      : await prisma.employeeDocument.create({
+          data: {
+            employeeId,
+            documentType,
+            ...docData,
+            createdBy: user.id,
+          },
+        });
   }
+
+  const mapped = mapEmployeeDocument(doc);
 
   return Response.json({
-    document: {
-      id: doc.id,
-      name: doc.documentType.replace(/_/g, " "),
-      fileName: doc.fileName,
-      url: doc.filePath,
-    },
-    employeeUrls: employeeUpdate,
+    document: mapped,
   });
 }

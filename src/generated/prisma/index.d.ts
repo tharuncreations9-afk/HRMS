@@ -12959,6 +12959,8 @@ export namespace Prisma {
     employeeId: number | null
     documentType: $Enums.DocumentType | null
     fileName: string | null
+    mimeType: string | null
+    fileData: Bytes | null
     filePath: string | null
     uploadedAt: Date | null
     createdAt: Date | null
@@ -12972,6 +12974,8 @@ export namespace Prisma {
     employeeId: number | null
     documentType: $Enums.DocumentType | null
     fileName: string | null
+    mimeType: string | null
+    fileData: Bytes | null
     filePath: string | null
     uploadedAt: Date | null
     createdAt: Date | null
@@ -12985,6 +12989,8 @@ export namespace Prisma {
     employeeId: number
     documentType: number
     fileName: number
+    mimeType: number
+    fileData: number
     filePath: number
     uploadedAt: number
     createdAt: number
@@ -13014,6 +13020,8 @@ export namespace Prisma {
     employeeId?: true
     documentType?: true
     fileName?: true
+    mimeType?: true
+    fileData?: true
     filePath?: true
     uploadedAt?: true
     createdAt?: true
@@ -13027,6 +13035,8 @@ export namespace Prisma {
     employeeId?: true
     documentType?: true
     fileName?: true
+    mimeType?: true
+    fileData?: true
     filePath?: true
     uploadedAt?: true
     createdAt?: true
@@ -13040,6 +13050,8 @@ export namespace Prisma {
     employeeId?: true
     documentType?: true
     fileName?: true
+    mimeType?: true
+    fileData?: true
     filePath?: true
     uploadedAt?: true
     createdAt?: true
@@ -13140,7 +13152,9 @@ export namespace Prisma {
     employeeId: number
     documentType: $Enums.DocumentType
     fileName: string
-    filePath: string
+    mimeType: string | null
+    fileData: Bytes | null
+    filePath: string | null
     uploadedAt: Date
     createdAt: Date
     updatedAt: Date
@@ -13172,6 +13186,8 @@ export namespace Prisma {
     employeeId?: boolean
     documentType?: boolean
     fileName?: boolean
+    mimeType?: boolean
+    fileData?: boolean
     filePath?: boolean
     uploadedAt?: boolean
     createdAt?: boolean
@@ -13190,6 +13206,8 @@ export namespace Prisma {
     employeeId?: boolean
     documentType?: boolean
     fileName?: boolean
+    mimeType?: boolean
+    fileData?: boolean
     filePath?: boolean
     uploadedAt?: boolean
     createdAt?: boolean
@@ -13198,7 +13216,7 @@ export namespace Prisma {
     updatedBy?: boolean
   }
 
-  export type EmployeeDocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "employeeId" | "documentType" | "fileName" | "filePath" | "uploadedAt" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy", ExtArgs["result"]["employeeDocument"]>
+  export type EmployeeDocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "employeeId" | "documentType" | "fileName" | "mimeType" | "fileData" | "filePath" | "uploadedAt" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy", ExtArgs["result"]["employeeDocument"]>
   export type EmployeeDocumentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     employee?: boolean | EmployeeDefaultArgs<ExtArgs>
     creator?: boolean | EmployeeDocument$creatorArgs<ExtArgs>
@@ -13217,7 +13235,9 @@ export namespace Prisma {
       employeeId: number
       documentType: $Enums.DocumentType
       fileName: string
-      filePath: string
+      mimeType: string | null
+      fileData: Prisma.Bytes | null
+      filePath: string | null
       uploadedAt: Date
       createdAt: Date
       updatedAt: Date
@@ -13599,6 +13619,8 @@ export namespace Prisma {
     readonly employeeId: FieldRef<"EmployeeDocument", 'Int'>
     readonly documentType: FieldRef<"EmployeeDocument", 'DocumentType'>
     readonly fileName: FieldRef<"EmployeeDocument", 'String'>
+    readonly mimeType: FieldRef<"EmployeeDocument", 'String'>
+    readonly fileData: FieldRef<"EmployeeDocument", 'Bytes'>
     readonly filePath: FieldRef<"EmployeeDocument", 'String'>
     readonly uploadedAt: FieldRef<"EmployeeDocument", 'DateTime'>
     readonly createdAt: FieldRef<"EmployeeDocument", 'DateTime'>
@@ -29235,6 +29257,8 @@ export namespace Prisma {
     employeeId: 'employeeId',
     documentType: 'documentType',
     fileName: 'fileName',
+    mimeType: 'mimeType',
+    fileData: 'fileData',
     filePath: 'filePath',
     uploadedAt: 'uploadedAt',
     createdAt: 'createdAt',
@@ -29592,6 +29616,7 @@ export namespace Prisma {
 
   export const EmployeeDocumentOrderByRelevanceFieldEnum: {
     fileName: 'fileName',
+    mimeType: 'mimeType',
     filePath: 'filePath'
   };
 
@@ -30778,7 +30803,9 @@ export namespace Prisma {
     employeeId?: IntFilter<"EmployeeDocument"> | number
     documentType?: EnumDocumentTypeFilter<"EmployeeDocument"> | $Enums.DocumentType
     fileName?: StringFilter<"EmployeeDocument"> | string
-    filePath?: StringFilter<"EmployeeDocument"> | string
+    mimeType?: StringNullableFilter<"EmployeeDocument"> | string | null
+    fileData?: BytesNullableFilter<"EmployeeDocument"> | Bytes | null
+    filePath?: StringNullableFilter<"EmployeeDocument"> | string | null
     uploadedAt?: DateTimeFilter<"EmployeeDocument"> | Date | string
     createdAt?: DateTimeFilter<"EmployeeDocument"> | Date | string
     updatedAt?: DateTimeFilter<"EmployeeDocument"> | Date | string
@@ -30794,7 +30821,9 @@ export namespace Prisma {
     employeeId?: SortOrder
     documentType?: SortOrder
     fileName?: SortOrder
-    filePath?: SortOrder
+    mimeType?: SortOrderInput | SortOrder
+    fileData?: SortOrderInput | SortOrder
+    filePath?: SortOrderInput | SortOrder
     uploadedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -30814,7 +30843,9 @@ export namespace Prisma {
     employeeId?: IntFilter<"EmployeeDocument"> | number
     documentType?: EnumDocumentTypeFilter<"EmployeeDocument"> | $Enums.DocumentType
     fileName?: StringFilter<"EmployeeDocument"> | string
-    filePath?: StringFilter<"EmployeeDocument"> | string
+    mimeType?: StringNullableFilter<"EmployeeDocument"> | string | null
+    fileData?: BytesNullableFilter<"EmployeeDocument"> | Bytes | null
+    filePath?: StringNullableFilter<"EmployeeDocument"> | string | null
     uploadedAt?: DateTimeFilter<"EmployeeDocument"> | Date | string
     createdAt?: DateTimeFilter<"EmployeeDocument"> | Date | string
     updatedAt?: DateTimeFilter<"EmployeeDocument"> | Date | string
@@ -30830,7 +30861,9 @@ export namespace Prisma {
     employeeId?: SortOrder
     documentType?: SortOrder
     fileName?: SortOrder
-    filePath?: SortOrder
+    mimeType?: SortOrderInput | SortOrder
+    fileData?: SortOrderInput | SortOrder
+    filePath?: SortOrderInput | SortOrder
     uploadedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -30851,7 +30884,9 @@ export namespace Prisma {
     employeeId?: IntWithAggregatesFilter<"EmployeeDocument"> | number
     documentType?: EnumDocumentTypeWithAggregatesFilter<"EmployeeDocument"> | $Enums.DocumentType
     fileName?: StringWithAggregatesFilter<"EmployeeDocument"> | string
-    filePath?: StringWithAggregatesFilter<"EmployeeDocument"> | string
+    mimeType?: StringNullableWithAggregatesFilter<"EmployeeDocument"> | string | null
+    fileData?: BytesNullableWithAggregatesFilter<"EmployeeDocument"> | Bytes | null
+    filePath?: StringNullableWithAggregatesFilter<"EmployeeDocument"> | string | null
     uploadedAt?: DateTimeWithAggregatesFilter<"EmployeeDocument"> | Date | string
     createdAt?: DateTimeWithAggregatesFilter<"EmployeeDocument"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"EmployeeDocument"> | Date | string
@@ -33124,7 +33159,9 @@ export namespace Prisma {
   export type EmployeeDocumentCreateInput = {
     documentType: $Enums.DocumentType
     fileName: string
-    filePath: string
+    mimeType?: string | null
+    fileData?: Bytes | null
+    filePath?: string | null
     uploadedAt?: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33138,7 +33175,9 @@ export namespace Prisma {
     employeeId: number
     documentType: $Enums.DocumentType
     fileName: string
-    filePath: string
+    mimeType?: string | null
+    fileData?: Bytes | null
+    filePath?: string | null
     uploadedAt?: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33149,7 +33188,9 @@ export namespace Prisma {
   export type EmployeeDocumentUpdateInput = {
     documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
     fileName?: StringFieldUpdateOperationsInput | string
-    filePath?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileData?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    filePath?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33163,7 +33204,9 @@ export namespace Prisma {
     employeeId?: IntFieldUpdateOperationsInput | number
     documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
     fileName?: StringFieldUpdateOperationsInput | string
-    filePath?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileData?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    filePath?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33176,7 +33219,9 @@ export namespace Prisma {
     employeeId: number
     documentType: $Enums.DocumentType
     fileName: string
-    filePath: string
+    mimeType?: string | null
+    fileData?: Bytes | null
+    filePath?: string | null
     uploadedAt?: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33187,7 +33232,9 @@ export namespace Prisma {
   export type EmployeeDocumentUpdateManyMutationInput = {
     documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
     fileName?: StringFieldUpdateOperationsInput | string
-    filePath?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileData?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    filePath?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33198,7 +33245,9 @@ export namespace Prisma {
     employeeId?: IntFieldUpdateOperationsInput | number
     documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
     fileName?: StringFieldUpdateOperationsInput | string
-    filePath?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileData?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    filePath?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35545,6 +35594,8 @@ export namespace Prisma {
     employeeId?: SortOrder
     documentType?: SortOrder
     fileName?: SortOrder
+    mimeType?: SortOrder
+    fileData?: SortOrder
     filePath?: SortOrder
     uploadedAt?: SortOrder
     createdAt?: SortOrder
@@ -35565,6 +35616,8 @@ export namespace Prisma {
     employeeId?: SortOrder
     documentType?: SortOrder
     fileName?: SortOrder
+    mimeType?: SortOrder
+    fileData?: SortOrder
     filePath?: SortOrder
     uploadedAt?: SortOrder
     createdAt?: SortOrder
@@ -35578,6 +35631,8 @@ export namespace Prisma {
     employeeId?: SortOrder
     documentType?: SortOrder
     fileName?: SortOrder
+    mimeType?: SortOrder
+    fileData?: SortOrder
     filePath?: SortOrder
     uploadedAt?: SortOrder
     createdAt?: SortOrder
@@ -47504,7 +47559,9 @@ export namespace Prisma {
   export type EmployeeDocumentCreateWithoutEmployeeInput = {
     documentType: $Enums.DocumentType
     fileName: string
-    filePath: string
+    mimeType?: string | null
+    fileData?: Bytes | null
+    filePath?: string | null
     uploadedAt?: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -47516,7 +47573,9 @@ export namespace Prisma {
     id?: number
     documentType: $Enums.DocumentType
     fileName: string
-    filePath: string
+    mimeType?: string | null
+    fileData?: Bytes | null
+    filePath?: string | null
     uploadedAt?: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -49070,7 +49129,9 @@ export namespace Prisma {
   export type EmployeeDocumentCreateWithoutCreatorInput = {
     documentType: $Enums.DocumentType
     fileName: string
-    filePath: string
+    mimeType?: string | null
+    fileData?: Bytes | null
+    filePath?: string | null
     uploadedAt?: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -49083,7 +49144,9 @@ export namespace Prisma {
     employeeId: number
     documentType: $Enums.DocumentType
     fileName: string
-    filePath: string
+    mimeType?: string | null
+    fileData?: Bytes | null
+    filePath?: string | null
     uploadedAt?: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -49103,7 +49166,9 @@ export namespace Prisma {
   export type EmployeeDocumentCreateWithoutUpdaterInput = {
     documentType: $Enums.DocumentType
     fileName: string
-    filePath: string
+    mimeType?: string | null
+    fileData?: Bytes | null
+    filePath?: string | null
     uploadedAt?: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -49116,7 +49181,9 @@ export namespace Prisma {
     employeeId: number
     documentType: $Enums.DocumentType
     fileName: string
-    filePath: string
+    mimeType?: string | null
+    fileData?: Bytes | null
+    filePath?: string | null
     uploadedAt?: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -50253,7 +50320,9 @@ export namespace Prisma {
     employeeId?: IntFilter<"EmployeeDocument"> | number
     documentType?: EnumDocumentTypeFilter<"EmployeeDocument"> | $Enums.DocumentType
     fileName?: StringFilter<"EmployeeDocument"> | string
-    filePath?: StringFilter<"EmployeeDocument"> | string
+    mimeType?: StringNullableFilter<"EmployeeDocument"> | string | null
+    fileData?: BytesNullableFilter<"EmployeeDocument"> | Bytes | null
+    filePath?: StringNullableFilter<"EmployeeDocument"> | string | null
     uploadedAt?: DateTimeFilter<"EmployeeDocument"> | Date | string
     createdAt?: DateTimeFilter<"EmployeeDocument"> | Date | string
     updatedAt?: DateTimeFilter<"EmployeeDocument"> | Date | string
@@ -67913,7 +67982,9 @@ export namespace Prisma {
     id?: number
     documentType: $Enums.DocumentType
     fileName: string
-    filePath: string
+    mimeType?: string | null
+    fileData?: Bytes | null
+    filePath?: string | null
     uploadedAt?: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -68264,7 +68335,9 @@ export namespace Prisma {
     employeeId: number
     documentType: $Enums.DocumentType
     fileName: string
-    filePath: string
+    mimeType?: string | null
+    fileData?: Bytes | null
+    filePath?: string | null
     uploadedAt?: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -68276,7 +68349,9 @@ export namespace Prisma {
     employeeId: number
     documentType: $Enums.DocumentType
     fileName: string
-    filePath: string
+    mimeType?: string | null
+    fileData?: Bytes | null
+    filePath?: string | null
     uploadedAt?: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -68829,7 +68904,9 @@ export namespace Prisma {
   export type EmployeeDocumentUpdateWithoutEmployeeInput = {
     documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
     fileName?: StringFieldUpdateOperationsInput | string
-    filePath?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileData?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    filePath?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68841,7 +68918,9 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
     fileName?: StringFieldUpdateOperationsInput | string
-    filePath?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileData?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    filePath?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68853,7 +68932,9 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
     fileName?: StringFieldUpdateOperationsInput | string
-    filePath?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileData?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    filePath?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -70081,7 +70162,9 @@ export namespace Prisma {
   export type EmployeeDocumentUpdateWithoutCreatorInput = {
     documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
     fileName?: StringFieldUpdateOperationsInput | string
-    filePath?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileData?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    filePath?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -70094,7 +70177,9 @@ export namespace Prisma {
     employeeId?: IntFieldUpdateOperationsInput | number
     documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
     fileName?: StringFieldUpdateOperationsInput | string
-    filePath?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileData?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    filePath?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -70106,7 +70191,9 @@ export namespace Prisma {
     employeeId?: IntFieldUpdateOperationsInput | number
     documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
     fileName?: StringFieldUpdateOperationsInput | string
-    filePath?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileData?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    filePath?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -70116,7 +70203,9 @@ export namespace Prisma {
   export type EmployeeDocumentUpdateWithoutUpdaterInput = {
     documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
     fileName?: StringFieldUpdateOperationsInput | string
-    filePath?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileData?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    filePath?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -70129,7 +70218,9 @@ export namespace Prisma {
     employeeId?: IntFieldUpdateOperationsInput | number
     documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
     fileName?: StringFieldUpdateOperationsInput | string
-    filePath?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileData?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    filePath?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -70141,7 +70232,9 @@ export namespace Prisma {
     employeeId?: IntFieldUpdateOperationsInput | number
     documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
     fileName?: StringFieldUpdateOperationsInput | string
-    filePath?: StringFieldUpdateOperationsInput | string
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    fileData?: NullableBytesFieldUpdateOperationsInput | Bytes | null
+    filePath?: NullableStringFieldUpdateOperationsInput | string | null
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

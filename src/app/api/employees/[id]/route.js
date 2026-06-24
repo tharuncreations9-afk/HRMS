@@ -9,6 +9,15 @@ import {
   parseStatusInput,
   isValidDbStatus,
 } from "@/lib/employee-status";
+import {
+  validateEmployeeForm,
+  checkEmployeeDuplicates,
+  mapPrismaDuplicateError,
+  validationErrorResponse,
+  normalizeEmployeeInput,
+  validateMobile,
+} from "@/lib/employee-validation";
+import { mapEmployeeDocument, mapDocumentsByType } from "@/lib/document-mapper";
 
 function canEditEmployee(user, employeeId) {
   const isOwn = user.id === employeeId || user.employeeId === employeeId;
@@ -108,8 +117,17 @@ export async function GET(request, { params }) {
     }),
   ]);
 
+  const onLeaveIds = await getEmployeeIdsOnLeaveToday(prisma);
+  const mappedEmployee = mapEmployee(employee, onLeaveIds);
+  const byType = mapDocumentsByType(documents);
+  if (byType.Experience_Letter?.url) mappedEmployee.experienceLetterUrl = byType.Experience_Letter.url;
+  if (byType.Relieving_Letter?.url) mappedEmployee.relievingLetterUrl = byType.Relieving_Letter.url;
+  if (byType.Payslip?.length) {
+    mappedEmployee.payslipUrls = byType.Payslip.map((p) => p.url).filter(Boolean);
+  }
+
   return Response.json({
-    employee: mapEmployee(employee, await getEmployeeIdsOnLeaveToday(prisma)),
+    employee: mappedEmployee,
     canEdit: Boolean(getEditScope(user, id)),
     editScope: getEditScope(user, id),
     lookups,
@@ -126,11 +144,7 @@ export async function GET(request, { params }) {
       days: Number(l.totalDays),
       status: l.finalStatus,
     })),
-    documents: documents.map((d) => ({
-      name: d.documentType.replace(/_/g, " "),
-      fileName: d.fileName,
-      url: d.filePath,
-    })),
+    documents: documents.map((d) => mapEmployeeDocument(d)),
     activityLogs: activityLogs.map((log) => ({
       action: `${log.moduleName} ${log.actionType}`,
       by: "System",
@@ -156,6 +170,62 @@ export async function PATCH(request, { params }) {
 
   const body = await request.json();
   const isSelfOnly = editScope === "self";
+  let normalizedInput = null;
+
+  if (!isSelfOnly) {
+    const merged = {
+      ...existing,
+      ...body,
+      employeeCode: body.employeeCode ?? existing.employeeCode,
+      firstName: body.firstName ?? existing.firstName,
+      lastName: body.lastName ?? existing.lastName,
+      mobile: body.mobile ?? existing.mobile,
+      email: body.email ?? existing.email,
+      pan: body.pan ?? existing.pan,
+      aadhaar: body.aadhaar ?? existing.aadhaar,
+      departmentId: body.departmentId ?? existing.departmentId,
+      designationId: body.designationId ?? existing.designationId,
+      joiningDate: body.joiningDate
+        ? body.joiningDate
+        : existing.joiningDate?.toISOString().split("T")[0],
+      employeeCategory: body.employeeCategory ?? existing.employeeCategory,
+    };
+
+    const validation = validateEmployeeForm(merged, { isEdit: true });
+    if (!validation.valid) {
+      return validationErrorResponse(validation.fieldErrors, validation.summary);
+    }
+
+    const duplicateCheck = await checkEmployeeDuplicates(prisma, validation.normalized, id);
+    if (!duplicateCheck.valid) {
+      return validationErrorResponse(duplicateCheck.fieldErrors, duplicateCheck.summary);
+    }
+    normalizedInput = validation.normalized;
+  } else {
+    normalizedInput = normalizeEmployeeInput({
+      mobile: body.mobile ?? existing.mobile,
+      alternateMobile: body.alternateMobile ?? existing.alternateMobile,
+      email: body.email ?? existing.email,
+    });
+    const fieldErrors = {};
+    const mobileCheck = validateMobile(normalizedInput.mobile);
+    if (!mobileCheck.valid) fieldErrors.mobile = mobileCheck.message;
+    if (normalizedInput.alternateMobile) {
+      const altCheck = validateMobile(normalizedInput.alternateMobile, {
+        required: false,
+        field: "alternateMobile",
+      });
+      if (!altCheck.valid) fieldErrors.alternateMobile = altCheck.message;
+    }
+    if (!normalizedInput.email?.trim()) fieldErrors.email = "Email is required.";
+    if (Object.keys(fieldErrors).length) {
+      return validationErrorResponse(fieldErrors);
+    }
+    const duplicateCheck = await checkEmployeeDuplicates(prisma, normalizedInput, id);
+    if (!duplicateCheck.valid) {
+      return validationErrorResponse(duplicateCheck.fieldErrors, duplicateCheck.summary);
+    }
+  }
 
   if (!isSelfOnly && body.employeeCategory) {
     const categoryValidation = validateEmployeeCategory(body);
@@ -173,7 +243,16 @@ export async function PATCH(request, { params }) {
   fields.forEach((f) => {
     if (body[f] !== undefined) {
       if (!isSelfOnly || SELF_EDIT_FIELDS.has(f)) {
-        updateData[f] = body[f];
+        if (f === "mobile" && normalizedInput?.mobile) updateData.mobile = normalizedInput.mobile;
+        else if (f === "alternateMobile" && normalizedInput) {
+          updateData.alternateMobile = normalizedInput.alternateMobile || null;
+        } else if (f === "email" && normalizedInput?.email) updateData.email = normalizedInput.email;
+        else if (f === "pan" && normalizedInput?.pan !== undefined) updateData.pan = normalizedInput.pan || null;
+        else if (f === "aadhaar" && normalizedInput?.aadhaar !== undefined) {
+          updateData.aadhaar = normalizedInput.aadhaar || null;
+        } else {
+          updateData[f] = body[f];
+        }
       }
     }
   });
@@ -203,8 +282,8 @@ export async function PATCH(request, { params }) {
       updateData.reportingManagerId = parseInt(body.reportingManagerId, 10);
     }
     if (body.employeeCode?.trim() && body.employeeCode.trim() !== existing.employeeCode) {
-      updateData.employeeCode = body.employeeCode.trim();
-      updateData.camAttendanceId = body.employeeCode.trim();
+      updateData.employeeCode = normalizedInput?.employeeCode || body.employeeCode.trim();
+      updateData.camAttendanceId = updateData.employeeCode;
     }
     if (body.employeeCategory) {
       Object.assign(updateData, buildCategoryData(body));
@@ -230,6 +309,7 @@ export async function PATCH(request, { params }) {
 
   updateData.updatedBy = user.id;
 
+  try {
   const employee = await prisma.employee.update({
     where: { id },
     data: updateData,
@@ -252,6 +332,17 @@ export async function PATCH(request, { params }) {
   });
 
   return Response.json({ employee: mapEmployee(employee, await getEmployeeIdsOnLeaveToday(prisma)) });
+  } catch (err) {
+    console.error("Update employee error:", err);
+    const dup = mapPrismaDuplicateError(err);
+    if (dup) {
+      return Response.json(
+        { error: dup.message, field: dup.field, fields: dup.fields },
+        { status: 400 }
+      );
+    }
+    return Response.json({ error: err.message || "Failed to update employee" }, { status: 400 });
+  }
 }
 
 export async function DELETE(request, { params }) {

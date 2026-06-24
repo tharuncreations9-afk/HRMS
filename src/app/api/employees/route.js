@@ -16,6 +16,12 @@ import {
   isValidDbStatus,
 } from "@/lib/employee-status";
 import {
+  validateEmployeeForm,
+  checkEmployeeDuplicates,
+  mapPrismaDuplicateError,
+  validationErrorResponse,
+} from "@/lib/employee-validation";
+import {
   EMPLOYEE_LIST_STATUS_FILTERS,
   EMPLOYEE_CATEGORY_FILTERS,
   buildDepartmentFilterOptions,
@@ -130,27 +136,21 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
-    const fullName = `${body.firstName || ""} ${body.lastName || ""}`.trim() || body.fullName;
-
-    const missing = [];
-    if (!body.employeeCode?.trim()) missing.push("Employee Code");
-    if (!body.firstName?.trim() && !body.lastName?.trim() && !fullName) missing.push("Name");
-    if (!body.mobile?.trim()) missing.push("Mobile");
-    if (!body.email?.trim()) missing.push("Email");
-    if (!body.departmentId) missing.push("Department");
-    if (!body.designationId) missing.push("Designation");
-    if (!body.joiningDate) missing.push("Joining Date");
-    if (missing.length) {
-      return Response.json({ error: `Required fields missing: ${missing.join(", ")}` }, { status: 400 });
+    const validation = validateEmployeeForm(body, { isEdit: false });
+    if (!validation.valid) {
+      return validationErrorResponse(validation.fieldErrors, validation.summary);
     }
 
-    const categoryValidation = validateEmployeeCategory(body);
+    const normalized = validation.normalized;
+    const categoryValidation = validateEmployeeCategory(normalized);
     if (!categoryValidation.valid) {
-      return Response.json({ error: categoryValidation.errors.join("; ") }, { status: 400 });
+      const fieldErrors = { employeeCategory: categoryValidation.errors[0] };
+      return validationErrorResponse(fieldErrors, categoryValidation.errors[0]);
     }
 
-    if (!body.password || body.password.length < 6) {
-      return Response.json({ error: "Password is required (minimum 6 characters)" }, { status: 400 });
+    const duplicateCheck = await checkEmployeeDuplicates(prisma, normalized);
+    if (!duplicateCheck.valid) {
+      return validationErrorResponse(duplicateCheck.fieldErrors, duplicateCheck.summary);
     }
 
     const employeeRole = await prisma.role.findUnique({ where: { roleName: "employee" } });
@@ -158,41 +158,44 @@ export async function POST(request) {
       return Response.json({ error: "Default employee role not found" }, { status: 400 });
     }
 
+    const fullName = `${normalized.firstName} ${normalized.lastName}`.trim();
     const passwordHash = await hashPassword(body.password);
-    const categoryData = buildCategoryData(body);
+    const categoryData = buildCategoryData(normalized);
 
-    const statusInput = parseStatusInput(body.status) || "Active";
+    const statusInput = parseStatusInput(normalized.status) || "Active";
     if (!isValidDbStatus(statusInput)) {
       return Response.json({ error: "Invalid employee status" }, { status: 400 });
     }
 
     const employee = await prisma.employee.create({
       data: {
-        employeeCode: body.employeeCode.trim(),
-        camAttendanceId: body.employeeCode.trim(),
-        firstName: body.firstName || fullName.split(" ")[0],
-        lastName: body.lastName || fullName.split(" ").slice(1).join(" ") || "",
+        employeeCode: normalized.employeeCode,
+        camAttendanceId: normalized.employeeCode,
+        firstName: normalized.firstName,
+        lastName: normalized.lastName,
         fullName,
-        dob: body.dob ? new Date(body.dob) : null,
-        gender: body.gender,
-        bloodGroup: body.bloodGroup,
-        mobile: body.mobile,
-        alternateMobile: body.alternateMobile,
-        email: body.email,
+        dob: normalized.dob ? new Date(normalized.dob) : null,
+        gender: normalized.gender || null,
+        bloodGroup: normalized.bloodGroup || null,
+        mobile: normalized.mobile,
+        alternateMobile: normalized.alternateMobile || null,
+        email: normalized.email,
         passwordHash,
-        roleId: body.roleId ? parseInt(body.roleId, 10) : employeeRole.id,
-        address: body.address,
-        departmentId: parseInt(body.departmentId, 10),
-        designationId: parseInt(body.designationId, 10),
-        reportingManagerId: body.reportingManagerId ? parseInt(body.reportingManagerId, 10) : null,
-        joiningDate: new Date(body.joiningDate),
-        employmentType: body.employmentType || "Full_Time",
+        roleId: normalized.roleId ? parseInt(normalized.roleId, 10) : employeeRole.id,
+        address: normalized.address || null,
+        departmentId: parseInt(normalized.departmentId, 10),
+        designationId: parseInt(normalized.designationId, 10),
+        reportingManagerId: normalized.reportingManagerId
+          ? parseInt(normalized.reportingManagerId, 10)
+          : null,
+        joiningDate: new Date(normalized.joiningDate),
+        employmentType: normalized.employmentType || "Full_Time",
         status: statusInput,
-        emergencyContact: body.emergencyContact,
-        bankName: body.bankName,
-        accountNumber: body.accountNumber,
-        pan: body.pan,
-        aadhaar: body.aadhaar,
+        emergencyContact: normalized.emergencyContact || null,
+        bankName: normalized.bankName || null,
+        accountNumber: normalized.accountNumber || null,
+        pan: normalized.pan || null,
+        aadhaar: normalized.aadhaar || null,
         ...categoryData,
         createdBy: user.id,
       },
@@ -233,12 +236,12 @@ export async function POST(request) {
     return Response.json({ employee: mapEmployee(employee, new Set()) }, { status: 201 });
   } catch (err) {
     console.error("Create employee error:", err);
-    if (err.code === "P2002") {
-      const target = (err.meta?.target || []).join(", ");
-      if (target.includes("email")) return Response.json({ error: "Email already exists" }, { status: 400 });
-      if (target.includes("employee_code")) return Response.json({ error: "Employee Code already exists" }, { status: 400 });
-      if (target.includes("cam_attendance_id")) return Response.json({ error: "Employee ID already exists" }, { status: 400 });
-      return Response.json({ error: "Duplicate value — record already exists" }, { status: 400 });
+    const dup = mapPrismaDuplicateError(err);
+    if (dup) {
+      return Response.json(
+        { error: dup.message, field: dup.field, fields: dup.fields },
+        { status: 400 }
+      );
     }
     return Response.json({ error: err.message || "Failed to create employee" }, { status: 400 });
   }

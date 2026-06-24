@@ -244,6 +244,8 @@ exports.Prisma.EmployeeDocumentScalarFieldEnum = {
   employeeId: 'employeeId',
   documentType: 'documentType',
   fileName: 'fileName',
+  mimeType: 'mimeType',
+  fileData: 'fileData',
   filePath: 'filePath',
   uploadedAt: 'uploadedAt',
   createdAt: 'createdAt',
@@ -523,6 +525,7 @@ exports.Prisma.EmployeeOrderByRelevanceFieldEnum = {
 
 exports.Prisma.EmployeeDocumentOrderByRelevanceFieldEnum = {
   fileName: 'fileName',
+  mimeType: 'mimeType',
   filePath: 'filePath'
 };
 

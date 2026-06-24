@@ -17,7 +17,10 @@ export async function apiFetch(path, options = {}) {
   const data = await res.json().catch(() => ({}));
 
   if (!res.ok) {
-    throw new Error(data.error || "Request failed");
+    const error = new Error(data.error || "Request failed");
+    error.field = data.field;
+    error.fields = data.fields;
+    throw error;
   }
   return data;
 }
@@ -46,7 +49,12 @@ export const api = {
       body: formData,
     });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || "Upload failed");
+    if (!res.ok) {
+      const error = new Error(data.error || "Upload failed");
+      error.field = data.field;
+      error.fields = data.fields;
+      throw error;
+    }
     return data;
   },
   uploadEmployeePhoto: async (employeeId, file) => {
@@ -59,7 +67,12 @@ export const api = {
       body: formData,
     });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || "Photo upload failed");
+    if (!res.ok) {
+      const error = new Error(data.error || "Photo upload failed");
+      error.field = data.field;
+      error.fields = data.fields;
+      throw error;
+    }
     return data;
   },
   deleteEmployeePhoto: (employeeId) =>

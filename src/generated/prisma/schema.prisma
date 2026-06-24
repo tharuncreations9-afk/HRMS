@@ -403,7 +403,9 @@ model EmployeeDocument {
   employeeId   Int          @map("employee_id")
   documentType DocumentType @map("document_type")
   fileName     String       @map("file_name") @db.VarChar(255)
-  filePath     String       @map("file_path") @db.VarChar(500)
+  mimeType     String?      @map("mime_type") @db.VarChar(100)
+  fileData     Bytes?       @map("file_data") @db.LongBlob
+  filePath     String?      @map("file_path") @db.VarChar(500)
   uploadedAt   DateTime     @default(now()) @map("uploaded_at")
   createdAt    DateTime     @default(now()) @map("created_at")
   updatedAt    DateTime     @updatedAt @map("updated_at")
