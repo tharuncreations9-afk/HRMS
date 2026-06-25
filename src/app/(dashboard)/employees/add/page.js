@@ -14,10 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { api } from "@/lib/api-client";
 import { validateEmployeeCategory } from "@/lib/employee-category";
-import {
-  validateEmployeeForm,
-  REQUIRED_DOCUMENT_TYPES,
-} from "@/lib/employee-validation";
+import { validateEmployeeForm } from "@/lib/employee-validation";
 import { useAuth } from "@/context/auth-context";
 import { useLookups } from "@/hooks/use-lookups";
 
@@ -30,10 +27,10 @@ const sections = [
 ];
 
 const DOCUMENT_UPLOADS = [
-  { label: "PAN Card", type: "PAN", required: true },
-  { label: "Aadhaar Card", type: "Aadhaar", required: true },
-  { label: "Bank Passbook", type: "Bank_Passbook", required: true },
-  { label: "Offer Letter", type: "Offer_Letter", required: false },
+  { label: "PAN Card", type: "PAN" },
+  { label: "Aadhaar Card", type: "Aadhaar" },
+  { label: "Bank Passbook", type: "Bank_Passbook" },
+  { label: "Offer Letter", type: "Offer_Letter" },
 ];
 
 const EXPERIENCE_DOC_UPLOADS = [
@@ -240,13 +237,6 @@ function AddEmployeeContent() {
       errors.employeeCategory = categoryCheck.errors[0];
     }
 
-    REQUIRED_DOCUMENT_TYPES.forEach((type) => {
-      const label = DOCUMENT_UPLOADS.find((d) => d.type === type)?.label || type;
-      if (!pendingFiles[type] && !(isEditMode && existingDocs[type])) {
-        errors[`doc_${type}`] = `${label} upload is required.`;
-      }
-    });
-
     if (Object.keys(errors).length) {
       setFieldErrors(errors);
       const firstKey = Object.keys(errors)[0];
@@ -256,9 +246,9 @@ function AddEmployeeContent() {
         qualification: 2, collegeName: 2, graduationYear: 2,
         totalExperienceYears: 2, previousCompany: 2,
         mobile: 3, email: 3, password: 3, confirmPassword: 3,
-        pan: 4, aadhaar: 4, doc_PAN: 4, doc_Aadhaar: 4, doc_Bank_Passbook: 4,
+        pan: 4, aadhaar: 4,
       };
-      const errorStep = stepMap[firstKey] ?? (firstKey.startsWith("doc_") ? 4 : 0);
+      const errorStep = stepMap[firstKey] ?? 0;
       setStep(errorStep);
       toast.error(
         Object.keys(errors).length > 1
@@ -832,9 +822,7 @@ function AddEmployeeContent() {
                       return (
                         <div key={doc.type} className={`flex items-center justify-between rounded-lg border p-4 ${docError ? "border-destructive" : ""}`}>
                           <div className="min-w-0 pr-2">
-                            <span className="text-sm font-medium">
-                              {doc.label}{doc.required ? " *" : ""}
-                            </span>
+                            <span className="text-sm font-medium">{doc.label}</span>
                             {file && (
                               <p className="mt-1 flex items-center gap-1 text-xs text-emerald-600">
                                 <Check className="h-3 w-3" /> {file.name}

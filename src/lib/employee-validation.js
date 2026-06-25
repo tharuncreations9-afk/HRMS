@@ -2,9 +2,6 @@ const PAN_REGEX = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
 const MOBILE_REGEX = /^\d{10}$/;
 const AADHAAR_REGEX = /^\d{12}$/;
 
-export const REQUIRED_DOCUMENT_TYPES = ["PAN", "Aadhaar", "Bank_Passbook"];
-export const OPTIONAL_DOCUMENT_TYPES = ["Offer_Letter"];
-
 export function normalizeEmployeeInput(body = {}) {
   return {
     ...body,
