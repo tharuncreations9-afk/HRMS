@@ -9,7 +9,8 @@ const DESKTOP_ZOOM = 0.7;
  * Desktop scale is applied only after mount via inline styles.
  */
 export function ExcelPreviewViewport({ children, scrollToStart = false }) {
-  const outerRef = useRef(null);
+  const frameRef = useRef(null);
+  const scrollHostRef = useRef(null);
   const innerRef = useRef(null);
   const [mounted, setMounted] = useState(false);
   const [layoutHeight, setLayoutHeight] = useState(0);
@@ -52,10 +53,10 @@ export function ExcelPreviewViewport({ children, scrollToStart = false }) {
 
   useEffect(() => {
     if (!mounted || !scrollToStart) return;
-    const el = outerRef.current;
-    if (!el) return;
-    el.scrollLeft = 0;
-    el.scrollTop = 0;
+    const scrollEl = scrollHostRef.current || frameRef.current;
+    if (!scrollEl) return;
+    scrollEl.scrollLeft = 0;
+    scrollEl.scrollTop = 0;
   }, [mounted, scrollToStart, children]);
 
   const scaleStyle =
@@ -73,11 +74,11 @@ export function ExcelPreviewViewport({ children, scrollToStart = false }) {
 
   return (
     <div
-      ref={outerRef}
-      className="excel-preview-frame excel-preview-frame--responsive min-h-0 flex-1 overflow-auto rounded-none border border-[#a6a6a6]"
+      ref={frameRef}
+      className="excel-preview-frame excel-preview-frame--responsive min-h-0 flex-1 rounded-none border border-[#a6a6a6]"
     >
       <p className="no-print excel-mobile-hint">Swipe left/right to view all columns</p>
-      <div className="excel-preview-scroll-host">
+      <div ref={scrollHostRef} className="excel-preview-scroll-host">
         <div className="excel-scale-outer" style={wrapperStyle}>
           <div ref={innerRef} className="excel-preview-inner" style={scaleStyle}>
             {children}
