@@ -26,7 +26,7 @@
     "db:seed-leaves": "node prisma/seed-leaves.js",
     "logo:transparent": "node scripts/remove-logo-bg.js",
     "db:studio": "prisma studio",
-    "deploy:server": "sh scripts/deploy-server.sh",
+    "deploy:server": "sh scripts/deploy-server.sh"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
