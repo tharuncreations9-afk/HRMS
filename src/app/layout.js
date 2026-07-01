@@ -21,23 +21,47 @@ export const metadata = {
 const chunkRecoveryScript = `
 (function () {
   var key = "emp_chunk_reload";
+  var tries = parseInt(sessionStorage.getItem(key) || "0", 10);
   function reloadOnce() {
-    if (sessionStorage.getItem(key)) return;
-    sessionStorage.setItem(key, "1");
+    if (tries >= 2) return;
+    tries += 1;
+    sessionStorage.setItem(key, String(tries));
+    if (window.caches && window.caches.keys) {
+      window.caches.keys().then(function (names) {
+        names.forEach(function (name) { window.caches.delete(name); });
+      });
+    }
     var url = new URL(window.location.href);
     url.searchParams.set("_cb", String(Date.now()));
     window.location.replace(url.toString());
   }
+  function isChunkFailure(message) {
+    if (!message) return false;
+    var text = String(message);
+    return (
+      text.indexOf("Loading chunk") !== -1 ||
+      text.indexOf("ChunkLoadError") !== -1 ||
+      text.indexOf("Failed to fetch dynamically imported module") !== -1
+    );
+  }
   window.addEventListener(
     "error",
     function (event) {
-      var target = event.target;
+      if (isChunkFailure(event && event.message)) reloadOnce();
+      var target = event && event.target;
       if (!target || (target.tagName !== "SCRIPT" && target.tagName !== "LINK")) return;
       var asset = target.src || target.href;
       if (asset && asset.indexOf("/_next/static/") !== -1) reloadOnce();
     },
     true
   );
+  window.addEventListener("unhandledrejection", function (event) {
+    var reason = event && event.reason;
+    if (isChunkFailure(reason && reason.message ? reason.message : reason)) reloadOnce();
+  });
+  window.addEventListener("load", function () {
+    sessionStorage.removeItem(key);
+  });
 })();
 `;
 

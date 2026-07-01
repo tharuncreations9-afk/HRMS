@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 
 const RELOAD_KEY = "emp_chunk_reload";
-const BUILD_CHECK_KEY = "emp_build_check";
+const MAX_RELOADS = 2;
 
 function isChunkLoadError(message) {
   if (!message) return false;
@@ -23,8 +23,15 @@ function isNextStaticAsset(url) {
 
 function reloadOnce() {
   if (typeof window === "undefined") return;
-  if (sessionStorage.getItem(RELOAD_KEY)) return;
-  sessionStorage.setItem(RELOAD_KEY, "1");
+  const tries = parseInt(sessionStorage.getItem(RELOAD_KEY) || "0", 10);
+  if (tries >= MAX_RELOADS) return;
+  sessionStorage.setItem(RELOAD_KEY, String(tries + 1));
+
+  if (window.caches?.keys) {
+    window.caches.keys().then((names) => {
+      names.forEach((name) => window.caches.delete(name));
+    });
+  }
 
   const url = new URL(window.location.href);
   url.searchParams.set("_cb", String(Date.now()));
@@ -58,10 +65,7 @@ export function ChunkErrorRecovery() {
 
     window.addEventListener("error", onError, true);
     window.addEventListener("unhandledrejection", onRejection);
-
-    if (!sessionStorage.getItem(RELOAD_KEY)) {
-      sessionStorage.removeItem(BUILD_CHECK_KEY);
-    }
+    window.addEventListener("load", () => sessionStorage.removeItem(RELOAD_KEY));
 
     return () => {
       window.removeEventListener("error", onError, true);

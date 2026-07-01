@@ -32,6 +32,7 @@ yarn-error.log*
 
 # uploaded files (stored in Cloudinary; keep local folder out of git)
 /public/uploads/
+/public/build-info.json
 
 # typescript
 *.tsbuildinfo

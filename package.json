@@ -8,6 +8,7 @@
     "prestart": "node scripts/ensure-prisma-client.js",
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "node scripts/write-build-manifest.js && node scripts/verify-next-build.js",
     "start": "next start",
     "start:3001": "next start -p 3001",
     "lint": "next lint",
@@ -25,7 +26,7 @@
     "db:seed-leaves": "node prisma/seed-leaves.js",
     "logo:transparent": "node scripts/remove-logo-bg.js",
     "db:studio": "prisma studio",
-    "deploy:server": "git pull origin main && npm install && npm run build && npm run stop:3000 && npm run start"
+    "deploy:server": "sh scripts/deploy-server.sh",
   },
   "prisma": {
     "seed": "node prisma/seed.js"
