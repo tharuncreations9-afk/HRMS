@@ -31,8 +31,11 @@ export function getMonthIndex(monthName) {
 }
 
 export function filterEmployeesByDepartment(employees, department) {
-  if (department === "All Departments") return employees;
-  return employees.filter((e) => e.department === department);
+  if (!department || department === "All Departments") return employees;
+  const dept = String(department).trim();
+  return employees.filter(
+    (e) => String(e.department || "").trim() === dept
+  );
 }
 
 /** Split month working days (Mon–Sat) into weeks ending on Saturday. */

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FileBarChart,
@@ -41,6 +41,8 @@ export default function ReportsPage() {
   const [showPreview, setShowPreview] = useState(false);
   const [generated, setGenerated] = useState(false);
   const [reportEmployees, setReportEmployees] = useState([]);
+  const [previewScrollKey, setPreviewScrollKey] = useState(0);
+  const previewSectionRef = useRef(null);
   const { lookups } = useLookups();
   const months = lookups?.months || [];
   const years = lookups?.reportYears || [];
@@ -58,9 +60,15 @@ export default function ReportsPage() {
     if (canGenerate) {
       try {
         const data = await api.reportEmployees(department);
-        setReportEmployees(data.employees || []);
+        const employees = data.employees || [];
+        setReportEmployees(employees);
         setGenerated(true);
         setShowPreview(true);
+        setPreviewScrollKey((k) => k + 1);
+        toast.success(`${employees.length} employee(s) loaded for ${department}.`);
+        requestAnimationFrame(() => {
+          previewSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
       } catch (err) {
         toast.error(err.message);
       }
@@ -207,7 +215,10 @@ export default function ReportsPage() {
           </Card>
         </motion.aside>
 
-        <section className={`flex min-h-0 min-w-0 flex-col ${PREVIEW_HEIGHT}`}>
+        <section
+          ref={previewSectionRef}
+          className={`flex min-h-0 min-w-0 flex-col ${PREVIEW_HEIGHT}`}
+        >
           <AnimatePresence mode="wait">
             {generated ? (
               <motion.div
@@ -220,15 +231,20 @@ export default function ReportsPage() {
                 {showPreview && (
                   <>
                     <div className="no-print mb-3 flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                      <h2 className="text-base font-semibold break-words sm:text-lg">
-                        Worksheet Preview — {department} · {month} {year}
-                      </h2>
+                      <div className="min-w-0">
+                        <h2 className="text-base font-semibold break-words sm:text-lg">
+                          Worksheet Preview — {department} · {month} {year}
+                        </h2>
+                        <p className="text-xs text-muted-foreground">
+                          {reportEmployees.length} employee(s) in register
+                        </p>
+                      </div>
                       <Button variant="outline" size="sm" className="w-full shrink-0 sm:w-auto" onClick={handlePrint}>
                         <Printer className="mr-1 h-4 w-4" /> Print Register
                       </Button>
                     </div>
 
-                    <ExcelPreviewViewport>
+                    <ExcelPreviewViewport scrollToStart={previewScrollKey > 0} key={previewScrollKey}>
                       <AttendanceRegister
                         department={department}
                         month={month}

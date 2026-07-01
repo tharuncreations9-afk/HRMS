@@ -3,9 +3,10 @@
 .excel-register-root {
   font-family: Calibri, Arial, "Segoe UI", sans-serif;
   color: #000;
+  -webkit-text-size-adjust: 100%;
 }
 
-/* ── Screen preview (~70% zoom, compact rows) ── */
+/* ── Screen preview ── */
 @media screen {
   .excel-register-page {
     box-sizing: border-box;
@@ -35,6 +36,8 @@
     vertical-align: middle;
     line-height: 1.25;
     box-sizing: border-box;
+    color: #000;
+    background: #fff;
   }
 
   .excel-week-title-cell {
@@ -43,6 +46,7 @@
     font-weight: 700;
     padding: 5px 4px;
     background: #fff;
+    color: #000;
   }
 
   .excel-col-sno {
@@ -62,6 +66,7 @@
     text-align: center;
     font-size: 10px;
     background: #fff;
+    color: #000;
   }
 
   .excel-th-name {
@@ -89,6 +94,11 @@
     text-align: left;
     border-right: 2px solid #000;
     text-transform: uppercase;
+    overflow: visible;
+    white-space: nowrap;
+    text-overflow: clip;
+    color: #000 !important;
+    background: #fff !important;
   }
 
   .excel-td-field {
@@ -102,6 +112,67 @@
   .excel-data-row td {
     height: 20px;
   }
+
+  /* Mobile: full-width sheet, sticky S.No + Name, no transform clipping */
+  @media (max-width: 1023px) {
+    .excel-register-page {
+      width: 100%;
+      min-width: 0;
+      margin: 0 0 10px;
+    }
+
+    .excel-register-table {
+      font-size: 11px;
+      min-width: 640px;
+    }
+
+    .excel-col-sno {
+      width: 32px;
+    }
+
+    .excel-col-name {
+      width: 120px;
+    }
+
+    .excel-col-field {
+      width: 72px;
+    }
+
+    .excel-th-sno,
+    .excel-td-sno {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background: #fff !important;
+      box-shadow: 2px 0 0 #000;
+    }
+
+    .excel-th-name,
+    .excel-td-name {
+      position: sticky;
+      left: 32px;
+      z-index: 2;
+      min-width: 120px;
+      max-width: 140px;
+      background: #fff !important;
+      box-shadow: 2px 0 0 #000;
+    }
+
+    .excel-week-title-cell {
+      position: static;
+      font-size: 12px;
+    }
+
+    .excel-data-row,
+    .excel-data-row td {
+      height: 24px;
+    }
+
+    .excel-td-name {
+      white-space: normal;
+      word-break: break-word;
+    }
+  }
 }
 
 /* Preview frame */
@@ -111,6 +182,34 @@
     linear-gradient(#c0c0c0 1px, transparent 1px),
     linear-gradient(90deg, #c0c0c0 1px, transparent 1px);
   background-size: 12px 12px;
+}
+
+.excel-preview-frame--mobile {
+  display: flex;
+  flex-direction: column;
+}
+
+.excel-mobile-hint {
+  margin: 0;
+  padding: 6px 10px;
+  text-align: center;
+  font-size: 11px;
+  color: #444;
+  background: #e8e8e8;
+  border-bottom: 1px solid #bbb;
+}
+
+.excel-mobile-scroll {
+  flex: 1;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 10px 8px 14px;
+}
+
+.excel-preview-inner--mobile {
+  width: max-content;
+  min-width: 100%;
+  margin: 0 auto;
 }
 
 .excel-preview-canvas {
@@ -180,18 +279,30 @@
     background: #fff;
   }
 
-  .no-print {
+  .no-print,
+  .excel-mobile-hint {
     display: none !important;
   }
 
   .excel-preview-frame,
   .excel-preview-canvas,
-  .excel-preview-zoom {
+  .excel-preview-zoom,
+  .excel-mobile-scroll,
+  .excel-preview-inner--mobile {
     background: none !important;
     padding: 0 !important;
     transform: none !important;
     width: 100% !important;
     height: auto !important;
+    overflow: visible !important;
+  }
+
+  .excel-th-sno,
+  .excel-td-sno,
+  .excel-th-name,
+  .excel-td-name {
+    position: static !important;
+    box-shadow: none !important;
   }
 
   .excel-register-root {
@@ -216,6 +327,7 @@
 
   .excel-register-table {
     width: 100% !important;
+    min-width: 0 !important;
     font-size: 10pt !important;
     border: 2px solid #000 !important;
   }
@@ -224,6 +336,8 @@
   .excel-register-table td {
     border: 1px solid #000 !important;
     padding: 1.5pt 4pt !important;
+    color: #000 !important;
+    background: #fff !important;
   }
 
   .excel-week-title-cell {
@@ -256,7 +370,6 @@
     border-right: 2px solid #000 !important;
   }
 
-  /* 20 rows + header fit landscape page height */
   .excel-data-row,
   .excel-data-row td {
     height: 8.5mm !important;
