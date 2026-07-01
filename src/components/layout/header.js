@@ -2,13 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
   Bell,
-  Sun,
-  Moon,
   LogOut,
   User,
   Settings,
@@ -18,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ThemeToggleButton } from "@/components/ui/theme-toggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,7 +31,6 @@ import { cn } from "@/lib/utils";
 
 export function Header({ onMenuToggle }) {
   const { user, logout } = useAuth();
-  const { theme, setTheme } = useTheme();
   const router = useRouter();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -104,14 +101,7 @@ export function Header({ onMenuToggle }) {
           <Search className="h-5 w-5" />
         </Button>
 
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        >
-          <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-        </Button>
+        <ThemeToggleButton />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
