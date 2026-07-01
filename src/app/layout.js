@@ -1,6 +1,7 @@
 import { Inter, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { ChunkErrorRecovery } from "@/components/providers/chunk-error-recovery";
 import { AuthProvider } from "@/context/auth-context";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${display.variable} font-sans`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+          <ChunkErrorRecovery />
           <AuthProvider>{children}</AuthProvider>
           <Toaster />
         </ThemeProvider>

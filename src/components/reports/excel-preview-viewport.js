@@ -3,98 +3,83 @@
 import { useRef, useEffect, useState } from "react";
 
 const DESKTOP_ZOOM = 0.7;
-const MOBILE_BREAKPOINT = 1024;
-
-function useIsMobilePreview() {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
-    const update = () => setIsMobile(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-
-  return isMobile;
-}
 
 /**
- * Desktop: ~70% zoom on gray canvas.
- * Mobile: no transform (fixes blank/clipped text) + horizontal scroll with sticky name column.
+ * Single DOM tree for SSR + client (avoids React hydration #423).
+ * Desktop scale is applied only after mount via inline styles.
  */
 export function ExcelPreviewViewport({ children, scrollToStart = false }) {
   const outerRef = useRef(null);
   const innerRef = useRef(null);
-  const scrollRef = useRef(null);
+  const [mounted, setMounted] = useState(false);
   const [layoutHeight, setLayoutHeight] = useState(0);
-  const isMobile = useIsMobilePreview();
+  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
-    if (isMobile) {
-      setLayoutHeight(0);
-      return;
-    }
+    setMounted(true);
+  }, []);
 
-    const inner = innerRef.current;
-    if (!inner) return;
+  useEffect(() => {
+    if (!mounted) return;
 
+    const mq = window.matchMedia("(min-width: 1024px)");
     const update = () => {
+      const desktop = mq.matches;
+      setIsDesktop(desktop);
+
+      if (!desktop) {
+        setLayoutHeight(0);
+        return;
+      }
+
+      const inner = innerRef.current;
+      if (!inner) return;
       setLayoutHeight(inner.offsetHeight * DESKTOP_ZOOM);
     };
 
     update();
-    const ro = new ResizeObserver(update);
-    ro.observe(inner);
-    return () => ro.disconnect();
-  }, [children, isMobile]);
+
+    const inner = innerRef.current;
+    const ro = inner ? new ResizeObserver(update) : null;
+    if (ro && inner) ro.observe(inner);
+
+    mq.addEventListener("change", update);
+    return () => {
+      mq.removeEventListener("change", update);
+      ro?.disconnect();
+    };
+  }, [mounted, children]);
 
   useEffect(() => {
-    if (!scrollToStart) return;
-    const el = scrollRef.current || outerRef.current;
+    if (!mounted || !scrollToStart) return;
+    const el = outerRef.current;
     if (!el) return;
     el.scrollLeft = 0;
     el.scrollTop = 0;
-  }, [scrollToStart, children, isMobile]);
+  }, [mounted, scrollToStart, children]);
 
-  if (isMobile) {
-    return (
-      <div
-        ref={outerRef}
-        className="excel-preview-frame excel-preview-frame--mobile min-h-0 flex-1 overflow-auto rounded-none border border-[#a6a6a6]"
-      >
-        <p className="no-print excel-mobile-hint">Swipe left/right to view all columns</p>
-        <div ref={scrollRef} className="excel-mobile-scroll">
-          <div ref={innerRef} className="excel-preview-inner--mobile">
-            {children}
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const scaleStyle =
+    mounted && isDesktop
+      ? {
+          transform: `scale(${DESKTOP_ZOOM})`,
+          transformOrigin: "top center",
+        }
+      : undefined;
+
+  const wrapperStyle =
+    mounted && isDesktop && layoutHeight > 0
+      ? { height: layoutHeight, width: "100%", display: "flex", justifyContent: "center" }
+      : undefined;
 
   return (
     <div
       ref={outerRef}
-      className="excel-preview-frame min-h-0 flex-1 overflow-auto rounded-none border border-[#a6a6a6]"
+      className="excel-preview-frame excel-preview-frame--responsive min-h-0 flex-1 overflow-auto rounded-none border border-[#a6a6a6]"
     >
-      <div className="excel-preview-canvas">
-        <div
-          style={{
-            height: layoutHeight > 0 ? layoutHeight : undefined,
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <div
-            ref={innerRef}
-            className="excel-preview-zoom"
-            style={{
-              transform: `scale(${DESKTOP_ZOOM})`,
-              transformOrigin: "top center",
-            }}
-          >
+      <p className="no-print excel-mobile-hint">Swipe left/right to view all columns</p>
+      <div className="excel-preview-scroll-host">
+        <div className="excel-scale-outer" style={wrapperStyle}>
+          <div ref={innerRef} className="excel-preview-inner" style={scaleStyle}>
             {children}
           </div>
         </div>

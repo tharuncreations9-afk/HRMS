@@ -24,7 +24,8 @@
     "db:reset-data": "node prisma/reset-data.js",
     "db:seed-leaves": "node prisma/seed-leaves.js",
     "logo:transparent": "node scripts/remove-logo-bg.js",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "deploy:server": "git pull origin main && npm install && npm run build && npm run stop:3000 && npm run start"
   },
   "prisma": {
     "seed": "node prisma/seed.js"

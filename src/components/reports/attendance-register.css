@@ -184,12 +184,13 @@
   background-size: 12px 12px;
 }
 
-.excel-preview-frame--mobile {
+.excel-preview-frame--responsive {
   display: flex;
   flex-direction: column;
 }
 
 .excel-mobile-hint {
+  display: block;
   margin: 0;
   padding: 6px 10px;
   text-align: center;
@@ -199,17 +200,47 @@
   border-bottom: 1px solid #bbb;
 }
 
-.excel-mobile-scroll {
-  flex: 1;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 10px 8px 14px;
+@media (min-width: 1024px) {
+  .excel-mobile-hint {
+    display: none;
+  }
 }
 
-.excel-preview-inner--mobile {
-  width: max-content;
-  min-width: 100%;
-  margin: 0 auto;
+.excel-preview-scroll-host {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 1023px) {
+  .excel-preview-scroll-host {
+    padding: 10px 8px 14px;
+  }
+
+  .excel-preview-inner {
+    width: max-content;
+    min-width: 100%;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .excel-preview-scroll-host {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100%;
+    padding: 16px 12px 20px;
+  }
+
+  .excel-scale-outer {
+    width: 100%;
+  }
+
+  .excel-preview-inner {
+    transform-origin: top center;
+  }
 }
 
 .excel-preview-canvas {
@@ -287,8 +318,9 @@
   .excel-preview-frame,
   .excel-preview-canvas,
   .excel-preview-zoom,
-  .excel-mobile-scroll,
-  .excel-preview-inner--mobile {
+  .excel-preview-scroll-host,
+  .excel-scale-outer,
+  .excel-preview-inner {
     background: none !important;
     padding: 0 !important;
     transform: none !important;
