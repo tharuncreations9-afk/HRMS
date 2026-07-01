@@ -325,7 +325,7 @@ function AddEmployeeContent() {
   if (loadingEmployee) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-royal border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-champagne border-t-transparent" />
       </div>
     );
   }
@@ -335,7 +335,7 @@ function AddEmployeeContent() {
       <div className="flex items-center gap-4">
         <Link href="/employees"><Button variant="ghost" size="icon"><ArrowLeft className="h-5 w-5" /></Button></Link>
         <div>
-          <h1 className="text-2xl font-bold lg:text-3xl">{isEditMode ? "Edit Employee" : "Add Employee"}</h1>
+          <h1 className="font-display text-2xl font-bold lg:text-3xl">{isEditMode ? "Edit Employee" : "Add Employee"}</h1>
           <p className="text-muted-foreground">
             {isEditMode ? "Update employee record" : "Create a new employee record"}
           </p>
@@ -352,7 +352,7 @@ function AddEmployeeContent() {
                 onClick={() => setStep(i)}
                 className={`shrink-0 rounded-full px-4 py-2 text-xs font-medium transition-colors ${
                   step === i
-                    ? "bg-royal text-white"
+                    ? "bg-champagne text-white"
                     : "border bg-background text-muted-foreground"
                 }`}
               >
@@ -371,7 +371,7 @@ function AddEmployeeContent() {
                   type="button"
                   onClick={() => setStep(i)}
                   className={`w-full rounded-lg px-3 py-2.5 text-left text-sm transition-colors ${
-                    step === i ? "bg-royal/10 font-medium text-royal" : "text-muted-foreground hover:bg-muted/50"
+                    step === i ? "bg-champagne/10 font-medium text-champagne" : "text-muted-foreground hover:bg-muted/50"
                   }`}
                 >
                   {section.title}
@@ -566,7 +566,7 @@ function AddEmployeeContent() {
                             value={cat.value}
                             checked={form.employeeCategory === cat.value}
                             onChange={() => set("employeeCategory", cat.value)}
-                            className="h-4 w-4 accent-royal"
+                            className="h-4 w-4 accent-champagne"
                           />
                           {cat.label}
                         </label>
@@ -845,7 +845,7 @@ function AddEmployeeContent() {
                                 href={existing.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="mt-1 inline-block text-xs text-royal hover:underline"
+                                className="mt-1 inline-block text-xs text-champagne hover:underline"
                               >
                                 View PDF
                               </a>
@@ -917,7 +917,7 @@ export default function AddEmployeePage() {
   return (
     <Suspense fallback={
       <div className="flex h-64 items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-royal border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-champagne border-t-transparent" />
       </div>
     }>
       <AddEmployeeContent />

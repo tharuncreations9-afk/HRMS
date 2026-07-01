@@ -62,7 +62,7 @@ function ResetPasswordForm() {
     return (
       <div className="text-center">
         <CheckCircle2 className="mx-auto mb-4 h-12 w-12 text-emerald-500" />
-        <h2 className="mb-2 text-2xl font-bold">Password Updated</h2>
+        <h2 className="mb-2 font-display text-2xl font-bold">Password Updated</h2>
         <p className="text-muted-foreground">Redirecting to login...</p>
       </div>
     );
@@ -79,7 +79,7 @@ function ResetPasswordForm() {
         </Link>
       </div>
 
-      <h2 className="mb-2 text-2xl font-bold">Create New Password</h2>
+      <h2 className="mb-2 font-display text-2xl font-bold">Create New Password</h2>
       <p className="mb-8 text-muted-foreground">Enter your new password below.</p>
 
       <form onSubmit={handleSubmit} className="space-y-5 [&_label]:text-center lg:[&_label]:text-left">

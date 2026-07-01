@@ -114,7 +114,7 @@ export function Sidebar({ collapsed, onToggle, mobile = false, onClose }) {
 
   const asideClassName = cn(
 
-    "fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-border/50 bg-navy text-white",
+    "fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-champagne/10 bg-espresso text-white",
 
     mobile && "w-[min(280px,85vw)] shadow-2xl"
 
@@ -189,7 +189,7 @@ export function Sidebar({ collapsed, onToggle, mobile = false, onClose }) {
 
                   activeCheck
 
-                    ? "bg-royal/20 text-white shadow-glow"
+                    ? "bg-champagne/20 text-white shadow-glow"
 
                     : "text-white/60 hover:bg-white/5 hover:text-white"
 
@@ -197,7 +197,7 @@ export function Sidebar({ collapsed, onToggle, mobile = false, onClose }) {
 
               >
 
-                <item.icon className={cn("h-5 w-5 shrink-0", activeCheck && "text-royal-light")} />
+                <item.icon className={cn("h-5 w-5 shrink-0", activeCheck && "text-champagne-light")} />
 
                 {(!collapsed || mobile) && <span>{item.label}</span>}
 

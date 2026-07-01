@@ -152,7 +152,7 @@ export default function RolesPage() {
 
         <div>
 
-          <h1 className="text-2xl font-bold lg:text-3xl">Roles & Permissions</h1>
+          <h1 className="font-display text-2xl font-bold lg:text-3xl">Roles & Permissions</h1>
 
           <p className="text-muted-foreground">Dynamic role-based access control from database</p>
 
@@ -166,7 +166,7 @@ export default function RolesPage() {
 
             onClick={() => setEditMode((v) => !v)}
 
-            className="inline-flex items-center gap-2 rounded-lg bg-royal px-4 py-2 text-sm font-medium text-white shadow-glow transition hover:bg-royal/90"
+            className="inline-flex items-center gap-2 rounded-lg bg-champagne px-4 py-2 text-sm font-medium text-white shadow-glow transition hover:bg-champagne/90"
 
           >
 
@@ -344,7 +344,7 @@ export default function RolesPage() {
 
             <CardTitle className="flex items-center gap-2">
 
-              <Lock className="h-5 w-5 text-royal" />
+              <Lock className="h-5 w-5 text-champagne" />
 
               Permission Management
 

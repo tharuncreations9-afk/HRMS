@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAuth, canManageRoles, forbiddenResponse } from "@/lib/auth-server";
 
 const roleColors = {
-  employee: "from-blue-500 to-blue-600",
+  employee: "from-champagne to-gold",
   manager: "from-emerald-500 to-emerald-600",
   security: "from-cyan-500 to-cyan-600",
   hr: "from-purple-500 to-purple-600",

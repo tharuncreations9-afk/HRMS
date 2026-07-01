@@ -21,14 +21,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { AttendanceRegister } from "@/components/reports/attendance-register";
-import { ReportPreviewScaler } from "@/components/reports/report-preview-scaler";
+import { ExcelPreviewViewport } from "@/components/reports/excel-preview-viewport";
+import {
+  exportAttendanceRegisterExcel,
+  downloadRegisterPdf,
+} from "@/lib/attendance-register";
 import { toast } from "sonner";
 import { api } from "@/lib/api-client";
 import { useLookups } from "@/hooks/use-lookups";
 
 const currentYear = new Date().getFullYear();
 
-const PREVIEW_HEIGHT = "h-[calc(100vh-12rem)] min-h-[520px] max-h-[800px]";
+const PREVIEW_HEIGHT = "h-[calc(100vh-12rem)] min-h-[520px] max-h-[900px]";
 
 export default function ReportsPage() {
   const [department, setDepartment] = useState("");
@@ -68,17 +72,29 @@ export default function ReportsPage() {
   };
 
   const handleDownloadPDF = () => {
-    toast.info("PDF download will be available in Phase 2 with backend integration.");
+    downloadRegisterPdf();
+    toast.info("Choose 'Save as PDF' in the print dialog for a PDF copy.");
   };
 
   const handleDownloadExcel = () => {
-    toast.info("Excel download will be available in Phase 2 with backend integration.");
+    if (!generated) return;
+    try {
+      exportAttendanceRegisterExcel({
+        department,
+        month,
+        year: parseInt(year, 10),
+        employees: reportEmployees,
+      });
+      toast.success("Excel register downloaded.");
+    } catch (err) {
+      toast.error(err?.message || "Failed to export Excel file.");
+    }
   };
 
   return (
     <div className="flex min-h-0 flex-col gap-4 lg:gap-5">
       <div className="shrink-0">
-        <h1 className="text-2xl font-bold lg:text-3xl">Reports & Downloads</h1>
+        <h1 className="font-display text-2xl font-bold lg:text-3xl">Reports & Downloads</h1>
         <p className="text-muted-foreground">Generate and download attendance reports</p>
       </div>
 
@@ -91,7 +107,7 @@ export default function ReportsPage() {
           <Card className="glass-card">
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-2">
-                <FileBarChart className="h-5 w-5 shrink-0 text-royal" />
+                <FileBarChart className="h-5 w-5 shrink-0 text-champagne" />
                 <span>Monthly Attendance Sheet</span>
               </CardTitle>
               <CardDescription>
@@ -182,59 +198,62 @@ export default function ReportsPage() {
               <div className="rounded-lg bg-muted/50 p-3 text-xs text-muted-foreground">
                 <p className="mb-1 font-medium text-foreground">Attendance Register Format</p>
                 <ul className="list-disc space-y-1 pl-4">
-                  <li>Monday to Saturday only (Sundays excluded)</li>
-                  <li>Two dates per page for manual entry</li>
-                  <li>In Time and Out Time columns</li>
-                  <li>A4 print-friendly layout</li>
+                  <li>Excel layout — Week title inside table (merged row)</li>
+                  <li>20 rows per sheet · In Time · Out Time · Signature</li>
+                  <li>Landscape print — fits one A4 page width</li>
                 </ul>
               </div>
             </CardContent>
           </Card>
         </motion.aside>
 
-        <section className="flex min-h-0 min-w-0 flex-col">
+        <section className={`flex min-h-0 min-w-0 flex-col ${PREVIEW_HEIGHT}`}>
           <AnimatePresence mode="wait">
-            {showPreview && generated ? (
+            {generated ? (
               <motion.div
                 key="preview"
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -12 }}
-                className={`flex min-h-0 flex-col ${PREVIEW_HEIGHT}`}
+                className={showPreview ? "flex min-h-0 flex-1 flex-col" : "register-offscreen"}
               >
-                <div className="no-print mb-3 flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                  <h2 className="text-base font-semibold break-words sm:text-lg">
-                    Preview — {department} · {month} {year}
-                  </h2>
-                  <Button variant="outline" size="sm" className="w-full shrink-0 sm:w-auto" onClick={handlePrint}>
-                    <Printer className="mr-1 h-4 w-4" /> Print Register
-                  </Button>
-                </div>
+                {showPreview && (
+                  <>
+                    <div className="no-print mb-3 flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                      <h2 className="text-base font-semibold break-words sm:text-lg">
+                        Worksheet Preview — {department} · {month} {year}
+                      </h2>
+                      <Button variant="outline" size="sm" className="w-full shrink-0 sm:w-auto" onClick={handlePrint}>
+                        <Printer className="mr-1 h-4 w-4" /> Print Register
+                      </Button>
+                    </div>
 
-                <div
-                  className={`min-h-0 flex-1 overflow-y-auto overflow-x-auto rounded-lg border border-border bg-muted/40 shadow-inner`}
-                >
-                  <div className="min-h-full p-3 sm:p-4">
-                    <p className="no-print mb-3 text-center text-[11px] text-muted-foreground lg:hidden">
-                      Scroll inside the preview to view all pages. Use Print for full A4 output.
-                    </p>
-                    <ReportPreviewScaler scrollContainer>
+                    <ExcelPreviewViewport>
                       <AttendanceRegister
                         department={department}
                         month={month}
-                        year={parseInt(year)}
+                        year={parseInt(year, 10)}
                         employees={reportEmployees}
                       />
-                    </ReportPreviewScaler>
-                  </div>
-                </div>
+                    </ExcelPreviewViewport>
+                  </>
+                )}
+
+                {!showPreview && (
+                  <AttendanceRegister
+                    department={department}
+                    month={month}
+                    year={parseInt(year, 10)}
+                    employees={reportEmployees}
+                  />
+                )}
               </motion.div>
             ) : (
               <motion.div
                 key="empty"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className={`flex items-center justify-center rounded-xl border-2 border-dashed border-muted-foreground/20 ${PREVIEW_HEIGHT}`}
+                className="flex flex-1 items-center justify-center rounded-xl border-2 border-dashed border-muted-foreground/20"
               >
                 <div className="px-4 text-center">
                   <FileBarChart className="mx-auto h-12 w-12 text-muted-foreground/30" />

@@ -146,7 +146,7 @@ export function Header({ onMenuToggle }) {
                 >
                   <div className="flex w-full items-center justify-between">
                     <span className="font-medium text-sm">{notif.title}</span>
-                    {!notif.read && <span className="h-2 w-2 rounded-full bg-royal" />}
+                    {!notif.read && <span className="h-2 w-2 rounded-full bg-champagne" />}
                   </div>
                   <span className="text-xs text-muted-foreground">{notif.message}</span>
                   <span className="text-[10px] text-muted-foreground">{notif.time}</span>

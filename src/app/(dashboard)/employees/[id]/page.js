@@ -77,7 +77,7 @@ function DocLink({ label, url }) {
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center gap-1 text-sm font-medium text-royal hover:underline"
+        className="flex items-center gap-1 text-sm font-medium text-champagne hover:underline"
       >
         <Download className="h-3.5 w-3.5" /> View / Download
       </a>
@@ -214,7 +214,7 @@ export default function EmployeeProfilePage() {
   if (!employee) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-royal border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-champagne border-t-transparent" />
       </div>
     );
   }
@@ -239,14 +239,14 @@ export default function EmployeeProfilePage() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-bold">{isOwnProfile ? "My Profile" : "Employee Profile"}</h1>
+          <h1 className="font-display text-2xl font-bold">{isOwnProfile ? "My Profile" : "Employee Profile"}</h1>
           <p className="text-muted-foreground">Employee ID: {employee.employeeCode}</p>
         </div>
       </div>
 
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
         <Card className="glass-card overflow-hidden">
-          <div className="h-24 bg-gradient-to-r from-navy to-royal" />
+          <div className="h-24 bg-gradient-to-r from-espresso to-champagne" />
           <CardContent className="relative px-4 pb-6 sm:px-6">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:flex-wrap">
               <div className="relative -mt-12 shrink-0">
@@ -330,7 +330,7 @@ export default function EmployeeProfilePage() {
                 },
               ].map((item) => (
                 <div key={item.label} className="flex items-center gap-3 rounded-lg border p-3">
-                  <item.icon className="h-4 w-4 shrink-0 text-royal" />
+                  <item.icon className="h-4 w-4 shrink-0 text-champagne" />
                   <div className="min-w-0">
                     <p className="text-[10px] text-muted-foreground">{item.label}</p>
                     <p className="text-sm font-medium truncate">{item.value}</p>
@@ -712,7 +712,7 @@ export default function EmployeeProfilePage() {
                 ).map((doc) => (
                   <div key={doc.name} className="flex items-center justify-between rounded-lg border p-4">
                     <div className="flex items-center gap-3 min-w-0">
-                      <FileText className="h-8 w-8 shrink-0 text-royal" />
+                      <FileText className="h-8 w-8 shrink-0 text-champagne" />
                       <div className="min-w-0">
                         <p className="font-medium">{doc.name}</p>
                         <p className="text-xs text-muted-foreground truncate">{doc.fileName || doc.id}</p>
@@ -743,7 +743,7 @@ export default function EmployeeProfilePage() {
               <CardContent>
                 <div className="space-y-4">
                   {activityLogs.map((log, i) => (
-                    <div key={i} className="flex gap-4 border-l-2 border-royal pl-4">
+                    <div key={i} className="flex gap-4 border-l-2 border-champagne pl-4">
                       <div>
                         <p className="font-medium">{log.action}</p>
                         <p className="text-sm text-muted-foreground">{log.details}</p>

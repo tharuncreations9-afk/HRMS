@@ -42,15 +42,30 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        navy: {
-          DEFAULT: "#0A1628",
-          light: "#1A2B4A",
-          dark: "#050D18",
+        espresso: {
+          DEFAULT: "#2C2419",
+          light: "#4A3F32",
+          dark: "#1A1612",
         },
-        royal: {
-          DEFAULT: "#2563EB",
-          light: "#3B82F6",
-          dark: "#1D4ED8",
+        champagne: {
+          DEFAULT: "#B8956A",
+          light: "#D4B896",
+          dark: "#9A7B52",
+        },
+        gold: {
+          DEFAULT: "#C9A962",
+          light: "#E2C88A",
+          dark: "#A68B4B",
+        },
+        ivory: {
+          DEFAULT: "#FAF7F2",
+          light: "#FFFCF8",
+          dark: "#F0EBE3",
+        },
+        sand: {
+          DEFAULT: "#E8DFD0",
+          light: "#F2EBE0",
+          dark: "#D4C9B8",
         },
       },
       borderRadius: {
@@ -60,15 +75,16 @@ module.exports = {
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "Georgia", "serif"],
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "glass": "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)",
+        "glass": "linear-gradient(135deg, rgba(250,247,242,0.15) 0%, rgba(232,223,208,0.08) 100%)",
       },
       boxShadow: {
-        glass: "0 8px 32px 0 rgba(31, 38, 135, 0.15)",
-        premium: "0 4px 24px -1px rgba(0, 0, 0, 0.08)",
-        glow: "0 0 20px rgba(37, 99, 235, 0.3)",
+        glass: "0 8px 32px 0 rgba(44, 36, 25, 0.08)",
+        premium: "0 4px 24px -1px rgba(44, 36, 25, 0.06)",
+        glow: "0 0 20px rgba(184, 149, 106, 0.25)",
       },
       animation: {
         "fade-in": "fadeIn 0.5s ease-out",

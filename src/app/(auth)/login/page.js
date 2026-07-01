@@ -98,7 +98,7 @@ export default function LoginPage() {
 
       <AuthFormPanel>
 
-        <h2 className="mb-2 text-2xl font-bold">Welcome back</h2>
+        <h2 className="mb-2 font-display text-2xl font-bold">Welcome back</h2>
 
         <p className="mb-8 text-muted-foreground">Sign in to your employee account</p>
 
@@ -194,7 +194,7 @@ export default function LoginPage() {
 
             </div>
 
-            <Link href="/forgot-password" className="text-sm text-royal hover:underline">
+            <Link href="/forgot-password" className="text-sm text-champagne hover:underline">
 
               Forgot Password?
 

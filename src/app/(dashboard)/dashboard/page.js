@@ -30,14 +30,14 @@ import { useAuth } from "@/context/auth-context";
 import { api } from "@/lib/api-client";
 
 const statCards = [
-  { key: "totalEmployees", label: "Total Employees", hint: "Active employees", icon: Users, color: "from-blue-500 to-blue-600", bg: "bg-blue-500/10" },
+  { key: "totalEmployees", label: "Total Employees", hint: "Active employees", icon: Users, color: "from-champagne to-gold", bg: "bg-champagne/10" },
   { key: "presentToday", label: "Present Today", hint: "Came to office today", icon: UserCheck, color: "from-emerald-500 to-emerald-600", bg: "bg-emerald-500/10" },
   { key: "onLeave", label: "On Leave Today", hint: "Approved / marked leave", icon: CalendarOff, color: "from-amber-500 to-amber-600", bg: "bg-amber-500/10" },
   { key: "absentToday", label: "Absent Today", hint: "Not present (includes not marked yet)", icon: UserX, color: "from-red-500 to-red-600", bg: "bg-red-500/10" },
 ];
 
 const quickActions = [
-  { label: "Add Employee", href: "/employees/add", icon: Plus, color: "bg-royal", perms: ["Employee Management"] },
+  { label: "Add Employee", href: "/employees/add", icon: Plus, color: "bg-champagne", perms: ["Employee Management"] },
   { label: "Mark Attendance", href: "/attendance", icon: ClipboardCheck, color: "bg-emerald-500", perms: ["Mark Attendance", "Attendance Monitoring"] },
   { label: "Generate Report", href: "/reports", icon: FileBarChart, color: "bg-amber-500", perms: ["Generate Reports", "View Team Reports"] },
   {
@@ -47,7 +47,7 @@ const quickActions = [
     color: "bg-purple-500",
     perms: ["Final Leave Approval", "Leave Approval", "View Leave Requests", "View Team Leave Requests"],
   },
-  { label: "Apply Leave", href: "/leaves", icon: CalendarDays, color: "bg-blue-500", perms: ["Apply Leave"] },
+  { label: "Apply Leave", href: "/leaves", icon: CalendarDays, color: "bg-gold", perms: ["Apply Leave"], hideForRoles: ["super_admin"] },
   { label: "View Attendance", href: "/attendance", icon: ClipboardCheck, color: "bg-teal-500", perms: ["View Attendance", "View Team Attendance"] },
 ];
 
@@ -61,7 +61,8 @@ const item = {
   show: { opacity: 1, y: 0 },
 };
 
-function canSeeQuickAction(action, hasPermission) {
+function canSeeQuickAction(action, hasPermission, userRole) {
+  if (action.hideForRoles?.includes(userRole)) return false;
   if (!action.perms?.length) return true;
   return action.perms.some((p) => hasPermission(p));
 }
@@ -85,7 +86,9 @@ export default function DashboardPage() {
   const [monthlyTrend, setMonthlyTrend] = useState([]);
 
   const showOrgDashboard = canViewOrgDashboard(hasPermission);
-  const visibleQuickActions = quickActions.filter((action) => canSeeQuickAction(action, hasPermission));
+  const visibleQuickActions = quickActions.filter((action) =>
+    canSeeQuickAction(action, hasPermission, user?.role)
+  );
 
   useEffect(() => {
     if (!showOrgDashboard) return;
@@ -100,7 +103,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-2xl font-bold lg:text-3xl">
+        <h1 className="font-display text-2xl font-bold lg:text-3xl">
           Good morning, <span className="gradient-text">{user?.name?.split(" ")[0]}</span>
         </h1>
         <p className="text-muted-foreground">
@@ -148,7 +151,7 @@ export default function DashboardPage() {
                     <XAxis dataKey="day" tick={{ fontSize: 11 }} />
                     <YAxis tick={{ fontSize: 11 }} width={32} />
                     <Tooltip contentStyle={{ borderRadius: "8px", border: "1px solid hsl(var(--border))" }} />
-                    <Bar dataKey="present" fill="#2563EB" radius={[4, 4, 0, 0]} name="Present" />
+                    <Bar dataKey="present" fill="#B8956A" radius={[4, 4, 0, 0]} name="Present" />
                     <Bar dataKey="absent" fill="#EF4444" radius={[4, 4, 0, 0]} name="Absent" />
                     <Bar dataKey="leave" fill="#F59E0B" radius={[4, 4, 0, 0]} name="Leave" />
                   </BarChart>
@@ -170,7 +173,7 @@ export default function DashboardPage() {
                     <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 11 }} />
                     <YAxis dataKey="department" type="category" width={72} tick={{ fontSize: 10 }} />
                     <Tooltip contentStyle={{ borderRadius: "8px", border: "1px solid hsl(var(--border))" }} />
-                    <Bar dataKey="percentage" fill="#2563EB" radius={[0, 4, 4, 0]} name="Attendance %" />
+                    <Bar dataKey="percentage" fill="#B8956A" radius={[0, 4, 4, 0]} name="Attendance %" />
                   </BarChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -192,15 +195,15 @@ export default function DashboardPage() {
                   <AreaChart data={monthlyTrend}>
                     <defs>
                       <linearGradient id="colorAtt" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#2563EB" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="#2563EB" stopOpacity={0} />
+                        <stop offset="5%" stopColor="#B8956A" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="#B8956A" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                     <XAxis dataKey="month" className="text-xs" />
                     <YAxis domain={[80, 100]} className="text-xs" />
                     <Tooltip contentStyle={{ borderRadius: "8px", border: "1px solid hsl(var(--border))" }} />
-                    <Area type="monotone" dataKey="attendance" stroke="#2563EB" fill="url(#colorAtt)" name="Attendance %" />
+                    <Area type="monotone" dataKey="attendance" stroke="#B8956A" fill="url(#colorAtt)" name="Attendance %" />
                   </AreaChart>
                 </ResponsiveContainer>
               </CardContent>

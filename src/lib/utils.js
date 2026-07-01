@@ -52,6 +52,15 @@ export function formatDateForRegister(date) {
   return `${day} ${formatted}`;
 }
 
+/** Excel register date: Wednesday, 01 July, 2026 */
+export function formatExcelRegisterDate(date) {
+  const dayName = date.toLocaleDateString("en-IN", { weekday: "long" });
+  const dayNum = String(date.getDate()).padStart(2, "0");
+  const monthName = date.toLocaleDateString("en-IN", { month: "long" });
+  const year = date.getFullYear();
+  return `${dayName}, ${dayNum} ${monthName}, ${year}`;
+}
+
 export const MONTHS = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December",

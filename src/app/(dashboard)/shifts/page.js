@@ -170,7 +170,7 @@ export default function ShiftManagementPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold lg:text-3xl">Shift Management</h1>
+          <h1 className="font-display text-2xl font-bold lg:text-3xl">Shift Management</h1>
           <p className="text-muted-foreground">
             Assign one active shift per department. Employees follow their department shift automatically.
           </p>

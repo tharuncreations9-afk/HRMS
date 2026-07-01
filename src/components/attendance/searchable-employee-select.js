@@ -92,7 +92,7 @@ export function SearchableEmployeeSelect({
                     type="button"
                     className={cn(
                       "flex w-full flex-col items-start px-3 py-2 text-left text-sm hover:bg-muted",
-                      value === emp.employeeCode && "bg-royal/10 text-royal"
+                      value === emp.employeeCode && "bg-champagne/10 text-champagne"
                     )}
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={() => handleSelect(emp)}

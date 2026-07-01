@@ -30,7 +30,7 @@ export function AuthHeroPanel() {
           className="mb-4 text-4xl font-bold leading-tight text-white xl:text-5xl"
         >
           Manage Your Workforce
-          <span className="block text-royal-light">Intelligently</span>
+          <span className="block text-champagne-light">Intelligently</span>
         </motion.h2>
 
         <motion.p
@@ -54,7 +54,7 @@ export function AuthHeroPanel() {
             { icon: Shield, label: "Enterprise Security" },
           ].map((item, i) => (
             <div key={i} className="rounded-xl bg-white/5 p-4 backdrop-blur-sm">
-              <item.icon className="mb-2 h-5 w-5 text-royal-light" />
+              <item.icon className="mb-2 h-5 w-5 text-champagne-light" />
               <p className="text-xs text-white/80">{item.label}</p>
             </div>
           ))}

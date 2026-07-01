@@ -110,7 +110,7 @@ export default function ForgotPasswordPage() {
 
 
 
-              <h2 className="mb-2 text-2xl font-bold">Forgot Password?</h2>
+              <h2 className="mb-2 font-display text-2xl font-bold">Forgot Password?</h2>
 
               <p className="mb-8 text-muted-foreground">
 
@@ -222,11 +222,11 @@ export default function ForgotPasswordPage() {
 
 
 
-              <h2 className="mb-2 text-2xl font-bold">Check Your Email</h2>
+              <h2 className="mb-2 font-display text-2xl font-bold">Check Your Email</h2>
 
               <p className="mb-2 text-muted-foreground">We&apos;ve sent a secure password reset link to</p>
 
-              <p className="mb-6 font-medium text-royal">{maskedEmail}</p>
+              <p className="mb-6 font-medium text-champagne">{maskedEmail}</p>
 
               <p className="mb-4 text-sm text-muted-foreground">
 
@@ -246,7 +246,7 @@ export default function ForgotPasswordPage() {
 
                   </p>
 
-                  <a href={devResetUrl} className="mt-1 block break-all text-royal underline">
+                  <a href={devResetUrl} className="mt-1 block break-all text-champagne underline">
 
                     {devResetUrl}
 

@@ -392,7 +392,7 @@ export default function DailyAttendancePage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between no-print">
         <div>
-          <h1 className="text-2xl font-bold lg:text-3xl">Daily Attendance</h1>
+          <h1 className="font-display text-2xl font-bold lg:text-3xl">Daily Attendance</h1>
           <p className="text-muted-foreground">
             {canMark
               ? "Mark Present on arrival; Half Day sets out to 2 PM without changing in time"
@@ -440,7 +440,7 @@ export default function DailyAttendancePage() {
       <div className="grid gap-4 sm:grid-cols-3 no-print">
         <Card className="glass-card">
           <CardContent className="flex items-center gap-3 p-4">
-            <Users className="h-8 w-8 text-royal" />
+            <Users className="h-8 w-8 text-champagne" />
             <div>
               <p className="text-xs text-muted-foreground">Total Active</p>
               <p className="text-xl font-bold">{markedCount + absentCount}</p>
@@ -472,7 +472,7 @@ export default function DailyAttendancePage() {
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <CardTitle className="flex items-center gap-2">
-                <Clock className="h-5 w-5 text-royal" />
+                <Clock className="h-5 w-5 text-champagne" />
                 {canMark ? "Mark Attendance" : "Attendance List"} — {dateLabel}
               </CardTitle>
               <CardDescription>

@@ -192,7 +192,7 @@ const LEAVE_CARD_STYLES = [
   { color: "text-red-500", bg: "bg-red-500/10", icon: "Heart" },
   { color: "text-amber-500", bg: "bg-amber-500/10", icon: "Star" },
   { color: "text-purple-500", bg: "bg-purple-500/10", icon: "Gift" },
-  { color: "text-blue-500", bg: "bg-blue-500/10", icon: "RefreshCw" },
+  { color: "text-champagne", bg: "bg-champagne/10", icon: "RefreshCw" },
   { color: "text-cyan-500", bg: "bg-cyan-500/10", icon: "CalendarDays" },
   { color: "text-rose-500", bg: "bg-rose-500/10", icon: "Clock" },
 ];

@@ -1,0 +1,265 @@
+/* Excel attendance register — matches MY-26.xlsx layout */
+
+.excel-register-root {
+  font-family: Calibri, Arial, "Segoe UI", sans-serif;
+  color: #000;
+}
+
+/* ── Screen preview (~70% zoom, compact rows) ── */
+@media screen {
+  .excel-register-page {
+    box-sizing: border-box;
+    width: 860px;
+    max-width: 100%;
+    margin: 0 auto 12px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    min-height: auto;
+  }
+
+  .excel-register-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: 10px;
+    border: 2px solid #000;
+    background: #fff;
+  }
+
+  .excel-register-table th,
+  .excel-register-table td {
+    border: 1px solid #000;
+    padding: 2px 5px;
+    vertical-align: middle;
+    line-height: 1.25;
+    box-sizing: border-box;
+  }
+
+  .excel-week-title-cell {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 4px;
+    background: #fff;
+  }
+
+  .excel-col-sno {
+    width: 5%;
+  }
+
+  .excel-col-name {
+    width: 24%;
+  }
+
+  .excel-col-field {
+    width: 10.5%;
+  }
+
+  .excel-th {
+    font-weight: 700;
+    text-align: center;
+    font-size: 10px;
+    background: #fff;
+  }
+
+  .excel-th-name {
+    text-align: left;
+    border-right: 2px solid #000;
+  }
+
+  .excel-th-date {
+    font-size: 10px;
+  }
+
+  .excel-register-table thead tr:nth-child(3) th {
+    border-bottom: 2px solid #000;
+  }
+
+  .excel-section-end {
+    border-right: 2px solid #000 !important;
+  }
+
+  .excel-td-sno {
+    text-align: center;
+  }
+
+  .excel-td-name {
+    text-align: left;
+    border-right: 2px solid #000;
+    text-transform: uppercase;
+  }
+
+  .excel-td-field {
+    text-align: center;
+  }
+
+  .excel-data-row {
+    height: 20px;
+  }
+
+  .excel-data-row td {
+    height: 20px;
+  }
+}
+
+/* Preview frame */
+.excel-preview-frame {
+  background-color: #d4d4d4;
+  background-image:
+    linear-gradient(#c0c0c0 1px, transparent 1px),
+    linear-gradient(90deg, #c0c0c0 1px, transparent 1px);
+  background-size: 12px 12px;
+}
+
+.excel-preview-canvas {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100%;
+  padding: 16px 12px 20px;
+}
+
+.excel-preview-zoom {
+  transform-origin: top center;
+}
+
+.register-offscreen {
+  position: fixed;
+  left: -10000px;
+  top: 0;
+  width: 297mm;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ── Print: landscape A4, fit one sheet per page ── */
+@page {
+  size: A4 landscape;
+  margin: 8mm;
+}
+
+@media print {
+  .register-offscreen {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    pointer-events: auto !important;
+    overflow: visible !important;
+  }
+
+  html,
+  body {
+    width: 297mm;
+    height: 210mm;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+
+  .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .excel-preview-frame,
+  .excel-preview-canvas,
+  .excel-preview-zoom {
+    background: none !important;
+    padding: 0 !important;
+    transform: none !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .excel-register-root {
+    width: 100%;
+  }
+
+  .excel-register-page {
+    width: 100% !important;
+    max-width: 281mm;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    page-break-after: always;
+    page-break-inside: avoid;
+    break-after: page;
+    break-inside: avoid;
+  }
+
+  .excel-register-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  .excel-register-table {
+    width: 100% !important;
+    font-size: 10pt !important;
+    border: 2px solid #000 !important;
+  }
+
+  .excel-register-table th,
+  .excel-register-table td {
+    border: 1px solid #000 !important;
+    padding: 1.5pt 4pt !important;
+  }
+
+  .excel-week-title-cell {
+    font-size: 11pt !important;
+    font-weight: 700 !important;
+    padding: 4pt !important;
+    text-align: center !important;
+  }
+
+  .excel-th-name,
+  .excel-td-name {
+    text-align: left !important;
+    border-right: 2px solid #000 !important;
+  }
+
+  .excel-td-name {
+    text-transform: uppercase;
+  }
+
+  .excel-th-sno,
+  .excel-td-sno {
+    text-align: center !important;
+  }
+
+  .excel-register-table thead tr:nth-child(3) th {
+    border-bottom: 2px solid #000 !important;
+  }
+
+  .excel-section-end {
+    border-right: 2px solid #000 !important;
+  }
+
+  /* 20 rows + header fit landscape page height */
+  .excel-data-row,
+  .excel-data-row td {
+    height: 8.5mm !important;
+    max-height: 8.5mm !important;
+  }
+}

@@ -220,7 +220,7 @@ function EmployeeListContent() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold lg:text-3xl">Employee Management</h1>
+          <h1 className="font-display text-2xl font-bold lg:text-3xl">Employee Management</h1>
           <p className="text-muted-foreground">Manage and view all employees</p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -256,7 +256,7 @@ function EmployeeListContent() {
                 ref={fileInputRef}
                 type="file"
                 accept=".xlsx,.xls"
-                className="w-full text-sm file:mr-3 file:rounded-md file:border-0 file:bg-royal file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-white"
+                className="w-full text-sm file:mr-3 file:rounded-md file:border-0 file:bg-champagne file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-white"
                 onChange={(e) => setBulkFile(e.target.files?.[0] || null)}
               />
               {bulkFile && (
@@ -423,7 +423,7 @@ function EmployeeListContent() {
         <CardContent>
           {loading && employees.length === 0 ? (
             <div className="flex h-48 items-center justify-center">
-              <div className="h-8 w-8 animate-spin rounded-full border-4 border-royal border-t-transparent" />
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-champagne border-t-transparent" />
             </div>
           ) : (
             <>
@@ -580,7 +580,7 @@ function EmployeeListContent() {
 
 export default function EmployeesPage() {
   return (
-    <Suspense fallback={<div className="flex h-64 items-center justify-center"><div className="h-8 w-8 animate-spin rounded-full border-4 border-royal border-t-transparent" /></div>}>
+    <Suspense fallback={<div className="flex h-64 items-center justify-center"><div className="h-8 w-8 animate-spin rounded-full border-4 border-champagne border-t-transparent" /></div>}>
       <EmployeeListContent />
     </Suspense>
   );

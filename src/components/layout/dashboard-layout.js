@@ -82,7 +82,7 @@ export function DashboardLayout({ children }) {
 
           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
 
-          className="h-10 w-10 rounded-full border-4 border-royal border-t-transparent"
+          className="h-10 w-10 rounded-full border-4 border-champagne border-t-transparent"
 
         />
 

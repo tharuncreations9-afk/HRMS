@@ -33,7 +33,7 @@ export function AuthFormPanel({ children, className }) {
 
         <div
           className={cn(
-            "max-lg:rounded-2xl max-lg:border max-lg:border-white/25 max-lg:bg-white/95 max-lg:p-6 max-lg:shadow-[0_20px_50px_rgba(10,22,40,0.35)] max-lg:backdrop-blur-md",
+            "max-lg:rounded-2xl max-lg:border max-lg:border-white/25 max-lg:bg-white/95 max-lg:p-6 max-lg:shadow-[0_20px_50px_rgba(44,36,25,0.35)] max-lg:backdrop-blur-md",
             "lg:p-0 lg:shadow-none"
           )}
         >

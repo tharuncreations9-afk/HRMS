@@ -4,48 +4,48 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-    --primary: 221 83% 53%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 214 32% 91%;
-    --secondary-foreground: 222 47% 11%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
-    --accent: 214 32% 91%;
-    --accent-foreground: 222 47% 11%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 221 83% 53%;
-    --radius: 0.75rem;
+    --background: 40 33% 97%;
+    --foreground: 25 20% 18%;
+    --card: 40 40% 99%;
+    --card-foreground: 25 20% 18%;
+    --popover: 40 40% 99%;
+    --popover-foreground: 25 20% 18%;
+    --primary: 38 42% 52%;
+    --primary-foreground: 40 40% 98%;
+    --secondary: 35 28% 90%;
+    --secondary-foreground: 25 20% 22%;
+    --muted: 38 24% 93%;
+    --muted-foreground: 25 12% 42%;
+    --accent: 36 30% 88%;
+    --accent-foreground: 25 20% 18%;
+    --destructive: 0 65% 48%;
+    --destructive-foreground: 40 40% 98%;
+    --border: 35 22% 86%;
+    --input: 35 22% 86%;
+    --ring: 38 42% 52%;
+    --radius: 0.875rem;
   }
 
   .dark {
-    --background: 222 47% 6%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 222 47% 6%;
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 217 33% 17%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 224 76% 48%;
+    --background: 25 18% 10%;
+    --foreground: 40 25% 94%;
+    --card: 25 16% 13%;
+    --card-foreground: 40 25% 94%;
+    --popover: 25 16% 13%;
+    --popover-foreground: 40 25% 94%;
+    --primary: 38 45% 58%;
+    --primary-foreground: 25 18% 10%;
+    --secondary: 25 14% 18%;
+    --secondary-foreground: 40 25% 94%;
+    --muted: 25 14% 18%;
+    --muted-foreground: 35 15% 62%;
+    --accent: 25 14% 20%;
+    --accent-foreground: 40 25% 94%;
+    --destructive: 0 63% 45%;
+    --destructive-foreground: 40 25% 94%;
+    --border: 25 12% 22%;
+    --input: 25 12% 22%;
+    --ring: 38 45% 58%;
   }
 }
 
@@ -63,55 +63,15 @@
 
 @layer utilities {
   .glass {
-    @apply bg-white/70 dark:bg-navy/70 backdrop-blur-xl border border-white/20 dark:border-white/10;
+    @apply bg-ivory/70 dark:bg-espresso/70 backdrop-blur-xl border border-champagne/20 dark:border-champagne/10;
   }
   .glass-card {
-    @apply bg-white/80 dark:bg-navy-light/80 backdrop-blur-md border border-white/30 dark:border-white/10 shadow-glass;
+    @apply bg-ivory/80 dark:bg-espresso-light/80 backdrop-blur-md border border-champagne/25 dark:border-champagne/10 shadow-glass;
   }
   .gradient-text {
-    @apply bg-gradient-to-r from-royal to-royal-light bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-champagne to-gold bg-clip-text text-transparent;
   }
   .premium-gradient {
-    background: linear-gradient(135deg, #0A1628 0%, #1A2B4A 50%, #2563EB 100%);
-  }
-}
-
-/* Print styles for attendance register */
-@media print {
-  body * {
-    visibility: hidden;
-  }
-  .print-area,
-  .print-area * {
-    visibility: visible;
-  }
-  .print-area {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-  }
-  .print-page {
-    page-break-after: always;
-    page-break-inside: avoid;
-    width: 210mm !important;
-    min-height: 297mm !important;
-    padding: 2rem !important;
-    margin-bottom: 0 !important;
-    box-shadow: none !important;
-    transform: none !important;
-  }
-  .attendance-register-page table {
-    min-width: 0 !important;
-    font-size: 0.75rem !important;
-  }
-  .print-page:last-child {
-    page-break-after: auto;
-  }
-  .no-print {
-    display: none !important;
-  }
-  .report-preview-scaler-inner {
-    transform: none !important;
+    background: linear-gradient(135deg, #2C2419 0%, #4A3F32 45%, #B8956A 100%);
   }
 }

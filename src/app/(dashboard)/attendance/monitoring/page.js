@@ -76,7 +76,7 @@ export default function AttendanceMonitoringPage() {
     { label: "Marked Today", count: markedCount, icon: UserCheck, color: "text-emerald-500", bg: "bg-emerald-500/10" },
     { label: "Absent Employees", count: absentCount, icon: UserX, color: "text-red-500", bg: "bg-red-500/10" },
     { label: "Late Employees", count: 0, icon: Clock, color: "text-amber-500", bg: "bg-amber-500/10" },
-    { label: "Leave Employees", count: 0, icon: CalendarOff, color: "text-blue-500", bg: "bg-blue-500/10" },
+    { label: "Leave Employees", count: 0, icon: CalendarOff, color: "text-champagne", bg: "bg-champagne/10" },
   ];
 
   const statusVariant = (s) => {
@@ -89,7 +89,7 @@ export default function AttendanceMonitoringPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold lg:text-3xl">Attendance Monitoring</h1>
+        <h1 className="font-display text-2xl font-bold lg:text-3xl">Attendance Monitoring</h1>
         <p className="text-muted-foreground">Real-time attendance overview and tracking</p>
       </div>
 

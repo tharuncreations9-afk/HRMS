@@ -155,7 +155,7 @@ export default function OrganizationPage() {
   if (isLoading || !user) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-royal border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-champagne border-t-transparent" />
       </div>
     );
   }
@@ -163,7 +163,7 @@ export default function OrganizationPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold lg:text-3xl">Departments & Designations</h1>
+        <h1 className="font-display text-2xl font-bold lg:text-3xl">Departments & Designations</h1>
         <p className="text-muted-foreground">Manage organization departments and job designations</p>
       </div>
 
@@ -190,7 +190,7 @@ export default function OrganizationPage() {
             <CardContent>
               {loading ? (
                 <div className="flex h-32 items-center justify-center">
-                  <div className="h-6 w-6 animate-spin rounded-full border-2 border-royal border-t-transparent" />
+                  <div className="h-6 w-6 animate-spin rounded-full border-2 border-champagne border-t-transparent" />
                 </div>
               ) : (
                 <div className="overflow-x-auto rounded-lg border">
@@ -255,7 +255,7 @@ export default function OrganizationPage() {
             <CardContent>
               {loading ? (
                 <div className="flex h-32 items-center justify-center">
-                  <div className="h-6 w-6 animate-spin rounded-full border-2 border-royal border-t-transparent" />
+                  <div className="h-6 w-6 animate-spin rounded-full border-2 border-champagne border-t-transparent" />
                 </div>
               ) : (
                 <div className="overflow-x-auto rounded-lg border">

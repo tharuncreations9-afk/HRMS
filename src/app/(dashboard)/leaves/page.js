@@ -213,7 +213,7 @@ export default function LeavesPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold lg:text-3xl">Leave Management</h1>
+          <h1 className="font-display text-2xl font-bold lg:text-3xl">Leave Management</h1>
           <p className="text-muted-foreground">
             {isSuperAdminView
               ? "View employee leave balances and approve requests"
@@ -342,7 +342,7 @@ export default function LeavesPage() {
                       <p className="text-xs font-medium text-muted-foreground">{card.label}</p>
                       <div className="mt-2 grid grid-cols-3 gap-2 text-center">
                         <div>
-                          <p className="text-lg font-bold text-royal">{balance.total}</p>
+                          <p className="text-lg font-bold text-champagne">{balance.total}</p>
                           <p className="text-[10px] text-muted-foreground">Total</p>
                         </div>
                         <div>
@@ -486,7 +486,7 @@ export default function LeavesPage() {
             <Card className="glass-card">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <CalendarDays className="h-5 w-5 text-royal" /> Holidays
+                  <CalendarDays className="h-5 w-5 text-champagne" /> Holidays
                 </CardTitle>
               </CardHeader>
               <CardContent className="max-h-[min(28rem,45vh)] space-y-3 overflow-y-auto pr-1">
