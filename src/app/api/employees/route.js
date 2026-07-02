@@ -20,6 +20,7 @@ import {
   checkEmployeeDuplicates,
   mapPrismaDuplicateError,
   validationErrorResponse,
+  mapCategoryErrorsToFields,
 } from "@/lib/employee-validation";
 import {
   EMPLOYEE_LIST_STATUS_FILTERS,
@@ -136,7 +137,7 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
-    const validation = validateEmployeeForm(body, { isEdit: false });
+    const validation = validateEmployeeForm(body, { isEdit: false, checkConfirmPassword: false });
     if (!validation.valid) {
       return validationErrorResponse(validation.fieldErrors, validation.summary);
     }
@@ -144,7 +145,7 @@ export async function POST(request) {
     const normalized = validation.normalized;
     const categoryValidation = validateEmployeeCategory(normalized);
     if (!categoryValidation.valid) {
-      const fieldErrors = { employeeCategory: categoryValidation.errors[0] };
+      const fieldErrors = mapCategoryErrorsToFields(categoryValidation.errors);
       return validationErrorResponse(fieldErrors, categoryValidation.errors[0]);
     }
 
@@ -159,7 +160,7 @@ export async function POST(request) {
     }
 
     const fullName = `${normalized.firstName} ${normalized.lastName}`.trim();
-    const passwordHash = await hashPassword(body.password);
+    const passwordHash = await hashPassword(body.password.trim());
     const categoryData = buildCategoryData(normalized);
 
     const statusInput = parseStatusInput(normalized.status) || "Active";

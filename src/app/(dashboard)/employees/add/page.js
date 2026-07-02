@@ -14,7 +14,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { api } from "@/lib/api-client";
 import { validateEmployeeCategory } from "@/lib/employee-category";
-import { validateEmployeeForm } from "@/lib/employee-validation";
+import {
+  validateEmployeeForm,
+  buildEmployeeApiPayload,
+  mapCategoryErrorsToFields,
+} from "@/lib/employee-validation";
 import { useAuth } from "@/context/auth-context";
 import { useLookups } from "@/hooks/use-lookups";
 
@@ -227,14 +231,15 @@ function AddEmployeeContent() {
   };
 
   const validateForm = () => {
-    const validation = validateEmployeeForm({ ...form, confirmPassword: form.confirmPassword }, {
-      isEdit: isEditMode,
-    });
+    const validation = validateEmployeeForm(
+      { ...form, confirmPassword: form.confirmPassword },
+      { isEdit: isEditMode, checkConfirmPassword: true }
+    );
     const errors = { ...validation.fieldErrors };
 
     const categoryCheck = validateEmployeeCategory(form);
     if (!categoryCheck.valid) {
-      errors.employeeCategory = categoryCheck.errors[0];
+      Object.assign(errors, mapCategoryErrorsToFields(categoryCheck.errors));
     }
 
     if (Object.keys(errors).length) {
@@ -244,7 +249,8 @@ function AddEmployeeContent() {
         employeeCode: 0, firstName: 0, lastName: 0,
         departmentId: 1, designationId: 1, joiningDate: 1, employeeCategory: 1,
         qualification: 2, collegeName: 2, graduationYear: 2,
-        totalExperienceYears: 2, previousCompany: 2,
+        totalExperienceYears: 2, totalExperienceMonths: 2,
+        previousCompany: 2, previousDesignation: 2, previousCtc: 2,
         mobile: 3, email: 3, password: 3, confirmPassword: 3,
         pan: 4, aadhaar: 4,
       };
@@ -278,48 +284,78 @@ function AddEmployeeContent() {
     if (!validateForm()) return;
 
     setSaving(true);
-    try {
-      const { confirmPassword, password, ...rest } = form;
-      const payload = { ...rest };
-      if (password) payload.password = password;
+    let employeeId = editId;
+    let employeeCreated = false;
 
-      let employeeId = editId;
+    try {
+      const payload = buildEmployeeApiPayload(form, { isEdit: isEditMode });
 
       if (isEditMode) {
         await api.updateEmployee(editId, payload);
       } else {
         const { employee } = await api.createEmployee(payload);
         employeeId = employee?.id;
+        employeeCreated = Boolean(employeeId);
+        if (!employeeId) {
+          throw new Error("Employee was saved but no employee ID was returned.");
+        }
       }
+
+      const uploadFailures = [];
 
       if (employeeId) {
         for (const doc of DOCUMENT_UPLOADS) {
           const file = pendingFiles[doc.type];
-          if (file) {
+          if (!file) continue;
+          try {
             await api.uploadEmployeeDocument(employeeId, doc.type, file);
+          } catch (uploadErr) {
+            uploadFailures.push(`${doc.label}: ${uploadErr.message}`);
           }
         }
 
         if (form.employeeCategory === "Experienced") {
           for (const doc of EXPERIENCE_DOC_UPLOADS) {
             const file = pendingFiles[doc.key];
-            if (file) {
+            if (!file) continue;
+            try {
               await api.uploadEmployeeDocument(employeeId, doc.type, file);
+            } catch (uploadErr) {
+              uploadFailures.push(`${doc.label}: ${uploadErr.message}`);
             }
           }
         }
 
         if (profilePhoto) {
-          await api.uploadEmployeePhoto(employeeId, profilePhoto);
+          try {
+            await api.uploadEmployeePhoto(employeeId, profilePhoto);
+          } catch (uploadErr) {
+            uploadFailures.push(`Profile photo: ${uploadErr.message}`);
+          }
         }
       }
 
-      toast.success(isEditMode ? "Employee updated successfully." : "Employee created successfully.");
+      if (uploadFailures.length) {
+        toast.warning(
+          `Employee ${isEditMode ? "updated" : "created"}, but some uploads failed: ${uploadFailures.join("; ")}`
+        );
+      } else {
+        toast.success(isEditMode ? "Employee updated successfully." : "Employee created successfully.");
+      }
+
       router.push("/employees");
     } catch (err) {
+      if (employeeCreated) {
+        toast.error(
+          `${err.message || "Save failed after employee was created."} Check the employee list and try uploading documents again.`
+        );
+        router.push("/employees");
+        return;
+      }
       handleApiError(err);
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
   };
 
   if (loadingEmployee) {

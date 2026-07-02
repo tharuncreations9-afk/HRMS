@@ -16,6 +16,7 @@ import {
   validationErrorResponse,
   normalizeEmployeeInput,
   validateMobile,
+  mapCategoryErrorsToFields,
 } from "@/lib/employee-validation";
 import { mapEmployeeDocument, mapDocumentsByType } from "@/lib/document-mapper";
 
@@ -191,7 +192,7 @@ export async function PATCH(request, { params }) {
       employeeCategory: body.employeeCategory ?? existing.employeeCategory,
     };
 
-    const validation = validateEmployeeForm(merged, { isEdit: true });
+    const validation = validateEmployeeForm(merged, { isEdit: true, checkConfirmPassword: false });
     if (!validation.valid) {
       return validationErrorResponse(validation.fieldErrors, validation.summary);
     }
@@ -230,7 +231,8 @@ export async function PATCH(request, { params }) {
   if (!isSelfOnly && body.employeeCategory) {
     const categoryValidation = validateEmployeeCategory(body);
     if (!categoryValidation.valid) {
-      return Response.json({ error: categoryValidation.errors.join("; ") }, { status: 400 });
+      const fieldErrors = mapCategoryErrorsToFields(categoryValidation.errors);
+      return validationErrorResponse(fieldErrors, categoryValidation.errors[0]);
     }
   }
 
