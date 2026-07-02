@@ -147,7 +147,7 @@ export const api = {
   createDesignation: (body) => apiFetch("/designations", { method: "POST", body: JSON.stringify(body) }),
   updateDesignation: (id, body) => apiFetch(`/designations/${id}`, { method: "PATCH", body: JSON.stringify(body) }),
   reportEmployees: (department) => apiFetch(`/reports/employees?department=${encodeURIComponent(department || "")}`),
-  lateComersReport: (params) => apiFetch(`/reports/late-comers?${new URLSearchParams(params || {})}`),
+  attendanceReport: (params) => apiFetch(`/reports/attendance?${new URLSearchParams(params || {})}`),
   shifts: (params) => apiFetch(`/shifts?${new URLSearchParams(params || {})}`),
   shiftDepartments: (params) => apiFetch(`/shifts/departments?${new URLSearchParams(params || {})}`),
   createShift: (body) => apiFetch("/shifts", { method: "POST", body: JSON.stringify(body) }),

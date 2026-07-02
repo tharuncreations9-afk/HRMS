@@ -28,8 +28,6 @@ import {
 
   Clock,
 
-  AlarmClock,
-
   ChevronLeft,
 
   ChevronRight,
@@ -66,7 +64,7 @@ const navItems = [
 
   { href: "/reports", label: "Reports", icon: FileBarChart, perm: ["Generate Reports", "View Team Reports"] },
 
-  { href: "/reports/late-comers", label: "Late Comers Report", icon: AlarmClock, perm: ["Generate Reports", "View Team Reports"] },
+  { href: "/reports/attendance", label: "Attendance Report", icon: FileBarChart, perm: ["Generate Reports", "View Team Reports"] },
 
   { href: "/roles", label: "Roles & Permissions", icon: Shield, roles: ["admin", "super_admin"] },
 
@@ -169,8 +167,8 @@ export function Sidebar({ collapsed, onToggle, mobile = false, onClose }) {
                   ? pathname === "/attendance"
                   : item.href === "/reports"
                     ? pathname === "/reports"
-                    : item.href === "/reports/late-comers"
-                      ? pathname === "/reports/late-comers"
+                    : item.href === "/reports/attendance"
+                      ? pathname === "/reports/attendance"
                       : item.href === "/shifts"
                         ? pathname === "/shifts"
                         : pathname === item.href;
