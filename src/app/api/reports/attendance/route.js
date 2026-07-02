@@ -75,6 +75,7 @@ export async function GET(request) {
         attendanceDate: true,
         attendanceStatus: true,
         lateMinutes: true,
+        inTime: true,
       },
     }),
     prisma.department.findMany({ orderBy: { departmentName: "asc" } }),

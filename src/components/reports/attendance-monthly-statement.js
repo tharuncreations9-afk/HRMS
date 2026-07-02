@@ -7,6 +7,16 @@ export function AttendanceMonthlyStatement({ headerTitle, rows = [] }) {
     <div className="print-area attendance-statement-root">
       <div className="attendance-statement-scroll">
         <table className="attendance-statement-table" cellSpacing={0} cellPadding={0}>
+          <colgroup>
+            <col className="attendance-col-sno" />
+            <col className="attendance-col-name" />
+            <col className="attendance-col-num" />
+            <col className="attendance-col-num" />
+            <col className="attendance-col-num" />
+            <col className="attendance-col-num" />
+            <col className="attendance-col-num" />
+            <col className="attendance-col-num" />
+          </colgroup>
           <thead>
             <tr>
               <th className="attendance-statement-title" colSpan={8}>
@@ -54,7 +64,9 @@ export function AttendanceMonthlyStatement({ headerTitle, rows = [] }) {
                   <td className="attendance-statement-num">{row.lateDays}</td>
                   <td className="attendance-statement-num">{row.fullDays}</td>
                   <td className="attendance-statement-num">{row.halfDays}</td>
-                  <td className="attendance-statement-num">{row.sundays}</td>
+                  <td className="attendance-statement-num" title={`Sundays attended (month has ${row.sundaysInMonth ?? "—"} Sundays)`}>
+                    {row.sundays}
+                  </td>
                   <td className="attendance-statement-num">{row.totalPresentDays}</td>
                   <td className="attendance-statement-num">{row.absentDays}</td>
                 </tr>

@@ -6,6 +6,18 @@
   color-scheme: light;
 }
 
+.attendance-col-sno {
+  width: 6%;
+}
+
+.attendance-col-name {
+  width: 30%;
+}
+
+.attendance-col-num {
+  width: 9%;
+}
+
 @media screen {
   .attendance-statement-scroll {
     overflow-x: auto;
@@ -22,6 +34,7 @@
     table-layout: fixed;
     font-size: 12px;
     background: #fff;
+    border: 1px solid #000;
   }
 
   .attendance-statement-table th,
@@ -60,13 +73,14 @@
 
 @page {
   size: A4 portrait;
-  margin: 10mm;
+  margin: 8mm;
 }
 
 @media print {
   html,
   body {
     width: 210mm;
+    height: auto;
     margin: 0 !important;
     padding: 0 !important;
     background: #fff !important;
@@ -87,8 +101,9 @@
     position: absolute;
     left: 0;
     top: 0;
-    width: 100%;
-    margin: 0;
+    width: 194mm;
+    max-width: 194mm;
+    margin: 0 auto;
     padding: 0;
     background: #fff;
   }
@@ -100,35 +115,60 @@
   .attendance-statement-scroll {
     overflow: visible !important;
     border: none !important;
+    width: 100%;
   }
 
   .attendance-statement-table {
     width: 100% !important;
     min-width: 0 !important;
-    font-size: 10pt !important;
+    max-width: 194mm;
+    font-size: 8.5pt !important;
     border-collapse: collapse !important;
+    table-layout: fixed !important;
+    border: 1px solid #000 !important;
+    page-break-inside: auto;
+  }
+
+  .attendance-statement-table thead {
+    display: table-header-group;
+  }
+
+  .attendance-statement-table tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
   }
 
   .attendance-statement-table th,
   .attendance-statement-table td {
     border: 1px solid #000 !important;
-    padding: 4pt 5pt !important;
+    padding: 3pt 4pt !important;
     color: #000 !important;
     background: #fff !important;
+    text-align: center !important;
+    vertical-align: middle !important;
   }
 
   .attendance-statement-title {
-    font-size: 13pt !important;
+    font-size: 12pt !important;
     font-weight: 700 !important;
     text-align: center !important;
-    padding: 8pt 4pt !important;
+    padding: 6pt 4pt !important;
   }
 
   .attendance-statement-name {
     text-align: left !important;
+    text-transform: uppercase;
+    font-size: 8pt !important;
+  }
+
+  .attendance-statement-sub {
+    font-size: 8pt !important;
+    font-weight: 700 !important;
   }
 
   .attendance-statement-data-row td {
-    height: 7mm;
+    height: 6mm;
+    max-height: 6mm;
+    font-size: 8.5pt !important;
   }
 }
