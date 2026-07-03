@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 
 export function middleware(request) {
-  const { pathname } = request.nextUrl;
+  const url = request.nextUrl.clone();
+  const { pathname } = url;
 
   if (
     pathname.startsWith("/_next/static") ||
@@ -11,6 +12,17 @@ export function middleware(request) {
     pathname === "/favicon.ico"
   ) {
     return NextResponse.next();
+  }
+
+  // Strip legacy cache-bust param from any URL (server-side, before React loads).
+  if (url.searchParams.has("_cb")) {
+    url.searchParams.delete("_cb");
+    return NextResponse.redirect(url);
+  }
+
+  // Root domain → login (no client-side redirect, no query params).
+  if (pathname === "/") {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   const response = NextResponse.next();
