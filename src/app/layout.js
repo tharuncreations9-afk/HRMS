@@ -22,6 +22,19 @@ const chunkRecoveryScript = `
 (function () {
   var key = "emp_chunk_reload";
   var tries = parseInt(sessionStorage.getItem(key) || "0", 10);
+
+  function stripCb() {
+    try {
+      var url = new URL(window.location.href);
+      if (!url.searchParams.has("_cb")) return;
+      url.searchParams.delete("_cb");
+      var qs = url.searchParams.toString();
+      window.history.replaceState(null, "", url.pathname + (qs ? "?" + qs : "") + url.hash);
+    } catch (e) {}
+  }
+
+  stripCb();
+
   function reloadOnce() {
     if (tries >= 2) return;
     tries += 1;
@@ -31,10 +44,9 @@ const chunkRecoveryScript = `
         names.forEach(function (name) { window.caches.delete(name); });
       });
     }
-    var url = new URL(window.location.href);
-    url.searchParams.set("_cb", String(Date.now()));
-    window.location.replace(url.toString());
+    window.location.reload();
   }
+
   function isChunkFailure(message) {
     if (!message) return false;
     var text = String(message);
@@ -44,6 +56,7 @@ const chunkRecoveryScript = `
       text.indexOf("Failed to fetch dynamically imported module") !== -1
     );
   }
+
   window.addEventListener(
     "error",
     function (event) {
@@ -55,12 +68,15 @@ const chunkRecoveryScript = `
     },
     true
   );
+
   window.addEventListener("unhandledrejection", function (event) {
     var reason = event && event.reason;
-    if (isChunkFailure(reason && reason.message ? reason.message : reason)) reloadOnce();
+    if (isChunkFailure(reason && reason.message ? reason.message : String(reason || ""))) reloadOnce();
   });
+
   window.addEventListener("load", function () {
     sessionStorage.removeItem(key);
+    stripCb();
   });
 })();
 `;
