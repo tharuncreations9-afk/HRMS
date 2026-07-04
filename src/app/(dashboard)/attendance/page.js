@@ -19,25 +19,15 @@ import { api } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
 import { useLookups } from "@/hooks/use-lookups";
 import { getLocalDateString } from "@/lib/utils";
-import { getLocalTimeString, resolveHalfDayOutTime } from "@/lib/attendance-date";
+import { isTimeInFuture } from "@/lib/attendance-date";
 import { AttendanceCorrectionDialog } from "@/components/attendance/attendance-correction-dialog";
 
 function statusAllowsOutTime(statusValue) {
   return statusValue === "present" || statusValue === "late" || statusValue === "halfDay";
 }
 
-function getAutoSaveTimes(statusValue) {
-  if (statusValue === "present") {
-    return { inTime: getLocalTimeString(), outTime: undefined };
-  }
-  if (statusValue === "halfDay") {
-    // Do not send inTime — server keeps existing arrival time from Present
-    return { inTime: undefined, outTime: resolveHalfDayOutTime() };
-  }
-  if (statusValue === "leave" || statusValue === "absent") {
-    return { inTime: undefined, outTime: undefined };
-  }
-  return { inTime: getLocalTimeString(), outTime: undefined };
+function getAutoSaveTimes() {
+  return { inTime: undefined, outTime: undefined };
 }
 
 function getRowStatusClass(statusValue) {
@@ -70,16 +60,6 @@ function getStatusBadgeVariant(statusValue) {
 
 function formatDisplayTime(value) {
   if (!value || value === "—") return "—";
-  return value;
-}
-
-function formatLateMinutes(value) {
-  if (value == null || value === "") return "—";
-  return String(value);
-}
-
-function formatRemark(value) {
-  if (!value) return "—";
   return value;
 }
 
@@ -211,7 +191,7 @@ export default function DailyAttendancePage() {
     if (!canEditDate || savingCode) return;
     if (row.markStatusValue === statusValue) return;
 
-    const { inTime, outTime } = getAutoSaveTimes(statusValue);
+    const { inTime, outTime } = getAutoSaveTimes();
     const label = statusByValue.get(statusValue)?.label || statusValue;
 
     setSavingCode(row.employeeCode);
@@ -247,9 +227,39 @@ export default function DailyAttendancePage() {
     setSavingCode(null);
   };
 
+  const handleInTimeChange = async (row, inTimeValue) => {
+    if (!canEditDate || savingCode || !row.markStatusValue) return;
+    if (row.markStatusValue === "leave" || row.markStatusValue === "absent") return;
+    if (inTimeValue && isTimeInFuture(inTimeValue, date)) {
+      toast.error("In time cannot be in the future");
+      return;
+    }
+
+    setSavingCode(row.employeeCode);
+    try {
+      const result = await api.markAttendance({
+        date,
+        employeeCode: row.employeeCode,
+        status: row.markStatusValue,
+        inTime: inTimeValue || undefined,
+        outTime: row.outTimeInput || undefined,
+      });
+      updateRowAfterSave(row.employeeCode, result.record, row.markStatusValue);
+      toast.success(`${row.employeeName} — in time saved`);
+    } catch (err) {
+      loadMarkSheet();
+      toast.error(err.message || "Failed to save in time");
+    }
+    setSavingCode(null);
+  };
+
   const handleOutTimeChange = async (row, outTimeValue) => {
     if (!canEditDate || savingCode || !row.markStatusValue) return;
     if (!statusAllowsOutTime(row.markStatusValue)) return;
+    if (outTimeValue && isTimeInFuture(outTimeValue, date)) {
+      toast.error("Out time cannot be in the future");
+      return;
+    }
 
     setSavingCode(row.employeeCode);
     try {
@@ -267,10 +277,6 @@ export default function DailyAttendancePage() {
       toast.error(err.message || "Failed to save out time");
     }
     setSavingCode(null);
-  };
-
-  const markOutNow = (row) => {
-    handleOutTimeChange(row, getLocalTimeString());
   };
 
   const handlePrint = async () => {
@@ -331,6 +337,34 @@ export default function DailyAttendancePage() {
     );
   };
 
+  const renderInTimeEditor = (row) => {
+    const noTimes = row.markStatusValue === "leave" || row.markStatusValue === "absent";
+    const canSetIn = canEditDate && row.markStatusValue && !noTimes;
+    const isSaving = savingCode === row.employeeCode;
+
+    if (!canSetIn) {
+      return <span className="text-muted-foreground">{noTimes ? "—" : formatDisplayTime(row.inTime) || "—"}</span>;
+    }
+
+    return (
+      <Input
+        type="time"
+        className="h-9 w-[120px]"
+        value={row.inTimeInput || ""}
+        disabled={isSaving}
+        onChange={(e) => {
+          const v = e.target.value;
+          setRows((prev) =>
+            prev.map((r) =>
+              r.employeeCode === row.employeeCode ? { ...r, inTimeInput: v } : r
+            )
+          );
+          if (v) handleInTimeChange({ ...row, inTimeInput: v }, v);
+        }}
+      />
+    );
+  };
+
   const renderOutTimeEditor = (row) => {
     const noTimes = row.markStatusValue === "leave" || row.markStatusValue === "absent";
     const canSetOut = canEditDate && statusAllowsOutTime(row.markStatusValue);
@@ -344,34 +378,21 @@ export default function DailyAttendancePage() {
     }
 
     return (
-      <div className="flex items-center gap-1">
-        <Input
-          type="time"
-          className="h-9 w-[120px]"
-          value={row.outTimeInput || ""}
-          disabled={isSaving}
-          onChange={(e) => {
-            const v = e.target.value;
-            setRows((prev) =>
-              prev.map((r) =>
-                r.employeeCode === row.employeeCode ? { ...r, outTimeInput: v } : r
-              )
-            );
-            if (v) handleOutTimeChange({ ...row, outTimeInput: v }, v);
-          }}
-        />
-        <Button
-          type="button"
-          size="sm"
-          variant="outline"
-          className="h-9 shrink-0 px-2 text-xs"
-          disabled={isSaving}
-          onClick={() => markOutNow(row)}
-          title="Set out time to now"
-        >
-          Now
-        </Button>
-      </div>
+      <Input
+        type="time"
+        className="h-9 w-[120px]"
+        value={row.outTimeInput || ""}
+        disabled={isSaving}
+        onChange={(e) => {
+          const v = e.target.value;
+          setRows((prev) =>
+            prev.map((r) =>
+              r.employeeCode === row.employeeCode ? { ...r, outTimeInput: v } : r
+            )
+          );
+          if (v) handleOutTimeChange({ ...row, outTimeInput: v }, v);
+        }}
+      />
     );
   };
 
@@ -380,9 +401,7 @@ export default function DailyAttendancePage() {
 
     return (
       <>
-        <td className="px-4 py-3 text-muted-foreground">
-          {noTimes ? "—" : formatDisplayTime(row.inTime) || "—"}
-        </td>
+        <td className="px-4 py-3">{renderInTimeEditor(row)}</td>
         <td className="px-4 py-3">{renderOutTimeEditor(row)}</td>
       </>
     );
@@ -395,7 +414,7 @@ export default function DailyAttendancePage() {
           <h1 className="font-display text-2xl font-bold lg:text-3xl">Daily Attendance</h1>
           <p className="text-muted-foreground">
             {canMark
-              ? "Mark Present on arrival; Half Day sets out to 2 PM without changing in time"
+              ? "Select status, then set in time and out time manually"
               : "View attendance for the selected date"}
           </p>
         </div>
@@ -542,8 +561,6 @@ export default function DailyAttendancePage() {
                       <th className="px-4 py-3 text-left font-medium">Shift</th>
                       <th className="px-4 py-3 text-left font-medium">In Time</th>
                       <th className="px-4 py-3 text-left font-medium">Out Time</th>
-                      <th className="px-4 py-3 text-left font-medium">Late Min</th>
-                      <th className="px-4 py-3 text-left font-medium">Remark</th>
                       {isLocked && canRequestCorrection && (
                         <th className="px-4 py-3 text-left font-medium">Action</th>
                       )}
@@ -552,7 +569,7 @@ export default function DailyAttendancePage() {
                   <tbody>
                     {rows.length === 0 ? (
                       <tr>
-                        <td colSpan={isLocked && canRequestCorrection ? 12 : 11} className="px-4 py-10 text-center text-muted-foreground">
+                        <td colSpan={isLocked && canRequestCorrection ? 10 : 9} className="px-4 py-10 text-center text-muted-foreground">
                           No employees match the selected filters
                         </td>
                       </tr>
@@ -597,8 +614,6 @@ export default function DailyAttendancePage() {
                             </td>
                             <td className="px-4 py-3 text-muted-foreground">{row.shiftTime || "—"}</td>
                             {renderTimeCells(row)}
-                            <td className="px-4 py-3 text-muted-foreground">{formatLateMinutes(row.lateMinutes)}</td>
-                            <td className="px-4 py-3 text-muted-foreground">{formatRemark(row.attendanceRemark)}</td>
                             {isLocked && canRequestCorrection && (
                               <td className="px-4 py-3">{renderCorrectionAction(row)}</td>
                             )}
@@ -659,9 +674,10 @@ export default function DailyAttendancePage() {
                           <div className="space-y-2 text-xs">
                             <div className="flex flex-wrap gap-4 text-muted-foreground">
                               <span>Shift: {row.shiftTime || "—"}</span>
-                              <span>In: {noTimes ? "—" : formatDisplayTime(row.inTime)}</span>
-                              <span>Late: {formatLateMinutes(row.lateMinutes)}</span>
-                              <span>Remark: {formatRemark(row.attendanceRemark)}</span>
+                            </div>
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="text-muted-foreground">In:</span>
+                              {renderInTimeEditor(row)}
                             </div>
                             <div className="flex flex-wrap items-center gap-2">
                               <span className="text-muted-foreground">Out:</span>

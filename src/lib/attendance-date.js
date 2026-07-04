@@ -23,13 +23,29 @@ export function getLocalTimeString(date = new Date()) {
   return `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
 }
 
-/** Default half-day departure time (2:00 PM). */
-export const HALF_DAY_DEFAULT_OUT_TIME = "14:00";
+export function getLocalDateString(date = new Date()) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
 
-/** Half-day out time: 2 PM, or current time if already past 2 PM. */
-export function resolveHalfDayOutTime(now = new Date()) {
-  const nowStr = getLocalTimeString(now);
-  return nowStr > HALF_DAY_DEFAULT_OUT_TIME ? nowStr : HALF_DAY_DEFAULT_OUT_TIME;
+/** Half-day: arrival after 12:30 or departure between 12:30–16:00. */
+export const HALF_DAY_CUTOFF_TIME = "12:30";
+export const HALF_DAY_END_WINDOW = "16:00";
+export const HALF_DAY_DEFAULT_OUT_TIME = HALF_DAY_CUTOFF_TIME;
+
+export function isAfterHalfDayCutoff(timeStr) {
+  if (!timeStr) return false;
+  return String(timeStr) > HALF_DAY_CUTOFF_TIME;
+}
+
+export function isTimeInFuture(timeStr, dateStr) {
+  if (!timeStr) return false;
+  const today = getLocalDateString();
+  if (dateStr && dateStr < today) return false;
+  if (dateStr && dateStr > today) return true;
+  return timeStr > getLocalTimeString();
 }
 
 export function toTimeInputValue(value) {

@@ -149,7 +149,7 @@ export default function DashboardPage() {
                   <BarChart data={weeklyAttendance} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                     <XAxis dataKey="day" tick={{ fontSize: 11 }} />
-                    <YAxis tick={{ fontSize: 11 }} width={32} />
+                    <YAxis tick={{ fontSize: 11 }} width={40} allowDecimals={false} />
                     <Tooltip contentStyle={{ borderRadius: "8px", border: "1px solid hsl(var(--border))" }} />
                     <Bar dataKey="present" fill="#B8956A" radius={[4, 4, 0, 0]} name="Present" />
                     <Bar dataKey="absent" fill="#EF4444" radius={[4, 4, 0, 0]} name="Absent" />
@@ -200,9 +200,12 @@ export default function DashboardPage() {
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                    <XAxis dataKey="month" className="text-xs" />
-                    <YAxis domain={[80, 100]} className="text-xs" />
-                    <Tooltip contentStyle={{ borderRadius: "8px", border: "1px solid hsl(var(--border))" }} />
+                    <XAxis dataKey="month" tick={{ fontSize: 11 }} />
+                    <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} allowDecimals={false} />
+                    <Tooltip
+                      contentStyle={{ borderRadius: "8px", border: "1px solid hsl(var(--border))" }}
+                      formatter={(value) => [`${value}%`, "Attendance %"]}
+                    />
                     <Area type="monotone" dataKey="attendance" stroke="#B8956A" fill="url(#colorAtt)" name="Attendance %" />
                   </AreaChart>
                 </ResponsiveContainer>

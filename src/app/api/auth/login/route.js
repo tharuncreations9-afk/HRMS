@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 
 import { verifyPassword, signToken } from "@/lib/auth-server";
+import { isValidEmail, AUTH_MESSAGES } from "@/lib/auth-validation";
 
 import { getEmployeePermissions } from "@/lib/permissions-server";
 
@@ -19,7 +20,13 @@ export async function POST(request) {
 
     if (!email || !password) {
 
-      return Response.json({ error: "Email and Password are required" }, { status: 400 });
+      return Response.json({ error: AUTH_MESSAGES.emailAndPasswordRequired }, { status: 400 });
+
+    }
+
+    if (!isValidEmail(email)) {
+
+      return Response.json({ error: AUTH_MESSAGES.emailRequired, field: "email" }, { status: 400 });
 
     }
 
@@ -51,7 +58,7 @@ export async function POST(request) {
 
     if (!employee) {
 
-      return Response.json({ error: "Invalid email or password" }, { status: 401 });
+      return Response.json({ error: AUTH_MESSAGES.passwordRequired, field: "password" }, { status: 401 });
 
     }
 
@@ -61,7 +68,7 @@ export async function POST(request) {
 
     if (!valid) {
 
-      return Response.json({ error: "Invalid credentials" }, { status: 401 });
+      return Response.json({ error: AUTH_MESSAGES.passwordRequired, field: "password" }, { status: 401 });
 
     }
 

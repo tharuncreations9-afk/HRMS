@@ -22,6 +22,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import { useAuth } from "@/context/auth-context";
+import { isValidEmail, AUTH_MESSAGES } from "@/lib/auth-validation";
 
 
 
@@ -46,7 +47,7 @@ export default function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
 
   const [error, setError] = useState("");
-
+  const [fieldError, setFieldError] = useState("");
   const [loading, setLoading] = useState(false);
 
 
@@ -56,33 +57,32 @@ export default function LoginPage() {
     e.preventDefault();
 
     setError("");
-
+    setFieldError("");
     setLoading(true);
 
-
-
     if (!email || !password) {
-
-      setError("Please enter Email and Password");
-
+      setError(AUTH_MESSAGES.emailAndPasswordRequired);
       setLoading(false);
-
       return;
-
     }
 
-
+    if (!isValidEmail(email)) {
+      setFieldError("email");
+      setError(AUTH_MESSAGES.emailRequired);
+      setLoading(false);
+      return;
+    }
 
     try {
-
       await login(email, password);
-
       router.push("/dashboard");
-
     } catch (err) {
-
-      setError(err.message || "Invalid credentials");
-
+      if (err.field === "password") {
+        setFieldError("password");
+      } else if (err.field === "email") {
+        setFieldError("email");
+      }
+      setError(err.message || AUTH_MESSAGES.passwordRequired);
     }
 
     setLoading(false);
@@ -123,9 +123,9 @@ export default function LoginPage() {
 
               value={email}
 
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => { setEmail(e.target.value); setFieldError(""); setError(""); }}
 
-              className="h-12 text-center lg:text-left"
+              className={`h-12 text-center lg:text-left ${fieldError === "email" ? "border-destructive" : ""}`}
 
             />
 
@@ -149,9 +149,9 @@ export default function LoginPage() {
 
                 value={password}
 
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => { setPassword(e.target.value); setFieldError(""); setError(""); }}
 
-                className="h-12 pr-10 text-center lg:text-left"
+                className={`h-12 pr-10 text-center lg:text-left ${fieldError === "password" ? "border-destructive" : ""}`}
 
               />
 

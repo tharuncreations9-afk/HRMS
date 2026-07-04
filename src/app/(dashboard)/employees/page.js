@@ -48,9 +48,7 @@ function EmployeeListContent() {
   const [search, setSearch] = useState(initialSearch);
   const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
   const [department, setDepartment] = useState("all");
-  const [designation, setDesignation] = useState("all");
   const [status, setStatus] = useState("all");
-  const [employeeCategory, setEmployeeCategory] = useState("all");
   const [employees, setEmployees] = useState([]);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(null);
@@ -59,9 +57,7 @@ function EmployeeListContent() {
   const { lookups } = useLookups();
   const [listFilters, setListFilters] = useState(null);
   const statusFilters = listFilters?.employeeStatusFilters || lookups?.employeeStatusFilters || [];
-  const categoryFilters = listFilters?.employeeCategoryFilters || lookups?.employeeCategoryFilters || [];
   const departments = listFilters?.departmentFilters || lookups?.departmentFilters || [];
-  const designations = listFilters?.designationFilters || lookups?.designationFilters || [];
   const [bulkOpen, setBulkOpen] = useState(false);
   const [resultOpen, setResultOpen] = useState(false);
   const [bulkFile, setBulkFile] = useState(null);
@@ -86,19 +82,17 @@ function EmployeeListContent() {
 
   useEffect(() => {
     setPage(1);
-  }, [debouncedSearch, department, designation, status, employeeCategory, limit]);
+  }, [debouncedSearch, department, status, limit]);
 
   const buildParams = useCallback(
     (pageNum) => {
       const params = { page: String(pageNum), limit: String(limit) };
       if (debouncedSearch) params.search = debouncedSearch;
       if (department !== "all") params.department = department;
-      if (designation !== "all") params.designation = designation;
       if (status !== "all") params.status = status;
-      if (employeeCategory !== "all") params.employeeCategory = employeeCategory;
       return params;
     },
-    [debouncedSearch, department, designation, status, employeeCategory, limit]
+    [debouncedSearch, department, status, limit]
   );
 
   const fetchPage = useCallback(
@@ -387,32 +381,12 @@ function EmployeeListContent() {
                   ))}
                 </SelectContent>
               </Select>
-              <Select value={designation} onValueChange={setDesignation}>
-                <SelectTrigger className="w-full sm:w-[150px]">
-                  <SelectValue placeholder="Designation" />
-                </SelectTrigger>
-                <SelectContent>
-                  {designations.map((d) => (
-                    <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
               <Select value={status} onValueChange={setStatus}>
                 <SelectTrigger className="w-full sm:w-[130px]">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
                   {statusFilters.map((opt) => (
-                    <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Select value={employeeCategory} onValueChange={setEmployeeCategory}>
-                <SelectTrigger className="w-full sm:w-[140px]">
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categoryFilters.map((opt) => (
                     <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
                   ))}
                 </SelectContent>
@@ -469,14 +443,6 @@ function EmployeeListContent() {
                             <p className="font-medium">{emp.designation || "—"}</p>
                           </div>
                           <div>
-                            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Category</p>
-                            <p className="font-medium">{emp.employeeCategory || "—"}</p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Experience</p>
-                            <p className="font-medium">{emp.experienceSummary || "—"}</p>
-                          </div>
-                          <div>
                             <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Mobile</p>
                             <p className="font-medium">{emp.mobile || "—"}</p>
                           </div>
@@ -506,14 +472,12 @@ function EmployeeListContent() {
                 ref={tableScrollRef}
                 className="hidden max-h-[min(32rem,55vh)] overflow-auto rounded-lg border lg:block"
               >
-                <table className="w-full min-w-[1000px] text-sm">
+                <table className="w-full min-w-[860px] text-sm">
                   <thead>
                     <tr className="border-b bg-muted/50">
                       <th className="sticky top-0 z-10 bg-muted/95 px-4 py-3 text-left font-medium backdrop-blur-sm">Photo</th>
                       <th className="sticky top-0 z-10 bg-muted/95 px-4 py-3 text-left font-medium backdrop-blur-sm">Employee ID</th>
                       <th className="sticky top-0 z-10 bg-muted/95 px-4 py-3 text-left font-medium backdrop-blur-sm">Name</th>
-                      <th className="sticky top-0 z-10 bg-muted/95 px-4 py-3 text-left font-medium backdrop-blur-sm">Category</th>
-                      <th className="sticky top-0 z-10 bg-muted/95 px-4 py-3 text-left font-medium backdrop-blur-sm">Experience</th>
                       <th className="sticky top-0 z-10 bg-muted/95 px-4 py-3 text-left font-medium backdrop-blur-sm">Department</th>
                       <th className="sticky top-0 z-10 bg-muted/95 px-4 py-3 text-left font-medium backdrop-blur-sm">Designation</th>
                       <th className="sticky top-0 z-10 bg-muted/95 px-4 py-3 text-left font-medium backdrop-blur-sm">Mobile</th>
@@ -536,8 +500,6 @@ function EmployeeListContent() {
                         </td>
                         <td className="px-4 py-3 font-mono text-xs">{emp.employeeCode}</td>
                         <td className="px-4 py-3 font-medium">{emp.name}</td>
-                        <td className="px-4 py-3">{emp.employeeCategory || "—"}</td>
-                        <td className="px-4 py-3">{emp.experienceSummary || "—"}</td>
                         <td className="px-4 py-3">{emp.department}</td>
                         <td className="px-4 py-3">{emp.designation}</td>
                         <td className="px-4 py-3">{emp.mobile}</td>

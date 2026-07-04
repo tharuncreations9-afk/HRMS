@@ -16,6 +16,9 @@ import {
   Save,
   Upload,
   Camera,
+  Lock,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -122,12 +125,71 @@ export default function EmployeeProfilePage() {
   const [saving, setSaving] = useState(false);
   const [photoPreview, setPhotoPreview] = useState(null);
   const [pendingPhoto, setPendingPhoto] = useState(null);
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [passwordErrors, setPasswordErrors] = useState({});
+  const [changingPassword, setChangingPassword] = useState(false);
+  const [showPasswords, setShowPasswords] = useState({
+    current: false,
+    new: false,
+    confirm: false,
+  });
 
   const isFullEdit = editScope === "full";
   const isOwnProfile = user?.id === Number(params.id);
   const backHref = hasPermission("Employee Management") ? "/employees" : "/dashboard";
 
   const set = (field, value) => setEditForm((f) => ({ ...f, [field]: value }));
+
+  const setPassword = (field, value) => {
+    setPasswordForm((f) => ({ ...f, [field]: value }));
+    setPasswordErrors((prev) => {
+      if (!prev[field]) return prev;
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
+  };
+
+  const resetPasswordForm = () => {
+    setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    setPasswordErrors({});
+    setShowPasswords({ current: false, new: false, confirm: false });
+  };
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    setPasswordErrors({});
+
+    if (!passwordForm.currentPassword.trim()) {
+      setPasswordErrors({ currentPassword: "Current password is required" });
+      return;
+    }
+    if (!passwordForm.newPassword.trim() || passwordForm.newPassword.length < 6) {
+      setPasswordErrors({ newPassword: "New password must be at least 6 characters" });
+      return;
+    }
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      setPasswordErrors({ confirmPassword: "Passwords do not match" });
+      return;
+    }
+
+    setChangingPassword(true);
+    try {
+      await api.changePassword(passwordForm);
+      resetPasswordForm();
+      toast.success("Password changed successfully.");
+    } catch (err) {
+      if (err.field) {
+        setPasswordErrors({ [err.field]: err.message });
+      }
+      toast.error(err.message || "Failed to change password");
+    }
+    setChangingPassword(false);
+  };
 
   const loadProfile = () => {
     return api.employee(params.id).then((data) => {
@@ -625,6 +687,63 @@ export default function EmployeeProfilePage() {
                 )}
               </CardContent>
             </Card>
+
+            {isOwnProfile && (
+              <Card className="glass-card lg:col-span-2">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Lock className="h-4 w-4 text-champagne" />
+                    Change Password
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleChangePassword} className="grid max-w-xl gap-4 sm:grid-cols-2">
+                    {[
+                      { key: "currentPassword", label: "Current Password", showKey: "current" },
+                      { key: "newPassword", label: "New Password", showKey: "new" },
+                      { key: "confirmPassword", label: "Confirm New Password", showKey: "confirm" },
+                    ].map(({ key, label, showKey }) => (
+                      <EditField key={key} label={label} className={key === "confirmPassword" ? "sm:col-span-2" : ""}>
+                        <div className="relative">
+                          <Input
+                            type={showPasswords[showKey] ? "text" : "password"}
+                            value={passwordForm[key]}
+                            onChange={(e) => setPassword(key, e.target.value)}
+                            autoComplete={key === "currentPassword" ? "current-password" : "new-password"}
+                            className={passwordErrors[key] ? "border-destructive" : ""}
+                          />
+                          <button
+                            type="button"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                            onClick={() =>
+                              setShowPasswords((prev) => ({ ...prev, [showKey]: !prev[showKey] }))
+                            }
+                            aria-label={showPasswords[showKey] ? "Hide password" : "Show password"}
+                          >
+                            {showPasswords[showKey] ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
+                          </button>
+                        </div>
+                        {passwordErrors[key] && (
+                          <p className="text-xs text-destructive">{passwordErrors[key]}</p>
+                        )}
+                      </EditField>
+                    ))}
+                    <div className="flex flex-col gap-2 sm:col-span-2 sm:flex-row">
+                      <Button type="submit" variant="premium" disabled={changingPassword}>
+                        {changingPassword ? "Updating..." : "Update Password"}
+                      </Button>
+                      <Button type="button" variant="outline" onClick={resetPasswordForm} disabled={changingPassword}>
+                        Clear
+                      </Button>
+                    </div>
+                  </form>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </TabsContent>
 

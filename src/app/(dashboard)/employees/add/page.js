@@ -19,6 +19,7 @@ import {
   buildEmployeeApiPayload,
   mapCategoryErrorsToFields,
 } from "@/lib/employee-validation";
+import { isValidEmail } from "@/lib/auth-validation";
 import { useAuth } from "@/context/auth-context";
 import { useLookups } from "@/hooks/use-lookups";
 
@@ -230,6 +231,50 @@ function AddEmployeeContent() {
     event.target.value = "";
   };
 
+  const validateStep = (stepIndex) => {
+    const errors = {};
+    const add = (field, message) => { errors[field] = message; };
+
+    if (stepIndex === 0) {
+      if (!form.employeeCode?.trim()) add("employeeCode", "Employee Code is required.");
+      if (!form.firstName?.trim()) add("firstName", "First Name is required.");
+      if (!form.lastName?.trim()) add("lastName", "Last Name is required.");
+    } else if (stepIndex === 1) {
+      if (!form.departmentId) add("departmentId", "Department is required.");
+      if (!form.designationId) add("designationId", "Designation is required.");
+      if (!form.joiningDate) add("joiningDate", "Joining Date is required.");
+      if (!form.employeeCategory) add("employeeCategory", "Employee Category is required.");
+    } else if (stepIndex === 2) {
+      const categoryCheck = validateEmployeeCategory(form);
+      if (!categoryCheck.valid) {
+        Object.assign(errors, mapCategoryErrorsToFields(categoryCheck.errors));
+      }
+    } else if (stepIndex === 3) {
+      if (!form.mobile?.trim()) add("mobile", "Mobile is required.");
+      if (!form.email?.trim()) add("email", "Email is required.");
+      else if (!isValidEmail(form.email)) add("email", "Enter a valid email address.");
+      if (!isEditMode) {
+        if (!form.password || form.password.length < 6) {
+          add("password", "Password is required (minimum 6 characters).");
+        } else if (form.password !== form.confirmPassword) {
+          add("confirmPassword", "Password and Confirm Password do not match.");
+        }
+      }
+    }
+
+    if (Object.keys(errors).length) {
+      setFieldErrors(errors);
+      toast.error("Please fill the required fields.");
+      return false;
+    }
+    setFieldErrors({});
+    return true;
+  };
+
+  const handleNext = () => {
+    if (validateStep(step)) setStep(step + 1);
+  };
+
   const validateForm = () => {
     const validation = validateEmployeeForm(
       { ...form, confirmPassword: form.confirmPassword },
@@ -258,7 +303,7 @@ function AddEmployeeContent() {
       setStep(errorStep);
       toast.error(
         Object.keys(errors).length > 1
-          ? "Please correct the highlighted fields."
+          ? "Please fill the required fields."
           : errors[firstKey]
       );
       return false;
@@ -271,7 +316,7 @@ function AddEmployeeContent() {
   const handleApiError = (err) => {
     if (err.fields) {
       setFieldErrors(err.fields);
-      toast.error(err.message || "Please correct the highlighted fields.");
+      toast.error(err.message || "Please fill the required fields.");
       return;
     }
     if (err.field) {
@@ -928,7 +973,7 @@ function AddEmployeeContent() {
             </div>
             <div className="w-full sm:w-auto">
               {step < sections.length - 1 ? (
-                <Button variant="premium" className="w-full sm:w-auto" onClick={() => setStep(step + 1)}>
+                <Button variant="premium" className="w-full sm:w-auto" onClick={handleNext}>
                   Next <ChevronRight className="h-4 w-4" />
                 </Button>
               ) : (

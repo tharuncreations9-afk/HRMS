@@ -1,4 +1,4 @@
-import { toAttendanceDate, getAttendanceDayRange, combineDateAndTime, toTimeInputValue, HALF_DAY_DEFAULT_OUT_TIME, resolveHalfDayOutTime } from "@/lib/attendance-date";
+import { toAttendanceDate, getAttendanceDayRange, combineDateAndTime, toTimeInputValue, isTimeInFuture, getLocalDateString } from "@/lib/attendance-date";
 import { adjustLeaveForWorkAttendance } from "@/lib/leave-attendance-sync";
 import { createAuditLog } from "@/lib/audit";
 import {
@@ -84,27 +84,26 @@ export async function markEmployeeAttendance(
   let finalOutTime = null;
 
   if (status === "Present" || status === "Late") {
-    finalInTime = parsedInTime ?? existing?.inTime ?? now;
+    if (inTime !== undefined) {
+      finalInTime = inTime ? parsedInTime : null;
+    } else {
+      finalInTime = existing?.inTime ?? null;
+    }
     if (outTime !== undefined) {
       finalOutTime = outTime ? parsedOutTime : null;
     } else {
       finalOutTime = existing?.outTime ?? null;
     }
   } else if (status === "Half_Day") {
-    // Keep original arrival in time; half-day only adjusts out time
-    finalInTime = existing?.inTime ?? parsedInTime ?? now;
-
-    const defaultHalfDayOut = combineDateAndTime(date, HALF_DAY_DEFAULT_OUT_TIME);
-
-    if (outTime !== undefined) {
-      finalOutTime = outTime ? parsedOutTime : existing?.outTime ?? defaultHalfDayOut;
+    if (inTime !== undefined) {
+      finalInTime = inTime ? parsedInTime : existing?.inTime ?? null;
     } else {
-      finalOutTime =
-        existing?.outTime ?? combineDateAndTime(date, resolveHalfDayOutTime(now));
+      finalInTime = existing?.inTime ?? parsedInTime ?? null;
     }
-
-    if (finalInTime && finalOutTime && finalOutTime <= finalInTime) {
-      finalOutTime = now > finalInTime ? now : defaultHalfDayOut;
+    if (outTime !== undefined) {
+      finalOutTime = outTime ? parsedOutTime : existing?.outTime ?? null;
+    } else {
+      finalOutTime = existing?.outTime ?? null;
     }
   } else if (status === "Leave" || status === "Absent") {
     finalInTime = null;
@@ -119,6 +118,14 @@ export async function markEmployeeAttendance(
 
   if (finalInTime && finalOutTime && finalOutTime <= finalInTime) {
     throw new Error("Out time must be after in time");
+  }
+
+  if (outTime && isTimeInFuture(outTime, date)) {
+    throw new Error("Out time cannot be in the future");
+  }
+
+  if (inTime && isTimeInFuture(inTime, date)) {
+    throw new Error("In time cannot be in the future");
   }
 
   const departmentShift = await getActiveShiftForDepartment(prisma, employee.departmentId);

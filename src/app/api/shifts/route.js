@@ -42,38 +42,65 @@ export async function POST(request) {
   if (error) return error;
 
   const body = await request.json();
-  const { errors, data } = validateShiftPayload(body);
+  const departmentIds = Array.isArray(body.departmentIds)
+    ? body.departmentIds.map((id) => Number(id)).filter(Boolean)
+    : body.departmentId
+      ? [Number(body.departmentId)]
+      : [];
+
+  if (!departmentIds.length) {
+    return Response.json({ error: "Select at least one department" }, { status: 400 });
+  }
+
+  const { errors, data } = validateShiftPayload({ ...body, departmentId: departmentIds[0] });
   if (errors.length) {
     return Response.json({ error: errors[0] }, { status: 400 });
   }
 
-  const department = await prisma.department.findUnique({ where: { id: data.departmentId } });
-  if (!department) {
-    return Response.json({ error: "Department not found" }, { status: 404 });
-  }
+  const created = [];
+  const skipped = [];
 
-  if (data.status === "Active") {
+  for (const departmentId of departmentIds) {
+    const department = await prisma.department.findUnique({ where: { id: departmentId } });
+    if (!department) {
+      skipped.push(`Department ${departmentId} not found`);
+      continue;
+    }
+
+    if (data.status === "Active") {
+      try {
+        await assertSingleActiveShift(prisma, departmentId);
+      } catch (err) {
+        skipped.push(`${department.departmentName}: ${err.message}`);
+        continue;
+      }
+    }
+
     try {
-      await assertSingleActiveShift(prisma, data.departmentId);
+      const shift = await prisma.departmentShift.create({
+        data: {
+          departmentId,
+          shiftName: data.shiftName,
+          startTime: data.startTime,
+          endTime: data.endTime,
+          graceMinutes: data.graceMinutes,
+          status: data.status,
+          createdBy: user.id,
+        },
+        include: { department: true },
+      });
+      created.push(shift);
     } catch (err) {
-      return Response.json({ error: err.message }, { status: 400 });
+      skipped.push(`${department.departmentName}: failed to create`);
+      console.error("Create shift failed:", err);
     }
   }
 
-  try {
-    const shift = await prisma.departmentShift.create({
-      data: {
-        departmentId: data.departmentId,
-        shiftName: data.shiftName,
-        startTime: data.startTime,
-        endTime: data.endTime,
-        graceMinutes: data.graceMinutes,
-        status: data.status,
-        createdBy: user.id,
-      },
-      include: { department: true },
-    });
+  if (!created.length) {
+    return Response.json({ error: skipped[0] || "Failed to create shifts" }, { status: 400 });
+  }
 
+  for (const shift of created) {
     try {
       await createAuditLog({
         employeeId: user.id,
@@ -84,10 +111,10 @@ export async function POST(request) {
     } catch (auditErr) {
       console.error("Shift audit log failed:", auditErr);
     }
-
-    return Response.json({ shift: mapShiftRecord(shift) }, { status: 201 });
-  } catch (err) {
-    console.error("Create shift failed:", err);
-    throw err;
   }
+
+  return Response.json({
+    shifts: created.map(mapShiftRecord),
+    skipped,
+  }, { status: 201 });
 }

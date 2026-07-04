@@ -32,6 +32,8 @@
     "seed": "node prisma/seed.js"
   },
   "dependencies": {
+    "@prisma/adapter-mariadb": "^6.19.3",
+    "@prisma/client": "^6.19.3",
     "@radix-ui/react-avatar": "^1.1.3",
     "@radix-ui/react-checkbox": "^1.1.4",
     "@radix-ui/react-dialog": "^1.1.6",
@@ -54,16 +56,15 @@
     "mariadb": "^3.4.2",
     "next": "14.2.35",
     "next-themes": "^0.4.4",
+    "nodemailer": "^9.0.3",
+    "prisma": "^6.19.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "recharts": "^2.15.1",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
-    "xlsx": "^0.18.5",
-    "@prisma/adapter-mariadb": "^6.19.3",
-    "@prisma/client": "^6.19.3",
-    "prisma": "^6.19.3"
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",

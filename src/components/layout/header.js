@@ -120,6 +120,7 @@ export function Header({ onMenuToggle }) {
               <Badge variant="secondary" className="text-xs">{unreadCount} new</Badge>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <div className="max-h-72 overflow-y-auto">
             {notifications.length === 0 ? (
               <DropdownMenuItem disabled className="p-3 text-center text-sm text-muted-foreground">
                 No notifications
@@ -143,6 +144,7 @@ export function Header({ onMenuToggle }) {
                 </DropdownMenuItem>
               ))
             )}
+            </div>
           </DropdownMenuContent>
         </DropdownMenu>
 

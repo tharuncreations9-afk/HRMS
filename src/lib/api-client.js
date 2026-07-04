@@ -29,6 +29,7 @@ export const api = {
   login: (body) => apiFetch("/auth/login", { method: "POST", body: JSON.stringify(body) }),
   forgotPassword: (body) => apiFetch("/auth/forgot-password", { method: "POST", body: JSON.stringify(body) }),
   resetPassword: (body) => apiFetch("/auth/reset-password", { method: "POST", body: JSON.stringify(body) }),
+  changePassword: (body) => apiFetch("/auth/change-password", { method: "POST", body: JSON.stringify(body) }),
   me: () => apiFetch("/auth/me"),
   dashboard: () => apiFetch("/dashboard"),
   notifications: () => apiFetch("/notifications"),

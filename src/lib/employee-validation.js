@@ -147,7 +147,7 @@ export function validateEmployeeForm(body, options = {}) {
     normalized,
     message: messages[0] || null,
     summary:
-      messages.length > 1 ? "Please correct the highlighted fields." : messages[0] || null,
+      messages.length > 1 ? "Please fill the required fields." : messages[0] || null,
   };
 }
 
@@ -201,7 +201,7 @@ export async function checkEmployeeDuplicates(prisma, data, excludeId = null) {
     fieldErrors,
     message: messages[0] || null,
     summary:
-      messages.length > 1 ? "Please correct the highlighted fields." : messages[0] || null,
+      messages.length > 1 ? "Please fill the required fields." : messages[0] || null,
   };
 }
 

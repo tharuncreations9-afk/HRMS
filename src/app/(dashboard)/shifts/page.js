@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Clock, Plus, Pencil, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -28,6 +28,7 @@ import { api } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
 import { useLookups } from "@/hooks/use-lookups";
 import { toast } from "sonner";
+import { Checkbox } from "@/components/ui/checkbox";
 
 function canAccessShifts(hasPermission) {
   return (
@@ -40,6 +41,7 @@ function canAccessShifts(hasPermission) {
 
 const emptyForm = {
   departmentId: "",
+  departmentIds: [],
   shiftName: "",
   startTime: "",
   endTime: "",
@@ -104,6 +106,25 @@ export default function ShiftManagementPage() {
     loadShifts();
   }, [user, canManage, limit, loadShifts]);
 
+  const groupedShifts = useMemo(() => {
+    const map = new Map();
+    shifts.forEach((shift) => {
+      const key = shift.departmentName || "Unknown";
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(shift);
+    });
+    return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
+  }, [shifts]);
+
+  const toggleDepartment = (deptValue) => {
+    setForm((prev) => {
+      const ids = prev.departmentIds.includes(deptValue)
+        ? prev.departmentIds.filter((id) => id !== deptValue)
+        : [...prev.departmentIds, deptValue];
+      return { ...prev, departmentIds: ids };
+    });
+  };
+
   const openDialog = async (shift = null) => {
     setEditingShift(shift);
     await loadDepartments(shift?.id || null);
@@ -111,6 +132,7 @@ export default function ShiftManagementPage() {
       shift
         ? {
             departmentId: String(shift.departmentId),
+            departmentIds: [],
             shiftName: shift.shiftName,
             startTime: shift.startTime,
             endTime: shift.endTime,
@@ -123,15 +145,24 @@ export default function ShiftManagementPage() {
   };
 
   const handleSave = async () => {
-    if (!form.departmentId || !form.shiftName.trim() || !form.startTime || !form.endTime) {
+    if (!form.shiftName.trim() || !form.startTime || !form.endTime) {
       toast.error("Please fill all required fields");
+      return;
+    }
+
+    if (editingShift) {
+      if (!form.departmentId) {
+        toast.error("Please select a department");
+        return;
+      }
+    } else if (!form.departmentIds.length) {
+      toast.error("Select at least one department");
       return;
     }
 
     setSaving(true);
     try {
       const payload = {
-        departmentId: Number(form.departmentId),
         shiftName: form.shiftName.trim(),
         startTime: form.startTime,
         endTime: form.endTime,
@@ -140,11 +171,21 @@ export default function ShiftManagementPage() {
       };
 
       if (editingShift) {
-        await api.updateShift(editingShift.id, payload);
+        await api.updateShift(editingShift.id, {
+          ...payload,
+          departmentId: Number(form.departmentId),
+        });
         toast.success("Shift updated");
       } else {
-        await api.createShift(payload);
-        toast.success("Shift created");
+        const result = await api.createShift({
+          ...payload,
+          departmentIds: form.departmentIds.map(Number),
+        });
+        const count = result.shifts?.length || 1;
+        toast.success(`Shift created for ${count} department${count > 1 ? "s" : ""}`);
+        if (result.skipped?.length) {
+          toast.warning(result.skipped.join("; "));
+        }
       }
 
       setDialogOpen(false);
@@ -217,30 +258,37 @@ export default function ShiftManagementPage() {
                         </td>
                       </tr>
                     ) : (
-                      shifts.map((shift) => (
-                        <tr key={shift.id} className="border-b hover:bg-muted/20">
-                          <td className="px-4 py-3">{shift.departmentName}</td>
-                          <td className="px-4 py-3 font-medium">{shift.shiftName}</td>
-                          <td className="px-4 py-3">{shift.startTimeDisplay}</td>
-                          <td className="px-4 py-3">{shift.endTimeDisplay}</td>
-                          <td className="px-4 py-3">{shift.graceDisplay}</td>
-                          <td className="px-4 py-3">
-                            <Badge variant={shift.status === "Active" ? "success" : "secondary"}>
-                              {shift.statusLabel}
-                            </Badge>
+                      groupedShifts.flatMap(([deptName, deptShifts]) => [
+                        <tr key={`header-${deptName}`} className="bg-muted/30">
+                          <td colSpan={7} className="px-4 py-2 text-sm font-semibold text-champagne">
+                            {deptName}
                           </td>
-                          <td className="px-4 py-3">
-                            <div className="flex gap-2">
-                              <Button size="sm" variant="outline" onClick={() => openDialog(shift)}>
-                                <Pencil className="h-3.5 w-3.5" /> Edit
-                              </Button>
-                              <Button size="sm" variant="outline" onClick={() => handleDelete(shift)}>
-                                <Trash2 className="h-3.5 w-3.5" /> Delete
-                              </Button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))
+                        </tr>,
+                        ...deptShifts.map((shift) => (
+                          <tr key={shift.id} className="border-b hover:bg-muted/20">
+                            <td className="px-4 py-3 pl-8 text-muted-foreground">{shift.departmentName}</td>
+                            <td className="px-4 py-3 font-medium">{shift.shiftName}</td>
+                            <td className="px-4 py-3">{shift.startTimeDisplay}</td>
+                            <td className="px-4 py-3">{shift.endTimeDisplay}</td>
+                            <td className="px-4 py-3">{shift.graceDisplay}</td>
+                            <td className="px-4 py-3">
+                              <Badge variant={shift.status === "Active" ? "success" : "secondary"}>
+                                {shift.statusLabel}
+                              </Badge>
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="flex gap-2">
+                                <Button size="sm" variant="outline" onClick={() => openDialog(shift)}>
+                                  <Pencil className="h-3.5 w-3.5" /> Edit
+                                </Button>
+                                <Button size="sm" variant="outline" onClick={() => handleDelete(shift)}>
+                                  <Trash2 className="h-3.5 w-3.5" /> Delete
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                        )),
+                      ])
                     )}
                   </tbody>
                 </table>
@@ -268,29 +316,56 @@ export default function ShiftManagementPage() {
           <DialogHeader>
             <DialogTitle>{editingShift ? "Edit Shift" : "Add Shift"}</DialogTitle>
             <DialogDescription>
-              Select a department from the master list. Only one active shift is allowed per department.
+              {editingShift
+                ? "Edit shift for this department only."
+                : "Select one or more departments to apply the same shift."}
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-2">
             <div className="space-y-2">
-              <Label>Department</Label>
-              <Select
-                value={form.departmentId}
-                onValueChange={(v) => setForm((prev) => ({ ...prev, departmentId: v }))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select department" />
-                </SelectTrigger>
-                <SelectContent>
-                  {departmentOptions.map((dept) => (
-                    <SelectItem key={dept.id} value={dept.value} disabled={dept.disabled}>
-                      {dept.label}
-                      {dept.disabled ? " (Active shift exists)" : ""}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Label>Department{editingShift ? "" : "s"}</Label>
+              {editingShift ? (
+                <Select
+                  value={form.departmentId}
+                  onValueChange={(v) => setForm((prev) => ({ ...prev, departmentId: v }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select department" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {departmentOptions.map((dept) => (
+                      <SelectItem key={dept.id} value={dept.value} disabled={dept.disabled}>
+                        {dept.label}
+                        {dept.disabled ? " (Active shift exists)" : ""}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <div className="max-h-40 space-y-2 overflow-y-auto rounded-lg border p-3">
+                  {departmentOptions.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">No departments available</p>
+                  ) : (
+                    departmentOptions.map((dept) => (
+                      <label
+                        key={dept.id}
+                        className={`flex cursor-pointer items-center gap-2 text-sm ${dept.disabled ? "opacity-50" : ""}`}
+                      >
+                        <Checkbox
+                          checked={form.departmentIds.includes(dept.value)}
+                          disabled={dept.disabled}
+                          onCheckedChange={() => !dept.disabled && toggleDepartment(dept.value)}
+                        />
+                        <span>
+                          {dept.label}
+                          {dept.disabled ? " (Active shift exists)" : ""}
+                        </span>
+                      </label>
+                    ))
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="space-y-2">
