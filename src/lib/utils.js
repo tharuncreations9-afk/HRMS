@@ -42,6 +42,15 @@ export function getDayName(date) {
   return date.toLocaleDateString("en-IN", { weekday: "long" });
 }
 
+/** Time-aware greeting for dashboard (local time). */
+export function getTimeOfDayGreeting(date = new Date()) {
+  const hour = date.getHours();
+  if (hour >= 5 && hour < 12) return "Good morning";
+  if (hour >= 12 && hour < 17) return "Good afternoon";
+  if (hour >= 17 && hour < 21) return "Good evening";
+  return "Hello";
+}
+
 export function formatDateForRegister(date) {
   const day = getDayName(date);
   const formatted = date.toLocaleDateString("en-IN", {

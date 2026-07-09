@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -128,7 +128,7 @@ export default function EmployeeProfilePage() {
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: "",
     newPassword: "",
-    confirmPassword: "",
+    confirmPassword: "",  
   });
   const [passwordErrors, setPasswordErrors] = useState({});
   const [changingPassword, setChangingPassword] = useState(false);
@@ -143,6 +143,13 @@ export default function EmployeeProfilePage() {
   const backHref = hasPermission("Employee Management") ? "/employees" : "/dashboard";
 
   const set = (field, value) => setEditForm((f) => ({ ...f, [field]: value }));
+
+  const filteredDesignations = useMemo(() => {
+    if (!editForm.departmentId) return [];
+    return (lookups?.designations || []).filter(
+      (d) => String(d.departmentId) === String(editForm.departmentId)
+    );
+  }, [lookups?.designations, editForm.departmentId]);
 
   const setPassword = (field, value) => {
     setPasswordForm((f) => ({ ...f, [field]: value }));
@@ -508,13 +515,22 @@ export default function EmployeeProfilePage() {
                 {editing && isFullEdit ? (
                   <>
                     <EditField label="Employee ID" className="sm:col-span-2">
-                      <Input
-                        value={editForm.employeeCode}
-                        onChange={(e) => set("employeeCode", e.target.value)}
-                      />
+                      <Input value={editForm.employeeCode} readOnly className="bg-muted" />
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        ID updates automatically if designation changes on save
+                      </p>
                     </EditField>
                     <EditField label="Department">
-                      <Select value={editForm.departmentId} onValueChange={(v) => set("departmentId", v)}>
+                      <Select
+                        value={editForm.departmentId}
+                        onValueChange={(v) => {
+                          setEditForm((f) => ({
+                            ...f,
+                            departmentId: v,
+                            designationId: "",
+                          }));
+                        }}
+                      >
                         <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
                         <SelectContent>
                           {(lookups?.departments || []).map((d) => (
@@ -524,11 +540,17 @@ export default function EmployeeProfilePage() {
                       </Select>
                     </EditField>
                     <EditField label="Designation">
-                      <Select value={editForm.designationId} onValueChange={(v) => set("designationId", v)}>
-                        <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                      <Select
+                        value={editForm.designationId}
+                        onValueChange={(v) => set("designationId", v)}
+                        disabled={!editForm.departmentId}
+                      >
+                        <SelectTrigger><SelectValue placeholder={editForm.departmentId ? "Select" : "Select department first"} /></SelectTrigger>
                         <SelectContent>
-                          {(lookups?.designations || []).map((d) => (
-                            <SelectItem key={d.id} value={String(d.id)}>{d.designationName}</SelectItem>
+                          {filteredDesignations.map((d) => (
+                            <SelectItem key={d.id} value={String(d.id)}>
+                              {d.designationName} ({d.designationCode})
+                            </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>

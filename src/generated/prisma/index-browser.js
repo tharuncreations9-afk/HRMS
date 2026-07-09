@@ -177,6 +177,11 @@ exports.Prisma.DepartmentShiftScalarFieldEnum = {
 exports.Prisma.DesignationScalarFieldEnum = {
   id: 'id',
   designationName: 'designationName',
+  designationCode: 'designationCode',
+  departmentId: 'departmentId',
+  sequenceStart: 'sequenceStart',
+  lastSequence: 'lastSequence',
+  releasedSequences: 'releasedSequences',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   createdBy: 'createdBy',
@@ -445,6 +450,10 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.NullableJsonNullValueInput = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
@@ -475,10 +484,6 @@ exports.Prisma.DepartmentShiftOrderByRelevanceFieldEnum = {
   endTime: 'endTime'
 };
 
-exports.Prisma.DesignationOrderByRelevanceFieldEnum = {
-  designationName: 'designationName'
-};
-
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
@@ -488,6 +493,11 @@ exports.Prisma.JsonNullValueFilter = {
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
+};
+
+exports.Prisma.DesignationOrderByRelevanceFieldEnum = {
+  designationName: 'designationName',
+  designationCode: 'designationCode'
 };
 
 exports.Prisma.EmployeeOrderByRelevanceFieldEnum = {

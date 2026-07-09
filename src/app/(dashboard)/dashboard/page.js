@@ -28,6 +28,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/context/auth-context";
 import { api } from "@/lib/api-client";
+import { getTimeOfDayGreeting } from "@/lib/utils";
 
 const statCards = [
   { key: "totalEmployees", label: "Total Employees", hint: "Active employees", icon: Users, color: "from-champagne to-gold", bg: "bg-champagne/10" },
@@ -80,6 +81,7 @@ function canViewOrgDashboard(hasPermission) {
 
 export default function DashboardPage() {
   const { user, hasPermission } = useAuth();
+  const [greeting, setGreeting] = useState("Welcome");
   const [stats, setStats] = useState({ totalEmployees: 0, presentToday: 0, absentToday: 0, onLeave: 0 });
   const [weeklyAttendance, setWeeklyAttendance] = useState([]);
   const [departmentAttendance, setDepartmentAttendance] = useState([]);
@@ -89,6 +91,10 @@ export default function DashboardPage() {
   const visibleQuickActions = quickActions.filter((action) =>
     canSeeQuickAction(action, hasPermission, user?.role)
   );
+
+  useEffect(() => {
+    setGreeting(getTimeOfDayGreeting());
+  }, []);
 
   useEffect(() => {
     if (!showOrgDashboard) return;
@@ -104,7 +110,7 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="font-display text-2xl font-bold lg:text-3xl">
-          Good morning, <span className="gradient-text">{user?.name?.split(" ")[0]}</span>
+          {greeting}, <span className="gradient-text">{user?.name?.split(" ")[0]}</span>
         </h1>
         <p className="text-muted-foreground">
           {showOrgDashboard

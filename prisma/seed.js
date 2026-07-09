@@ -94,29 +94,36 @@ const ROLE_PERMISSION_MAP = {
 
 
 const DEPARTMENTS = [
-
-  { departmentName: "Human Resources", departmentCode: "HR" },
-
-  { departmentName: "Engineering", departmentCode: "ENG" },
-
-  { departmentName: "Finance", departmentCode: "FIN" },
-
-  { departmentName: "Sales", departmentCode: "SAL" },
-
-  { departmentName: "Marketing", departmentCode: "MKT" },
-
-  { departmentName: "Operations", departmentCode: "OPS" },
-
+  { departmentName: "Admin Staff", departmentCode: "ADM" },
+  { departmentName: "Factory Staff", departmentCode: "FAC" },
+  { departmentName: "Support Staff", departmentCode: "SUP" },
+  { departmentName: "Job Workers", departmentCode: "JOB" },
+  { departmentName: "Temporary Staff", departmentCode: "TMP" },
+  { departmentName: "Management", departmentCode: "MGT" },
 ];
 
-
-
+/** departmentCode, designationName, designationCode, sequenceStart */
 const DESIGNATIONS = [
-
-  "Software Engineer", "Senior Engineer", "Team Lead", "Manager",
-
-  "HR Executive", "HR Manager", "Accountant", "Director", "VP",
-
+  { dept: "ADM", name: "Accounts", code: "AC", sequenceStart: 1001 },
+  { dept: "ADM", name: "Technical/IT", code: "IT", sequenceStart: 2001 },
+  { dept: "ADM", name: "Tagging", code: "TG", sequenceStart: 3001 },
+  { dept: "ADM", name: "Marketing", code: "MK", sequenceStart: 4001 },
+  { dept: "ADM", name: "Stone", code: "SN", sequenceStart: 5001 },
+  { dept: "ADM", name: "Bandini", code: "BD", sequenceStart: 6001 },
+  { dept: "FAC", name: "Factory General", code: "FG", sequenceStart: 7001 },
+  { dept: "FAC", name: "Designer", code: "DS", sequenceStart: 8001 },
+  { dept: "FAC", name: "Assorter", code: "AS", sequenceStart: 9001 },
+  { dept: "FAC", name: "Ghat", code: "GH", sequenceStart: 10001 },
+  { dept: "FAC", name: "Setting", code: "ST", sequenceStart: 11001 },
+  { dept: "FAC", name: "Wax", code: "WX", sequenceStart: 12001 },
+  { dept: "FAC", name: "Casting", code: "CS", sequenceStart: 13001 },
+  { dept: "FAC", name: "Polish", code: "PL", sequenceStart: 14001 },
+  { dept: "SUP", name: "House Keeping", code: "HK", sequenceStart: 15001 },
+  { dept: "SUP", name: "Security", code: "SC", sequenceStart: 16001 },
+  { dept: "SUP", name: "Drivers", code: "DR", sequenceStart: 17001 },
+  { dept: "JOB", name: "Dank", code: "DK", sequenceStart: 18001 },
+  { dept: "TMP", name: "Temporary Karigars", code: "TK", sequenceStart: 19001 },
+  { dept: "MGT", name: "Director, Partner", code: "M", sequenceStart: 1 },
 ];
 
 
@@ -138,19 +145,15 @@ const LEAVE_TYPES = [
 
 
 const TEST_EMPLOYEES = [
-
-  { code: "EMP001", role: "super_admin", firstName: "Rajesh", lastName: "Kumar", email: "superadmin@vlj.com", dept: "HR", desig: "Director" },
-
-  { code: "EMP002", role: "admin", firstName: "Priya", lastName: "Sharma", email: "admin@vlj.com", dept: "HR", desig: "Manager" },
-
-  { code: "EMP003", role: "hr", firstName: "Amit", lastName: "Patel", email: "hr@vlj.com", dept: "HR", desig: "HR Manager" },
-
-  { code: "EMP004", role: "manager", firstName: "Sneha", lastName: "Reddy", email: "manager@vlj.com", dept: "ENG", desig: "Team Lead" },
-
-  { code: "EMP005", role: "employee", firstName: "Vikram", lastName: "Singh", email: "employee@vlj.com", dept: "ENG", desig: "Software Engineer" },
-
-  { code: "EMP006", role: "security", firstName: "Ravi", lastName: "Naidu", email: "security@vlj.com", dept: "OPS", desig: "HR Executive" },
-
+  {
+    code: "VLJ-M-001",
+    role: "super_admin",
+    firstName: "Rajesh",
+    lastName: "Kumar",
+    email: "superadmin@vlj.com",
+    dept: "MGT",
+    desig: "Director, Partner",
+  },
 ];
 
 
@@ -251,18 +254,25 @@ async function main() {
 
   const desigRecords = {};
 
-  for (const name of DESIGNATIONS) {
-
-    desigRecords[name] = await prisma.designation.upsert({
-
-      where: { designationName: name },
-
-      update: {},
-
-      create: { designationName: name },
-
+  for (const d of DESIGNATIONS) {
+    const key = `${d.dept}:${d.name}`;
+    const isSuperadminDesig = d.code === "M";
+    desigRecords[key] = await prisma.designation.upsert({
+      where: { designationCode: d.code },
+      update: {
+        designationName: d.name,
+        departmentId: deptRecords[d.dept].id,
+        sequenceStart: d.sequenceStart,
+      },
+      create: {
+        designationName: d.name,
+        designationCode: d.code,
+        departmentId: deptRecords[d.dept].id,
+        sequenceStart: d.sequenceStart,
+        lastSequence: isSuperadminDesig ? 1 : null,
+        releasedSequences: [],
+      },
     });
-
   }
 
   console.log(`  ✓ Designations: ${DESIGNATIONS.length}`);
@@ -332,9 +342,9 @@ async function main() {
 
         address: "Bangalore, Karnataka",
 
-        departmentId: deptRecords[u.dept === "HR" ? "HR" : u.dept === "ENG" ? "ENG" : u.dept === "OPS" ? "OPS" : "HR"].id,
+        departmentId: deptRecords[u.dept].id,
 
-        designationId: desigRecords[u.desig].id,
+        designationId: desigRecords[`${u.dept}:${u.desig}`].id,
 
         reportingManagerId: u.role === "employee" ? managerEmployeeId : null,
 

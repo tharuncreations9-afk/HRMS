@@ -76,14 +76,16 @@ export function validatePan(pan, { required = false, field = "pan" } = {}) {
 
 export function validateRequiredFields(
   body,
-  { isEdit = false, checkConfirmPassword = false } = {}
+  { isEdit = false, checkConfirmPassword = false, autoEmployeeCode = false } = {}
 ) {
   const fields = {};
   const add = (field, message) => {
     fields[field] = message;
   };
 
-  if (!body.employeeCode?.trim()) add("employeeCode", "Employee Code is required.");
+  if (!autoEmployeeCode && !body.employeeCode?.trim()) {
+    add("employeeCode", "Employee Code is required.");
+  }
   if (!body.firstName?.trim()) add("firstName", "First Name is required.");
   if (!body.lastName?.trim()) add("lastName", "Last Name is required.");
   if (!body.departmentId) add("departmentId", "Department is required.");
@@ -109,9 +111,13 @@ export function validateRequiredFields(
 }
 
 export function validateEmployeeForm(body, options = {}) {
-  const { isEdit = false, checkConfirmPassword = false } = options;
+  const { isEdit = false, checkConfirmPassword = false, autoEmployeeCode = false } = options;
   const normalized = normalizeEmployeeInput(body);
-  const fieldErrors = validateRequiredFields(normalized, { isEdit, checkConfirmPassword });
+  const fieldErrors = validateRequiredFields(normalized, {
+    isEdit,
+    checkConfirmPassword,
+    autoEmployeeCode,
+  });
 
   const mobileCheck = validateMobile(normalized.mobile);
   if (!mobileCheck.valid) fieldErrors.mobile = mobileCheck.message;

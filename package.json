@@ -23,6 +23,7 @@
     "db:seed": "prisma db seed",
     "postinstall": "node scripts/ensure-prisma-client.js",
     "db:reset-data": "node prisma/reset-data.js",
+    "db:reset-employees": "node prisma/reset-employees-keep-superadmin.js",
     "db:seed-leaves": "node prisma/seed-leaves.js",
     "logo:transparent": "node scripts/remove-logo-bg.js",
     "db:studio": "prisma studio",

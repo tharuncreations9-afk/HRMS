@@ -2,12 +2,19 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Building2, Briefcase, Plus, Pencil } from "lucide-react";
+import { Building2, Briefcase, Plus, Pencil, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -19,7 +26,7 @@ import {
 import { api } from "@/lib/api-client";
 import { useAuth } from "@/context/auth-context";
 import { ListPagination } from "@/components/ui/list-pagination";
-import { useLookups } from "@/hooks/use-lookups";
+import { useLookups, clearLookupsCache } from "@/hooks/use-lookups";
 import { toast } from "sonner";
 
 function canAccessOrg(hasPermission) {
@@ -47,8 +54,14 @@ export default function OrganizationPage() {
   const [editingDept, setEditingDept] = useState(null);
   const [editingDesig, setEditingDesig] = useState(null);
   const [deptForm, setDeptForm] = useState({ departmentName: "", departmentCode: "" });
-  const [desigForm, setDesigForm] = useState({ designationName: "" });
+  const [desigForm, setDesigForm] = useState({
+    designationName: "",
+    designationCode: "",
+    departmentId: "",
+    sequenceStart: "",
+  });
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(null);
 
   useEffect(() => {
     if (!isLoading && user && !canAccessOrg(hasPermission)) {
@@ -97,9 +110,23 @@ export default function OrganizationPage() {
 
   const openDesigDialog = (desig = null) => {
     setEditingDesig(desig);
-    setDesigForm(desig ? { designationName: desig.designationName } : { designationName: "" });
+    setDesigForm(
+      desig
+        ? {
+            designationName: desig.designationName,
+            designationCode: desig.designationCode || "",
+            departmentId: String(desig.departmentId || ""),
+            sequenceStart: String(desig.sequenceStart || ""),
+          }
+        : { designationName: "", designationCode: "", departmentId: "", sequenceStart: "" }
+    );
     setDesigDialogOpen(true);
   };
+
+  const desigPreview =
+    desigForm.designationCode && desigForm.sequenceStart
+      ? `VLJ-${desigForm.designationCode.toUpperCase()}-${desigForm.sequenceStart}`
+      : "";
 
   const handleSaveDept = async () => {
     if (!deptForm.departmentName.trim() || !deptForm.departmentCode.trim()) {
@@ -120,6 +147,7 @@ export default function OrganizationPage() {
         toast.success("Department created");
       }
       setDeptDialogOpen(false);
+      clearLookupsCache();
       loadData();
     } catch (err) {
       toast.error(err.message);
@@ -133,9 +161,26 @@ export default function OrganizationPage() {
       toast.error("Designation name is required");
       return;
     }
+    if (!desigForm.designationCode.trim()) {
+      toast.error("Designation code is required (e.g. AC, IT)");
+      return;
+    }
+    if (!desigForm.departmentId) {
+      toast.error("Department is required");
+      return;
+    }
+    if (!desigForm.sequenceStart.trim()) {
+      toast.error("Employee ID start sequence is required");
+      return;
+    }
     setSaving(true);
     try {
-      const payload = { designationName: desigForm.designationName.trim() };
+      const payload = {
+        designationName: desigForm.designationName.trim(),
+        designationCode: desigForm.designationCode.trim().toUpperCase(),
+        departmentId: Number(desigForm.departmentId),
+        sequenceStart: Number(desigForm.sequenceStart),
+      };
       if (editingDesig) {
         await api.updateDesignation(editingDesig.id, payload);
         toast.success("Designation updated");
@@ -144,11 +189,42 @@ export default function OrganizationPage() {
         toast.success("Designation created");
       }
       setDesigDialogOpen(false);
+      clearLookupsCache();
       loadData();
     } catch (err) {
       toast.error(err.message);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleDeleteDept = async (dept) => {
+    if (!window.confirm(`Delete department "${dept.departmentName}"? This cannot be undone.`)) return;
+    setDeleting(`dept-${dept.id}`);
+    try {
+      await api.deleteDepartment(dept.id);
+      toast.success("Department deleted");
+      clearLookupsCache();
+      loadData();
+    } catch (err) {
+      toast.error(err.message || "Failed to delete department");
+    } finally {
+      setDeleting(null);
+    }
+  };
+
+  const handleDeleteDesig = async (desig) => {
+    if (!window.confirm(`Delete designation "${desig.designationName}"? This cannot be undone.`)) return;
+    setDeleting(`desig-${desig.id}`);
+    try {
+      await api.deleteDesignation(desig.id);
+      toast.success("Designation deleted");
+      clearLookupsCache();
+      loadData();
+    } catch (err) {
+      toast.error(err.message || "Failed to delete designation");
+    } finally {
+      setDeleting(null);
     }
   };
 
@@ -211,9 +287,20 @@ export default function OrganizationPage() {
                           <td className="px-4 py-3">{dept._count?.employees ?? 0}</td>
                           {canManage && (
                             <td className="px-4 py-3 text-right">
-                              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openDeptDialog(dept)}>
-                                <Pencil className="h-4 w-4" />
-                              </Button>
+                              <div className="flex justify-end gap-1">
+                                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openDeptDialog(dept)}>
+                                  <Pencil className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 text-destructive hover:text-destructive"
+                                  disabled={deleting === `dept-${dept.id}`}
+                                  onClick={() => handleDeleteDept(dept)}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
                             </td>
                           )}
                         </tr>
@@ -259,10 +346,14 @@ export default function OrganizationPage() {
                 </div>
               ) : (
                 <div className="overflow-x-auto rounded-lg border">
-                  <table className="w-full min-w-[400px] text-sm">
+                  <table className="w-full min-w-[720px] text-sm">
                     <thead>
                       <tr className="border-b bg-muted/50">
-                        <th className="px-4 py-3 text-left font-medium">Name</th>
+                        <th className="px-4 py-3 text-left font-medium">Department</th>
+                        <th className="px-4 py-3 text-left font-medium">Designation</th>
+                        <th className="px-4 py-3 text-left font-medium">Code</th>
+                        <th className="px-4 py-3 text-left font-medium">ID Starts</th>
+                        <th className="px-4 py-3 text-left font-medium">ID Format</th>
                         <th className="px-4 py-3 text-left font-medium">Employees</th>
                         {canManage && <th className="px-4 py-3 text-right font-medium">Actions</th>}
                       </tr>
@@ -270,13 +361,30 @@ export default function OrganizationPage() {
                     <tbody>
                       {designations.map((desig) => (
                         <tr key={desig.id} className="border-b hover:bg-muted/30">
+                          <td className="px-4 py-3">{desig.department?.departmentName || "—"}</td>
                           <td className="px-4 py-3 font-medium">{desig.designationName}</td>
+                          <td className="px-4 py-3 font-mono text-xs">{desig.designationCode}</td>
+                          <td className="px-4 py-3 font-mono text-xs">{desig.sequenceStart}</td>
+                          <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
+                            {desig.idFormatPreview || `VLJ-${desig.designationCode}-${desig.sequenceStart}`}
+                          </td>
                           <td className="px-4 py-3">{desig._count?.employees ?? 0}</td>
                           {canManage && (
                             <td className="px-4 py-3 text-right">
-                              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openDesigDialog(desig)}>
-                                <Pencil className="h-4 w-4" />
-                              </Button>
+                              <div className="flex justify-end gap-1">
+                                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openDesigDialog(desig)}>
+                                  <Pencil className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 text-destructive hover:text-destructive"
+                                  disabled={deleting === `desig-${desig.id}`}
+                                  onClick={() => handleDeleteDesig(desig)}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
                             </td>
                           )}
                         </tr>
@@ -343,19 +451,74 @@ export default function OrganizationPage() {
       </Dialog>
 
       <Dialog open={desigDialogOpen} onOpenChange={setDesigDialogOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>{editingDesig ? "Edit Designation" : "Add Designation"}</DialogTitle>
-            <DialogDescription>Job title or role name used when adding employees</DialogDescription>
+            <DialogDescription>
+              Assign to a department. Employee IDs generate as VLJ-{'{code}'}-{'{sequence}'}.
+            </DialogDescription>
           </DialogHeader>
-          <div className="space-y-2">
-            <Label htmlFor="desigName">Designation Name</Label>
-            <Input
-              id="desigName"
-              placeholder="e.g. Software Engineer"
-              value={desigForm.designationName}
-              onChange={(e) => setDesigForm({ designationName: e.target.value })}
-            />
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Department *</Label>
+              <Select
+                value={desigForm.departmentId}
+                onValueChange={(v) => setDesigForm((f) => ({ ...f, departmentId: v }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select department" />
+                </SelectTrigger>
+                <SelectContent>
+                  {departments.map((d) => (
+                    <SelectItem key={d.id} value={String(d.id)}>
+                      {d.departmentName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="desigName">Designation Name *</Label>
+              <Input
+                id="desigName"
+                placeholder="e.g. Accounts"
+                value={desigForm.designationName}
+                onChange={(e) => setDesigForm((f) => ({ ...f, designationName: e.target.value }))}
+              />
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="desigCode">Designation Code *</Label>
+                <Input
+                  id="desigCode"
+                  placeholder="e.g. AC"
+                  value={desigForm.designationCode}
+                  onChange={(e) =>
+                    setDesigForm((f) => ({
+                      ...f,
+                      designationCode: e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ""),
+                    }))
+                  }
+                  maxLength={10}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="seqStart">Employee ID Starts At *</Label>
+                <Input
+                  id="seqStart"
+                  type="number"
+                  min="1"
+                  placeholder="e.g. 1001"
+                  value={desigForm.sequenceStart}
+                  onChange={(e) => setDesigForm((f) => ({ ...f, sequenceStart: e.target.value }))}
+                />
+              </div>
+            </div>
+            {desigPreview && (
+              <p className="rounded-lg border bg-muted/40 px-3 py-2 text-sm">
+                Next employee ID example: <span className="font-mono font-medium">{desigPreview}</span>
+              </p>
+            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDesigDialogOpen(false)} disabled={saving}>Cancel</Button>

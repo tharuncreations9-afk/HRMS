@@ -51,13 +51,18 @@ export function validateEmployeeCategory(body) {
   }
 
   if (category === "Fresher") {
-    if (!body.qualification?.trim()) errors.push("Highest Qualification is required");
-    if (!body.collegeName?.trim()) errors.push("College / University is required");
-    if (!body.graduationYear) errors.push("Graduation Year is required");
-    else {
+    if (!body.qualification?.trim()) {
+      errors.push("Highest Qualification is required.");
+    }
+    if (!body.collegeName?.trim()) {
+      errors.push("College / University is required.");
+    }
+    if (!body.graduationYear) {
+      errors.push("Graduation Year is required.");
+    } else {
       const year = parseInt(body.graduationYear, 10);
       if (Number.isNaN(year) || year < 1950 || year > new Date().getFullYear() + 1) {
-        errors.push("Invalid Graduation Year");
+        errors.push("Enter a valid Graduation Year (1950 to current year).");
       }
     }
   } else {

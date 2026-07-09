@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense, useMemo, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowLeft, Upload, Save, ChevronRight, ChevronLeft, Check } from "lucide-react";
@@ -57,6 +57,13 @@ function FieldError({ message }) {
   return <p className="text-xs text-destructive mt-1">{message}</p>;
 }
 
+function validationToastMessage(errors) {
+  const keys = Object.keys(errors);
+  if (!keys.length) return "Please fill the required fields.";
+  if (keys.length > 1) return "Please fill the required fields.";
+  return errors[keys[0]];
+}
+
 const emptyForm = {
   employeeCode: "", firstName: "", lastName: "", dob: "", gender: "",
   bloodGroup: "", emergencyContact: "", departmentId: "", designationId: "", joiningDate: "",
@@ -96,15 +103,43 @@ function AddEmployeeContent() {
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [profilePreview, setProfilePreview] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
+  const [codeLoading, setCodeLoading] = useState(false);
   const [existingDocs, setExistingDocs] = useState({});
   const fileInputRefs = useRef({});
   const photoInputRef = useRef(null);
+
+  const filteredDesignations = useMemo(() => {
+    if (!form.departmentId) return [];
+    return designations.filter((d) => String(d.departmentId) === String(form.departmentId));
+  }, [designations, form.departmentId]);
+
+  const fetchNextEmployeeCode = useCallback(async (designationId, departmentId) => {
+    if (!designationId || !departmentId) return;
+    setCodeLoading(true);
+    try {
+      const data = await api.employeeNextCode({
+        designationId: String(designationId),
+        departmentId: String(departmentId),
+      });
+      setForm((f) => ({ ...f, employeeCode: data.employeeCode || "" }));
+    } catch (err) {
+      toast.error(err.message || "Failed to generate employee ID");
+    } finally {
+      setCodeLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (!lookups) return;
     setDepartments(lookups.departments || []);
     setDesignations(lookups.designations || []);
   }, [lookups]);
+
+  useEffect(() => {
+    if (!editId && form.designationId && form.departmentId) {
+      fetchNextEmployeeCode(form.designationId, form.departmentId);
+    }
+  }, [form.designationId, form.departmentId, editId, fetchNextEmployeeCode]);
 
   useEffect(() => {
     if (!editId) return;
@@ -236,7 +271,9 @@ function AddEmployeeContent() {
     const add = (field, message) => { errors[field] = message; };
 
     if (stepIndex === 0) {
-      if (!form.employeeCode?.trim()) add("employeeCode", "Employee Code is required.");
+      if (isEditMode && !form.employeeCode?.trim()) {
+        add("employeeCode", "Employee Code is required.");
+      }
       if (!form.firstName?.trim()) add("firstName", "First Name is required.");
       if (!form.lastName?.trim()) add("lastName", "Last Name is required.");
     } else if (stepIndex === 1) {
@@ -264,7 +301,7 @@ function AddEmployeeContent() {
 
     if (Object.keys(errors).length) {
       setFieldErrors(errors);
-      toast.error("Please fill the required fields.");
+      toast.error(validationToastMessage(errors));
       return false;
     }
     setFieldErrors({});
@@ -278,7 +315,7 @@ function AddEmployeeContent() {
   const validateForm = () => {
     const validation = validateEmployeeForm(
       { ...form, confirmPassword: form.confirmPassword },
-      { isEdit: isEditMode, checkConfirmPassword: true }
+      { isEdit: isEditMode, checkConfirmPassword: true, autoEmployeeCode: !isEditMode }
     );
     const errors = { ...validation.fieldErrors };
 
@@ -301,11 +338,7 @@ function AddEmployeeContent() {
       };
       const errorStep = stepMap[firstKey] ?? 0;
       setStep(errorStep);
-      toast.error(
-        Object.keys(errors).length > 1
-          ? "Please fill the required fields."
-          : errors[firstKey]
-      );
+      toast.error(validationToastMessage(errors));
       return false;
     }
 
@@ -498,10 +531,18 @@ function AddEmployeeContent() {
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2 sm:col-span-2">
-                      <Label>Employee ID (EMP Code) *</Label>
-                      <Input className={fieldClass(fieldErrors, "employeeCode")} placeholder="EMP009" value={form.employeeCode} onChange={(e) => set("employeeCode", e.target.value)} />
+                      <Label>Employee ID {isEditMode ? "*" : "(auto-generated)"}</Label>
+                      <Input
+                        className={fieldClass(fieldErrors, "employeeCode")}
+                        placeholder={codeLoading ? "Generating..." : "Select department & designation"}
+                        value={form.employeeCode}
+                        readOnly={!isEditMode}
+                        onChange={(e) => isEditMode && set("employeeCode", e.target.value)}
+                      />
                       <FieldError message={fieldErrors.employeeCode} />
-                      <p className="text-xs text-muted-foreground">Used for login reference, attendance &amp; payroll</p>
+                      <p className="text-xs text-muted-foreground">
+                        Format: VLJ-{'{code}'}-{'{sequence}'} — assigned automatically when you save
+                      </p>
                     </div>
                     <div className="space-y-2">
                       <Label>First Name *</Label>
@@ -559,7 +600,13 @@ function AddEmployeeContent() {
                 <CardContent className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label>Department *</Label>
-                    <Select value={form.departmentId} onValueChange={(v) => set("departmentId", v)}>
+                    <Select
+                      value={form.departmentId}
+                      onValueChange={(v) => {
+                        set("departmentId", v);
+                        setForm((f) => ({ ...f, departmentId: v, designationId: "", employeeCode: "" }));
+                      }}
+                    >
                       <SelectTrigger className={fieldClass(fieldErrors, "departmentId")}><SelectValue placeholder="Select Department" /></SelectTrigger>
                       <SelectContent>
                         {departments.map((d) => <SelectItem key={d.id} value={String(d.id)}>{d.departmentName}</SelectItem>)}
@@ -569,10 +616,19 @@ function AddEmployeeContent() {
                   </div>
                   <div className="space-y-2">
                     <Label>Designation *</Label>
-                    <Select value={form.designationId} onValueChange={(v) => set("designationId", v)}>
-                      <SelectTrigger className={fieldClass(fieldErrors, "designationId")}><SelectValue placeholder="Select Designation" /></SelectTrigger>
+                    <Select
+                      value={form.designationId}
+                      onValueChange={(v) => {
+                        set("designationId", v);
+                        if (!isEditMode) {
+                          setForm((f) => ({ ...f, designationId: v, employeeCode: "" }));
+                        }
+                      }}
+                      disabled={!form.departmentId}
+                    >
+                      <SelectTrigger className={fieldClass(fieldErrors, "designationId")}><SelectValue placeholder={form.departmentId ? "Select Designation" : "Select department first"} /></SelectTrigger>
                       <SelectContent>
-                        {designations.map((d) => <SelectItem key={d.id} value={String(d.id)}>{d.designationName}</SelectItem>)}
+                        {filteredDesignations.map((d) => <SelectItem key={d.id} value={String(d.id)}>{d.designationName} ({d.designationCode})</SelectItem>)}
                       </SelectContent>
                     </Select>
                     <FieldError message={fieldErrors.designationId} />
@@ -677,11 +733,22 @@ function AddEmployeeContent() {
                     <>
                       <div className="space-y-2 sm:col-span-2">
                         <Label>Highest Qualification *</Label>
-                        <Input value={form.qualification} onChange={(e) => set("qualification", e.target.value)} placeholder="e.g. B.Tech" />
+                        <Input
+                          className={fieldClass(fieldErrors, "qualification")}
+                          value={form.qualification}
+                          onChange={(e) => set("qualification", e.target.value)}
+                          placeholder="e.g. B.Tech"
+                        />
+                        <FieldError message={fieldErrors.qualification} />
                       </div>
                       <div className="space-y-2 sm:col-span-2">
                         <Label>College / University *</Label>
-                        <Input value={form.collegeName} onChange={(e) => set("collegeName", e.target.value)} />
+                        <Input
+                          className={fieldClass(fieldErrors, "collegeName")}
+                          value={form.collegeName}
+                          onChange={(e) => set("collegeName", e.target.value)}
+                        />
+                        <FieldError message={fieldErrors.collegeName} />
                       </div>
                       <div className="space-y-2">
                         <Label>Specialization</Label>
@@ -689,7 +756,16 @@ function AddEmployeeContent() {
                       </div>
                       <div className="space-y-2">
                         <Label>Graduation Year *</Label>
-                        <Input type="number" min="1950" max="2100" value={form.graduationYear} onChange={(e) => set("graduationYear", e.target.value)} />
+                        <Input
+                          className={fieldClass(fieldErrors, "graduationYear")}
+                          type="number"
+                          min="1950"
+                          max="2100"
+                          value={form.graduationYear}
+                          onChange={(e) => set("graduationYear", e.target.value)}
+                          placeholder="e.g. 2024"
+                        />
+                        <FieldError message={fieldErrors.graduationYear} />
                       </div>
                       <div className="space-y-2">
                         <Label>Percentage / CGPA</Label>
@@ -712,23 +788,56 @@ function AddEmployeeContent() {
                     <>
                       <div className="space-y-2">
                         <Label>Total Experience (Years) *</Label>
-                        <Input type="number" min="0" value={form.totalExperienceYears} onChange={(e) => set("totalExperienceYears", e.target.value)} />
+                        <Input
+                          className={fieldClass(fieldErrors, "totalExperienceYears")}
+                          type="number"
+                          min="0"
+                          value={form.totalExperienceYears}
+                          onChange={(e) => set("totalExperienceYears", e.target.value)}
+                        />
+                        <FieldError message={fieldErrors.totalExperienceYears} />
                       </div>
                       <div className="space-y-2">
                         <Label>Total Experience (Months) *</Label>
-                        <Input type="number" min="0" max="11" value={form.totalExperienceMonths} onChange={(e) => set("totalExperienceMonths", e.target.value)} />
+                        <Input
+                          className={fieldClass(fieldErrors, "totalExperienceMonths")}
+                          type="number"
+                          min="0"
+                          max="11"
+                          value={form.totalExperienceMonths}
+                          onChange={(e) => set("totalExperienceMonths", e.target.value)}
+                        />
+                        <FieldError message={fieldErrors.totalExperienceMonths} />
                       </div>
                       <div className="space-y-2 sm:col-span-2">
                         <Label>Previous Company Name *</Label>
-                        <Input value={form.previousCompany} onChange={(e) => set("previousCompany", e.target.value)} />
+                        <Input
+                          className={fieldClass(fieldErrors, "previousCompany")}
+                          value={form.previousCompany}
+                          onChange={(e) => set("previousCompany", e.target.value)}
+                        />
+                        <FieldError message={fieldErrors.previousCompany} />
                       </div>
                       <div className="space-y-2">
                         <Label>Previous Designation *</Label>
-                        <Input value={form.previousDesignation} onChange={(e) => set("previousDesignation", e.target.value)} />
+                        <Input
+                          className={fieldClass(fieldErrors, "previousDesignation")}
+                          value={form.previousDesignation}
+                          onChange={(e) => set("previousDesignation", e.target.value)}
+                        />
+                        <FieldError message={fieldErrors.previousDesignation} />
                       </div>
                       <div className="space-y-2">
                         <Label>Previous CTC *</Label>
-                        <Input type="number" min="0" step="0.01" value={form.previousCtc} onChange={(e) => set("previousCtc", e.target.value)} />
+                        <Input
+                          className={fieldClass(fieldErrors, "previousCtc")}
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          value={form.previousCtc}
+                          onChange={(e) => set("previousCtc", e.target.value)}
+                        />
+                        <FieldError message={fieldErrors.previousCtc} />
                       </div>
                       <div className="space-y-2">
                         <Label>Expected CTC</Label>

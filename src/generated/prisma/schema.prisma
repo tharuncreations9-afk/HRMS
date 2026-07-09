@@ -207,8 +207,9 @@ model Department {
   createdBy      Int?     @map("created_by")
   updatedBy      Int?     @map("updated_by")
 
-  employees Employee[]
-  shifts    DepartmentShift[]
+  employees    Employee[]
+  shifts       DepartmentShift[]
+  designations Designation[]
 
   creator Employee? @relation("DepartmentCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
   updater Employee? @relation("DepartmentUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
@@ -249,18 +250,26 @@ model DepartmentShift {
 // ─────────────────────────────────────────────────────────────────────────────
 
 model Designation {
-  id              Int      @id @default(autoincrement())
-  designationName String   @unique @map("designation_name") @db.VarChar(100)
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
-  createdBy       Int?     @map("created_by")
-  updatedBy       Int?     @map("updated_by")
+  id                Int      @id @default(autoincrement())
+  designationName   String   @map("designation_name") @db.VarChar(100)
+  designationCode   String   @unique @map("designation_code") @db.VarChar(10)
+  departmentId      Int      @map("department_id")
+  sequenceStart     Int      @map("sequence_start")
+  lastSequence      Int?     @map("last_sequence")
+  releasedSequences Json     @default("[]") @map("released_sequences")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+  createdBy         Int?     @map("created_by")
+  updatedBy         Int?     @map("updated_by")
 
-  employees Employee[]
+  department Department @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  employees  Employee[]
 
   creator Employee? @relation("DesignationCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
   updater Employee? @relation("DesignationUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
 
+  @@unique([departmentId, designationName])
+  @@index([departmentId])
   @@map("designations")
 }
 

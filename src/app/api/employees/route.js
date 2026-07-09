@@ -10,6 +10,10 @@ import { createNotification, getUsersByRole, notifyUsers } from "@/lib/notificat
 import { mapEmployee } from "@/lib/employee-mapper";
 import { validateEmployeeCategory, buildCategoryData } from "@/lib/employee-category";
 import {
+  assignEmployeeCode,
+  validateDesignationForDepartment,
+} from "@/lib/employee-id";
+import {
   getEmployeeIdsOnLeaveToday,
   applyStatusFilter,
   parseStatusInput,
@@ -137,12 +141,26 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
-    const validation = validateEmployeeForm(body, { isEdit: false, checkConfirmPassword: false });
+    const validation = validateEmployeeForm(body, {
+      isEdit: false,
+      checkConfirmPassword: false,
+      autoEmployeeCode: true,
+    });
     if (!validation.valid) {
       return validationErrorResponse(validation.fieldErrors, validation.summary);
     }
 
     const normalized = validation.normalized;
+
+    const designationCheck = await validateDesignationForDepartment(
+      prisma,
+      parseInt(normalized.designationId, 10),
+      parseInt(normalized.departmentId, 10)
+    );
+    if (!designationCheck.valid) {
+      return Response.json({ error: designationCheck.message }, { status: 400 });
+    }
+
     const categoryValidation = validateEmployeeCategory(normalized);
     if (!categoryValidation.valid) {
       const fieldErrors = mapCategoryErrorsToFields(categoryValidation.errors);
@@ -153,6 +171,9 @@ export async function POST(request) {
     if (!duplicateCheck.valid) {
       return validationErrorResponse(duplicateCheck.fieldErrors, duplicateCheck.summary);
     }
+
+    const employeeCode = await assignEmployeeCode(prisma, parseInt(normalized.designationId, 10));
+    normalized.employeeCode = employeeCode;
 
     const employeeRole = await prisma.role.findUnique({ where: { roleName: "employee" } });
     if (!employeeRole) {

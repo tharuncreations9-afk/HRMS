@@ -5,6 +5,11 @@ import { createNotification } from "@/lib/notifications";
 import { mapEmployee } from "@/lib/employee-mapper";
 import { validateEmployeeCategory, buildCategoryData } from "@/lib/employee-category";
 import {
+  assignEmployeeCode,
+  releaseEmployeeCode,
+  validateDesignationForDepartment,
+} from "@/lib/employee-id";
+import {
   getEmployeeIdsOnLeaveToday,
   parseStatusInput,
   isValidDbStatus,
@@ -266,6 +271,33 @@ export async function PATCH(request, { params }) {
   if (!isSelfOnly) {
     if (body.departmentId) updateData.departmentId = parseInt(body.departmentId, 10);
     if (body.designationId) updateData.designationId = parseInt(body.designationId, 10);
+
+    const nextDepartmentId = updateData.departmentId ?? existing.departmentId;
+    const nextDesignationId = updateData.designationId ?? existing.designationId;
+
+    if (body.departmentId || body.designationId) {
+      const designationCheck = await validateDesignationForDepartment(
+        prisma,
+        nextDesignationId,
+        nextDepartmentId
+      );
+      if (!designationCheck.valid) {
+        return Response.json({ error: designationCheck.message }, { status: 400 });
+      }
+    }
+
+    if (
+      body.designationId &&
+      parseInt(body.designationId, 10) !== existing.designationId
+    ) {
+      const newCode = await prisma.$transaction(async (tx) => {
+        await releaseEmployeeCode(prisma, existing.employeeCode, existing.designationId, { tx });
+        return assignEmployeeCode(prisma, parseInt(body.designationId, 10), { tx });
+      });
+      updateData.employeeCode = newCode;
+      updateData.camAttendanceId = newCode;
+    }
+
     if (body.roleId) updateData.roleId = parseInt(body.roleId, 10);
     if (body.joiningDate) updateData.joiningDate = new Date(body.joiningDate);
     if (body.employmentType) {
@@ -282,10 +314,6 @@ export async function PATCH(request, { params }) {
       updateData.reportingManagerId = null;
     } else if (body.reportingManagerId !== undefined) {
       updateData.reportingManagerId = parseInt(body.reportingManagerId, 10);
-    }
-    if (body.employeeCode?.trim() && body.employeeCode.trim() !== existing.employeeCode) {
-      updateData.employeeCode = normalizedInput?.employeeCode || body.employeeCode.trim();
-      updateData.camAttendanceId = updateData.employeeCode;
     }
     if (body.employeeCategory) {
       Object.assign(updateData, buildCategoryData(body));

@@ -130,7 +130,7 @@ export function parseEmployeeWorkbook(buffer) {
     if (field) columnMap[index] = field;
   });
 
-  const requiredFields = ["employeeCode", "firstName", "email", "mobile", "department", "designation", "joiningDate"];
+  const requiredFields = ["firstName", "email", "mobile", "department", "designation", "joiningDate"];
   const mappedFields = new Set(Object.values(columnMap));
   const missingHeaders = requiredFields.filter((f) => !mappedFields.has(f));
   if (missingHeaders.length) {
@@ -174,7 +174,7 @@ export function validateEmployeeRow(row, context) {
     seenCodes,
     seenEmails,
     departmentByName,
-    designationByName,
+    designationByDeptAndName,
     roleByName,
     managerByCode,
   } = context;
@@ -183,7 +183,14 @@ export function validateEmployeeRow(row, context) {
   const email = row.email?.trim().toLowerCase();
   const mobile = row.mobile?.trim();
 
-  if (!employeeCode) errors.push("Employee Code is required");
+  if (!employeeCode) {
+    // Auto-generated on upload when department + designation are valid
+  } else {
+    const codeKey = employeeCode.toLowerCase();
+    if (existingCodes.has(codeKey)) errors.push(`Duplicate Employee Code "${employeeCode}" already exists`);
+    if (seenCodes.has(codeKey)) errors.push(`Duplicate Employee Code "${employeeCode}" repeated in file`);
+  }
+
   if (!row.firstName?.trim()) errors.push("First Name is required");
   if (!email) errors.push("Email is required");
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push("Invalid email format");
@@ -191,12 +198,6 @@ export function validateEmployeeRow(row, context) {
   if (!row.department?.trim()) errors.push("Department is required");
   if (!row.designation?.trim()) errors.push("Designation is required");
   if (!row.joiningDate) errors.push("Joining Date is required");
-
-  if (employeeCode) {
-    const codeKey = employeeCode.toLowerCase();
-    if (existingCodes.has(codeKey)) errors.push(`Duplicate Employee Code "${employeeCode}" already exists`);
-    if (seenCodes.has(codeKey)) errors.push(`Duplicate Employee Code "${employeeCode}" repeated in file`);
-  }
 
   if (email) {
     if (existingEmails.has(email)) errors.push(`Duplicate Email "${row.email}" already exists`);
@@ -206,8 +207,11 @@ export function validateEmployeeRow(row, context) {
   const department = departmentByName.get(row.department?.trim().toLowerCase());
   if (!department) errors.push(`Department "${row.department}" not found`);
 
-  const designation = designationByName.get(row.designation?.trim().toLowerCase());
-  if (!designation) errors.push(`Designation "${row.designation}" not found`);
+  const designationKey = department
+    ? `${department.id}:${row.designation?.trim().toLowerCase()}`
+    : null;
+  const designation = designationKey ? designationByDeptAndName.get(designationKey) : null;
+  if (!designation) errors.push(`Designation "${row.designation}" not found for department "${row.department}"`);
 
   const joiningDate = parseExcelDate(row.joiningDate);
   if (!joiningDate) errors.push("Invalid Joining Date");
@@ -267,18 +271,17 @@ export function validateEmployeeRow(row, context) {
   };
 }
 
-export function buildTemplateWorkbook() {
-  const sheet = XLSX.utils.aoa_to_sheet([
-    BULK_UPLOAD_HEADERS,
+export function buildTemplateWorkbook(departments = [], designations = []) {
+  const exampleRows = [
     [
-      "EMP010",
+      "",
       "Ravi",
       "Kumar",
       "ravi.kumar@vlj.com",
       "9876543210",
       "Admin@123",
-      "Engineering",
-      "Software Engineer",
+      "Admin Staff",
+      "Accountant",
       "2024-01-15",
       "employee",
       "Male",
@@ -295,8 +298,52 @@ export function buildTemplateWorkbook() {
       "",
       "",
     ],
-  ]);
+    [
+      "",
+      "Priya",
+      "Sharma",
+      "priya.sharma@vlj.com",
+      "9876543211",
+      "Admin@123",
+      "Factory Staff",
+      "Supervisor",
+      "2024-02-01",
+      "employee",
+      "Female",
+      "1992-03-20",
+      "B+",
+      "",
+      "Hyderabad",
+      "9988776656",
+      "Full Time",
+      "Active",
+      "VLJ-M-001",
+      "",
+      "",
+      "",
+      "",
+    ],
+  ];
+
+  const refRows = [
+    ["Department", "Designation", "Code", "ID Format Example"],
+    ...designations.map((d) => {
+      const dept = departments.find((x) => x.id === d.departmentId);
+      const padLen = Math.max(String(d.sequenceStart || 1).length, 3);
+      const seq = String(d.sequenceStart || 1).padStart(padLen, "0");
+      return [
+        dept?.departmentName || "",
+        d.designationName,
+        d.designationCode || "",
+        `VLJ-${(d.designationCode || "").toUpperCase()}-${seq}`,
+      ];
+    }),
+  ];
+
+  const sheet = XLSX.utils.aoa_to_sheet([BULK_UPLOAD_HEADERS, ...exampleRows]);
+  const refSheet = XLSX.utils.aoa_to_sheet(refRows);
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, sheet, "Employees");
+  XLSX.utils.book_append_sheet(workbook, refSheet, "ID Reference");
   return XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
 }

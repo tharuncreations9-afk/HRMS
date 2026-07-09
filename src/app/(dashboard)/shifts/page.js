@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Clock, Plus, Pencil, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -105,16 +105,6 @@ export default function ShiftManagementPage() {
     if (!user || !canManage || !limit) return;
     loadShifts();
   }, [user, canManage, limit, loadShifts]);
-
-  const groupedShifts = useMemo(() => {
-    const map = new Map();
-    shifts.forEach((shift) => {
-      const key = shift.departmentName || "Unknown";
-      if (!map.has(key)) map.set(key, []);
-      map.get(key).push(shift);
-    });
-    return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
-  }, [shifts]);
 
   const toggleDepartment = (deptValue) => {
     setForm((prev) => {
@@ -258,37 +248,30 @@ export default function ShiftManagementPage() {
                         </td>
                       </tr>
                     ) : (
-                      groupedShifts.flatMap(([deptName, deptShifts]) => [
-                        <tr key={`header-${deptName}`} className="bg-muted/30">
-                          <td colSpan={7} className="px-4 py-2 text-sm font-semibold text-champagne">
-                            {deptName}
+                      shifts.map((shift) => (
+                        <tr key={shift.id} className="border-b hover:bg-muted/20">
+                          <td className="px-4 py-3 font-medium">{shift.departmentName}</td>
+                          <td className="px-4 py-3 font-medium">{shift.shiftName}</td>
+                          <td className="px-4 py-3">{shift.startTimeDisplay}</td>
+                          <td className="px-4 py-3">{shift.endTimeDisplay}</td>
+                          <td className="px-4 py-3">{shift.graceDisplay}</td>
+                          <td className="px-4 py-3">
+                            <Badge variant={shift.status === "Active" ? "success" : "secondary"}>
+                              {shift.statusLabel}
+                            </Badge>
                           </td>
-                        </tr>,
-                        ...deptShifts.map((shift) => (
-                          <tr key={shift.id} className="border-b hover:bg-muted/20">
-                            <td className="px-4 py-3 pl-8 text-muted-foreground">{shift.departmentName}</td>
-                            <td className="px-4 py-3 font-medium">{shift.shiftName}</td>
-                            <td className="px-4 py-3">{shift.startTimeDisplay}</td>
-                            <td className="px-4 py-3">{shift.endTimeDisplay}</td>
-                            <td className="px-4 py-3">{shift.graceDisplay}</td>
-                            <td className="px-4 py-3">
-                              <Badge variant={shift.status === "Active" ? "success" : "secondary"}>
-                                {shift.statusLabel}
-                              </Badge>
-                            </td>
-                            <td className="px-4 py-3">
-                              <div className="flex gap-2">
-                                <Button size="sm" variant="outline" onClick={() => openDialog(shift)}>
-                                  <Pencil className="h-3.5 w-3.5" /> Edit
-                                </Button>
-                                <Button size="sm" variant="outline" onClick={() => handleDelete(shift)}>
-                                  <Trash2 className="h-3.5 w-3.5" /> Delete
-                                </Button>
-                              </div>
-                            </td>
-                          </tr>
-                        )),
-                      ])
+                          <td className="px-4 py-3">
+                            <div className="flex gap-2">
+                              <Button size="sm" variant="outline" onClick={() => openDialog(shift)}>
+                                <Pencil className="h-3.5 w-3.5" /> Edit
+                              </Button>
+                              <Button size="sm" variant="outline" onClick={() => handleDelete(shift)}>
+                                <Trash2 className="h-3.5 w-3.5" /> Delete
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
                     )}
                   </tbody>
                 </table>

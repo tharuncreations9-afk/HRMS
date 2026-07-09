@@ -21,6 +21,7 @@ import { useLookups } from "@/hooks/use-lookups";
 import { getLocalDateString } from "@/lib/utils";
 import { isTimeInFuture } from "@/lib/attendance-date";
 import { AttendanceCorrectionDialog } from "@/components/attendance/attendance-correction-dialog";
+import "@/components/attendance/daily-attendance-print.css";
 
 function statusAllowsOutTime(statusValue) {
   return statusValue === "present" || statusValue === "late" || statusValue === "halfDay";
@@ -90,6 +91,7 @@ export default function DailyAttendancePage() {
   const [loading, setLoading] = useState(true);
   const [savingCode, setSavingCode] = useState(null);
   const [printRows, setPrintRows] = useState([]);
+  const [printPending, setPrintPending] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const [canEdit, setCanEdit] = useState(false);
   const [canRequestCorrection, setCanRequestCorrection] = useState(false);
@@ -144,6 +146,15 @@ export default function DailyAttendancePage() {
   useEffect(() => {
     loadMarkSheet();
   }, [loadMarkSheet]);
+
+  useEffect(() => {
+    if (!printPending) return;
+    const timer = setTimeout(() => {
+      window.print();
+      setPrintPending(false);
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [printPending, printRows]);
 
   const statusByValue = useMemo(() => new Map(statuses.map((s) => [s.value, s])), [statuses]);
 
@@ -290,7 +301,7 @@ export default function DailyAttendancePage() {
         search: debouncedSearch,
       });
       setPrintRows(data.rows || []);
-      setTimeout(() => window.print(), 100);
+      setPrintPending(true);
     } catch (err) {
       toast.error(err.message || "Failed to prepare print");
     }
@@ -408,7 +419,8 @@ export default function DailyAttendancePage() {
   };
 
   return (
-    <div className="space-y-6">
+    <>
+    <div className="space-y-6 no-print">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between no-print">
         <div>
           <h1 className="font-display text-2xl font-bold lg:text-3xl">Daily Attendance</h1>
@@ -709,44 +721,6 @@ export default function DailyAttendancePage() {
         </CardContent>
       </Card>
 
-      <div className="print-area hidden print:block">
-        <div className="flex min-h-[calc(100vh-2rem)] flex-col bg-white p-6 text-black">
-          <h2 className="mb-1 text-center text-base font-semibold">Daily Attendance List</h2>
-          <p className="mb-4 text-center text-sm text-gray-700">{dateLabel}</p>
-          <table className="w-full border-collapse border border-black text-xs">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="border border-black px-2 py-1.5 text-left">Employee Code</th>
-                <th className="border border-black px-2 py-1.5 text-left">Employee Name</th>
-                <th className="border border-black px-2 py-1.5 text-left">Status</th>
-                <th className="border border-black px-2 py-1.5 text-left">In Time</th>
-                <th className="border border-black px-2 py-1.5 text-left">Out Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rowsForPrint.map((r) => {
-                const noTimes = r.markStatusValue === "leave" || r.markStatusValue === "absent";
-                return (
-                  <tr key={r.employeeCode}>
-                    <td className="border border-black px-2 py-2">{r.employeeCode}</td>
-                    <td className="border border-black px-2 py-2">{r.employeeName}</td>
-                    <td className="border border-black px-2 py-2">{r.statusLabel || r.status || "Not Marked"}</td>
-                    <td className="border border-black px-2 py-2">{noTimes ? "—" : formatDisplayTime(r.inTime)}</td>
-                    <td className="border border-black px-2 py-2">{noTimes ? "—" : formatDisplayTime(r.outTime)}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-          <div className="mt-auto pt-16 text-right text-sm text-gray-800">
-            <div className="ml-auto inline-block min-w-[220px] text-center">
-              <div className="mb-1 border-b border-black" />
-              <p>Proprietor Signature</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <AttendanceCorrectionDialog
         open={correctionOpen}
         onOpenChange={setCorrectionOpen}
@@ -756,5 +730,58 @@ export default function DailyAttendancePage() {
         onSuccess={loadMarkSheet}
       />
     </div>
+
+      <div className="daily-attendance-print-root">
+        <div className="bg-white p-4 text-black">
+          <h2 className="mb-1 text-center text-base font-semibold">Daily Attendance List</h2>
+          <p className="mb-4 text-center text-sm text-gray-700">{dateLabel}</p>
+          {(departmentFilter !== "all" || statusFilter !== "all" || debouncedSearch) && (
+            <p className="mb-3 text-center text-xs text-gray-600">
+              Filters:
+              {departmentFilter !== "all" ? ` Department — ${departmentFilter}` : ""}
+              {statusFilter !== "all" ? ` · Status — ${statusFilter}` : ""}
+              {debouncedSearch ? ` · Search — "${debouncedSearch}"` : ""}
+            </p>
+          )}
+          <table className="w-full border-collapse border border-black text-xs">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="border border-black px-2 py-1.5 text-left">#</th>
+                <th className="border border-black px-2 py-1.5 text-left">Employee Code</th>
+                <th className="border border-black px-2 py-1.5 text-left">Employee Name</th>
+                <th className="border border-black px-2 py-1.5 text-left">Department</th>
+                <th className="border border-black px-2 py-1.5 text-left">Status</th>
+                <th className="border border-black px-2 py-1.5 text-left">Shift</th>
+                <th className="border border-black px-2 py-1.5 text-left">In Time</th>
+                <th className="border border-black px-2 py-1.5 text-left">Out Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rowsForPrint.map((r, index) => {
+                const noTimes = r.markStatusValue === "leave" || r.markStatusValue === "absent";
+                return (
+                  <tr key={r.employeeCode}>
+                    <td className="border border-black px-2 py-1.5">{index + 1}</td>
+                    <td className="border border-black px-2 py-1.5 font-mono">{r.employeeCode}</td>
+                    <td className="border border-black px-2 py-1.5">{r.employeeName}</td>
+                    <td className="border border-black px-2 py-1.5">{r.department || "—"}</td>
+                    <td className="border border-black px-2 py-1.5">{r.statusLabel || r.status || "Not Marked"}</td>
+                    <td className="border border-black px-2 py-1.5">{r.shiftTime || "—"}</td>
+                    <td className="border border-black px-2 py-1.5">{noTimes ? "—" : formatDisplayTime(r.inTime)}</td>
+                    <td className="border border-black px-2 py-1.5">{noTimes ? "—" : formatDisplayTime(r.outTime)}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          <div className="mt-10 text-right text-sm text-gray-800">
+            <div className="ml-auto inline-block min-w-[220px] text-center">
+              <div className="mb-1 border-b border-black" />
+              <p>Proprietor Signature</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { requirePermission, hashPassword } from "@/lib/auth-server";
 import { createAuditLog } from "@/lib/audit";
+import { assignEmployeeCode } from "@/lib/employee-id";
 import { parseEmployeeWorkbook, validateEmployeeRow } from "@/lib/employee-bulk-upload";
 
 export async function POST(request) {
@@ -38,8 +39,8 @@ export async function POST(request) {
     const departmentByName = new Map(
       departments.map((d) => [d.departmentName.toLowerCase(), d])
     );
-    const designationByName = new Map(
-      designations.map((d) => [d.designationName.toLowerCase(), d])
+    const designationByDeptAndName = new Map(
+      designations.map((d) => [`${d.departmentId}:${d.designationName.toLowerCase()}`, d])
     );
     const roleByName = new Map(roles.map((r) => [r.roleName.toLowerCase(), r]));
     const managerByCode = new Map(
@@ -64,7 +65,7 @@ export async function POST(request) {
         seenCodes,
         seenEmails,
         departmentByName,
-        designationByName,
+        designationByDeptAndName,
         roleByName,
         managerByCode,
       });
@@ -80,40 +81,46 @@ export async function POST(request) {
       }
 
       const data = validation.data;
-      if (codeKey) seenCodes.add(codeKey);
-      if (emailKey) seenEmails.add(emailKey);
+      let employeeCode = data.employeeCode;
 
       try {
         const passwordHash = await hashPassword(data.password);
-        const employee = await prisma.employee.create({
-          data: {
-            employeeCode: data.employeeCode,
-            camAttendanceId: data.employeeCode,
-            firstName: data.firstName,
-            lastName: data.lastName || "",
-            fullName: data.fullName,
-            dob: data.dob,
-            gender: data.gender,
-            bloodGroup: data.bloodGroup,
-            mobile: data.mobile,
-            alternateMobile: data.alternateMobile,
-            email: data.email,
-            passwordHash,
-            roleId: data.roleId || defaultRole.id,
-            address: data.address,
-            departmentId: data.departmentId,
-            designationId: data.designationId,
-            reportingManagerId: data.reportingManagerId,
-            joiningDate: data.joiningDate,
-            employmentType: data.employmentType,
-            status: data.status,
-            emergencyContact: data.emergencyContact,
-            bankName: data.bankName,
-            accountNumber: data.accountNumber,
-            pan: data.pan,
-            aadhaar: data.aadhaar,
-            createdBy: user.id,
-          },
+
+        const employee = await prisma.$transaction(async (tx) => {
+          if (!employeeCode) {
+            employeeCode = await assignEmployeeCode(prisma, data.designationId, { tx });
+          }
+
+          return tx.employee.create({
+            data: {
+              employeeCode,
+              camAttendanceId: employeeCode,
+              firstName: data.firstName,
+              lastName: data.lastName || "",
+              fullName: data.fullName,
+              dob: data.dob,
+              gender: data.gender,
+              bloodGroup: data.bloodGroup,
+              mobile: data.mobile,
+              alternateMobile: data.alternateMobile,
+              email: data.email,
+              passwordHash,
+              roleId: data.roleId || defaultRole.id,
+              address: data.address,
+              departmentId: data.departmentId,
+              designationId: data.designationId,
+              reportingManagerId: data.reportingManagerId,
+              joiningDate: data.joiningDate,
+              employmentType: data.employmentType,
+              status: data.status,
+              emergencyContact: data.emergencyContact,
+              bankName: data.bankName,
+              accountNumber: data.accountNumber,
+              pan: data.pan,
+              aadhaar: data.aadhaar,
+              createdBy: user.id,
+            },
+          });
         });
 
         if (leaveTypes.length) {
@@ -129,9 +136,11 @@ export async function POST(request) {
           });
         }
 
-        existingCodes.add(data.employeeCode.toLowerCase());
+        existingCodes.add(employeeCode.toLowerCase());
         existingEmails.add(data.email.toLowerCase());
-        managerByCode.set(data.employeeCode.toLowerCase(), {
+        if (employeeCode) seenCodes.add(employeeCode.toLowerCase());
+        if (emailKey) seenEmails.add(emailKey);
+        managerByCode.set(employeeCode.toLowerCase(), {
           id: employee.id,
           employeeCode: employee.employeeCode,
         });

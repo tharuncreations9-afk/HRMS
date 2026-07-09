@@ -1,0 +1,45 @@
+/* Daily Attendance — print only the attendance list */
+@page {
+  size: A4 portrait;
+  margin: 12mm;
+}
+
+.daily-attendance-print-root {
+  display: none;
+}
+
+@media print {
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .daily-attendance-print-root,
+  .daily-attendance-print-root * {
+    visibility: visible;
+  }
+
+  .daily-attendance-print-root {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #000;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}

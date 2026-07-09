@@ -40,7 +40,10 @@ export async function GET(request) {
       ? prisma.department.findMany({ orderBy: { departmentName: "asc" } })
       : Promise.resolve([]),
     canManage
-      ? prisma.designation.findMany({ orderBy: { designationName: "asc" } })
+      ? prisma.designation.findMany({
+          orderBy: [{ department: { departmentName: "asc" } }, { designationName: "asc" }],
+          include: { department: true },
+        })
       : Promise.resolve([]),
     prisma.leaveType.findMany({ orderBy: { leaveName: "asc" } }),
     canManage
@@ -70,6 +73,9 @@ export async function GET(request) {
     value: d.designationName,
     label: d.designationName,
     designationName: d.designationName,
+    designationCode: d.designationCode,
+    departmentId: d.departmentId,
+    sequenceStart: d.sequenceStart,
   }));
 
   return Response.json({

@@ -57,3 +57,57 @@ export async function PATCH(request, { params }) {
     throw err;
   }
 }
+
+export async function DELETE(request, { params }) {
+  const { user, error } = await requireOrgManagement(request);
+  if (error) return error;
+
+  const id = parseInt(params.id, 10);
+  if (Number.isNaN(id)) {
+    return Response.json({ error: "Invalid department id" }, { status: 400 });
+  }
+
+  const existing = await prisma.department.findUnique({
+    where: { id },
+    include: {
+      _count: { select: { employees: true, designations: true, shifts: true } },
+    },
+  });
+  if (!existing) {
+    return Response.json({ error: "Department not found" }, { status: 404 });
+  }
+
+  if (existing._count.employees > 0) {
+    return Response.json(
+      { error: `Cannot delete department with ${existing._count.employees} assigned employee(s).` },
+      { status: 400 }
+    );
+  }
+  if (existing._count.designations > 0) {
+    return Response.json(
+      { error: `Delete all ${existing._count.designations} designation(s) under this department first.` },
+      { status: 400 }
+    );
+  }
+  if (existing._count.shifts > 0) {
+    return Response.json(
+      { error: `Remove ${existing._count.shifts} shift(s) for this department before deleting.` },
+      { status: 400 }
+    );
+  }
+
+  await prisma.department.delete({ where: { id } });
+
+  try {
+    await createAuditLog({
+      userId: user.id,
+      moduleName: "Department Management",
+      actionType: "DELETE",
+      oldValue: existing,
+    });
+  } catch (auditErr) {
+    console.error("Department audit log failed:", auditErr);
+  }
+
+  return Response.json({ success: true });
+}

@@ -2880,11 +2880,13 @@ export namespace Prisma {
   export type DepartmentCountOutputType = {
     employees: number
     shifts: number
+    designations: number
   }
 
   export type DepartmentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     employees?: boolean | DepartmentCountOutputTypeCountEmployeesArgs
     shifts?: boolean | DepartmentCountOutputTypeCountShiftsArgs
+    designations?: boolean | DepartmentCountOutputTypeCountDesignationsArgs
   }
 
   // Custom InputTypes
@@ -2910,6 +2912,13 @@ export namespace Prisma {
    */
   export type DepartmentCountOutputTypeCountShiftsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DepartmentShiftWhereInput
+  }
+
+  /**
+   * DepartmentCountOutputType without action
+   */
+  export type DepartmentCountOutputTypeCountDesignationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DesignationWhereInput
   }
 
 
@@ -6932,6 +6941,7 @@ export namespace Prisma {
     updatedBy?: boolean
     employees?: boolean | Department$employeesArgs<ExtArgs>
     shifts?: boolean | Department$shiftsArgs<ExtArgs>
+    designations?: boolean | Department$designationsArgs<ExtArgs>
     creator?: boolean | Department$creatorArgs<ExtArgs>
     updater?: boolean | Department$updaterArgs<ExtArgs>
     _count?: boolean | DepartmentCountOutputTypeDefaultArgs<ExtArgs>
@@ -6953,6 +6963,7 @@ export namespace Prisma {
   export type DepartmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     employees?: boolean | Department$employeesArgs<ExtArgs>
     shifts?: boolean | Department$shiftsArgs<ExtArgs>
+    designations?: boolean | Department$designationsArgs<ExtArgs>
     creator?: boolean | Department$creatorArgs<ExtArgs>
     updater?: boolean | Department$updaterArgs<ExtArgs>
     _count?: boolean | DepartmentCountOutputTypeDefaultArgs<ExtArgs>
@@ -6963,6 +6974,7 @@ export namespace Prisma {
     objects: {
       employees: Prisma.$EmployeePayload<ExtArgs>[]
       shifts: Prisma.$DepartmentShiftPayload<ExtArgs>[]
+      designations: Prisma.$DesignationPayload<ExtArgs>[]
       creator: Prisma.$EmployeePayload<ExtArgs> | null
       updater: Prisma.$EmployeePayload<ExtArgs> | null
     }
@@ -7316,6 +7328,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     employees<T extends Department$employeesArgs<ExtArgs> = {}>(args?: Subset<T, Department$employeesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     shifts<T extends Department$shiftsArgs<ExtArgs> = {}>(args?: Subset<T, Department$shiftsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentShiftPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    designations<T extends Department$designationsArgs<ExtArgs> = {}>(args?: Subset<T, Department$designationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DesignationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     creator<T extends Department$creatorArgs<ExtArgs> = {}>(args?: Subset<T, Department$creatorArgs<ExtArgs>>): Prisma__EmployeeClient<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     updater<T extends Department$updaterArgs<ExtArgs> = {}>(args?: Subset<T, Department$updaterArgs<ExtArgs>>): Prisma__EmployeeClient<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
@@ -7742,6 +7755,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: DepartmentShiftScalarFieldEnum | DepartmentShiftScalarFieldEnum[]
+  }
+
+  /**
+   * Department.designations
+   */
+  export type Department$designationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Designation
+     */
+    select?: DesignationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Designation
+     */
+    omit?: DesignationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DesignationInclude<ExtArgs> | null
+    where?: DesignationWhereInput
+    orderBy?: DesignationOrderByWithRelationInput | DesignationOrderByWithRelationInput[]
+    cursor?: DesignationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DesignationScalarFieldEnum | DesignationScalarFieldEnum[]
   }
 
   /**
@@ -8906,12 +8943,18 @@ export namespace Prisma {
 
   export type DesignationAvgAggregateOutputType = {
     id: number | null
+    departmentId: number | null
+    sequenceStart: number | null
+    lastSequence: number | null
     createdBy: number | null
     updatedBy: number | null
   }
 
   export type DesignationSumAggregateOutputType = {
     id: number | null
+    departmentId: number | null
+    sequenceStart: number | null
+    lastSequence: number | null
     createdBy: number | null
     updatedBy: number | null
   }
@@ -8919,6 +8962,10 @@ export namespace Prisma {
   export type DesignationMinAggregateOutputType = {
     id: number | null
     designationName: string | null
+    designationCode: string | null
+    departmentId: number | null
+    sequenceStart: number | null
+    lastSequence: number | null
     createdAt: Date | null
     updatedAt: Date | null
     createdBy: number | null
@@ -8928,6 +8975,10 @@ export namespace Prisma {
   export type DesignationMaxAggregateOutputType = {
     id: number | null
     designationName: string | null
+    designationCode: string | null
+    departmentId: number | null
+    sequenceStart: number | null
+    lastSequence: number | null
     createdAt: Date | null
     updatedAt: Date | null
     createdBy: number | null
@@ -8937,6 +8988,11 @@ export namespace Prisma {
   export type DesignationCountAggregateOutputType = {
     id: number
     designationName: number
+    designationCode: number
+    departmentId: number
+    sequenceStart: number
+    lastSequence: number
+    releasedSequences: number
     createdAt: number
     updatedAt: number
     createdBy: number
@@ -8947,12 +9003,18 @@ export namespace Prisma {
 
   export type DesignationAvgAggregateInputType = {
     id?: true
+    departmentId?: true
+    sequenceStart?: true
+    lastSequence?: true
     createdBy?: true
     updatedBy?: true
   }
 
   export type DesignationSumAggregateInputType = {
     id?: true
+    departmentId?: true
+    sequenceStart?: true
+    lastSequence?: true
     createdBy?: true
     updatedBy?: true
   }
@@ -8960,6 +9022,10 @@ export namespace Prisma {
   export type DesignationMinAggregateInputType = {
     id?: true
     designationName?: true
+    designationCode?: true
+    departmentId?: true
+    sequenceStart?: true
+    lastSequence?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -8969,6 +9035,10 @@ export namespace Prisma {
   export type DesignationMaxAggregateInputType = {
     id?: true
     designationName?: true
+    designationCode?: true
+    departmentId?: true
+    sequenceStart?: true
+    lastSequence?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -8978,6 +9048,11 @@ export namespace Prisma {
   export type DesignationCountAggregateInputType = {
     id?: true
     designationName?: true
+    designationCode?: true
+    departmentId?: true
+    sequenceStart?: true
+    lastSequence?: true
+    releasedSequences?: true
     createdAt?: true
     updatedAt?: true
     createdBy?: true
@@ -9074,6 +9149,11 @@ export namespace Prisma {
   export type DesignationGroupByOutputType = {
     id: number
     designationName: string
+    designationCode: string
+    departmentId: number
+    sequenceStart: number
+    lastSequence: number | null
+    releasedSequences: JsonValue
     createdAt: Date
     updatedAt: Date
     createdBy: number | null
@@ -9102,10 +9182,16 @@ export namespace Prisma {
   export type DesignationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     designationName?: boolean
+    designationCode?: boolean
+    departmentId?: boolean
+    sequenceStart?: boolean
+    lastSequence?: boolean
+    releasedSequences?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
     updatedBy?: boolean
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
     employees?: boolean | Designation$employeesArgs<ExtArgs>
     creator?: boolean | Designation$creatorArgs<ExtArgs>
     updater?: boolean | Designation$updaterArgs<ExtArgs>
@@ -9117,14 +9203,20 @@ export namespace Prisma {
   export type DesignationSelectScalar = {
     id?: boolean
     designationName?: boolean
+    designationCode?: boolean
+    departmentId?: boolean
+    sequenceStart?: boolean
+    lastSequence?: boolean
+    releasedSequences?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
     updatedBy?: boolean
   }
 
-  export type DesignationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "designationName" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy", ExtArgs["result"]["designation"]>
+  export type DesignationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "designationName" | "designationCode" | "departmentId" | "sequenceStart" | "lastSequence" | "releasedSequences" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy", ExtArgs["result"]["designation"]>
   export type DesignationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
     employees?: boolean | Designation$employeesArgs<ExtArgs>
     creator?: boolean | Designation$creatorArgs<ExtArgs>
     updater?: boolean | Designation$updaterArgs<ExtArgs>
@@ -9134,6 +9226,7 @@ export namespace Prisma {
   export type $DesignationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Designation"
     objects: {
+      department: Prisma.$DepartmentPayload<ExtArgs>
       employees: Prisma.$EmployeePayload<ExtArgs>[]
       creator: Prisma.$EmployeePayload<ExtArgs> | null
       updater: Prisma.$EmployeePayload<ExtArgs> | null
@@ -9141,6 +9234,11 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       designationName: string
+      designationCode: string
+      departmentId: number
+      sequenceStart: number
+      lastSequence: number | null
+      releasedSequences: Prisma.JsonValue
       createdAt: Date
       updatedAt: Date
       createdBy: number | null
@@ -9485,6 +9583,7 @@ export namespace Prisma {
    */
   export interface Prisma__DesignationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    department<T extends DepartmentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DepartmentDefaultArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     employees<T extends Designation$employeesArgs<ExtArgs> = {}>(args?: Subset<T, Designation$employeesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     creator<T extends Designation$creatorArgs<ExtArgs> = {}>(args?: Subset<T, Designation$creatorArgs<ExtArgs>>): Prisma__EmployeeClient<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     updater<T extends Designation$updaterArgs<ExtArgs> = {}>(args?: Subset<T, Designation$updaterArgs<ExtArgs>>): Prisma__EmployeeClient<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -9519,6 +9618,11 @@ export namespace Prisma {
   interface DesignationFieldRefs {
     readonly id: FieldRef<"Designation", 'Int'>
     readonly designationName: FieldRef<"Designation", 'String'>
+    readonly designationCode: FieldRef<"Designation", 'String'>
+    readonly departmentId: FieldRef<"Designation", 'Int'>
+    readonly sequenceStart: FieldRef<"Designation", 'Int'>
+    readonly lastSequence: FieldRef<"Designation", 'Int'>
+    readonly releasedSequences: FieldRef<"Designation", 'Json'>
     readonly createdAt: FieldRef<"Designation", 'DateTime'>
     readonly updatedAt: FieldRef<"Designation", 'DateTime'>
     readonly createdBy: FieldRef<"Designation", 'Int'>
@@ -29184,6 +29288,11 @@ export namespace Prisma {
   export const DesignationScalarFieldEnum: {
     id: 'id',
     designationName: 'designationName',
+    designationCode: 'designationCode',
+    departmentId: 'departmentId',
+    sequenceStart: 'sequenceStart',
+    lastSequence: 'lastSequence',
+    releasedSequences: 'releasedSequences',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     createdBy: 'createdBy',
@@ -29506,6 +29615,13 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
   export const NullableJsonNullValueInput: {
     DbNull: typeof DbNull,
     JsonNull: typeof JsonNull
@@ -29554,13 +29670,6 @@ export namespace Prisma {
   export type DepartmentShiftOrderByRelevanceFieldEnum = (typeof DepartmentShiftOrderByRelevanceFieldEnum)[keyof typeof DepartmentShiftOrderByRelevanceFieldEnum]
 
 
-  export const DesignationOrderByRelevanceFieldEnum: {
-    designationName: 'designationName'
-  };
-
-  export type DesignationOrderByRelevanceFieldEnum = (typeof DesignationOrderByRelevanceFieldEnum)[keyof typeof DesignationOrderByRelevanceFieldEnum]
-
-
   export const JsonNullValueFilter: {
     DbNull: typeof DbNull,
     JsonNull: typeof JsonNull,
@@ -29576,6 +29685,14 @@ export namespace Prisma {
   };
 
   export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+  export const DesignationOrderByRelevanceFieldEnum: {
+    designationName: 'designationName',
+    designationCode: 'designationCode'
+  };
+
+  export type DesignationOrderByRelevanceFieldEnum = (typeof DesignationOrderByRelevanceFieldEnum)[keyof typeof DesignationOrderByRelevanceFieldEnum]
 
 
   export const EmployeeOrderByRelevanceFieldEnum: {
@@ -29740,6 +29857,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
    * Reference to a field of type 'Bytes'
    */
   export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
@@ -29771,20 +29902,6 @@ export namespace Prisma {
    * Reference to a field of type 'Decimal'
    */
   export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
-    
-
-
-  /**
-   * Reference to a field of type 'Json'
-   */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-  /**
-   * Reference to a field of type 'QueryMode'
-   */
-  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -30108,6 +30225,7 @@ export namespace Prisma {
     updatedBy?: IntNullableFilter<"Department"> | number | null
     employees?: EmployeeListRelationFilter
     shifts?: DepartmentShiftListRelationFilter
+    designations?: DesignationListRelationFilter
     creator?: XOR<EmployeeNullableScalarRelationFilter, EmployeeWhereInput> | null
     updater?: XOR<EmployeeNullableScalarRelationFilter, EmployeeWhereInput> | null
   }
@@ -30122,6 +30240,7 @@ export namespace Prisma {
     updatedBy?: SortOrderInput | SortOrder
     employees?: EmployeeOrderByRelationAggregateInput
     shifts?: DepartmentShiftOrderByRelationAggregateInput
+    designations?: DesignationOrderByRelationAggregateInput
     creator?: EmployeeOrderByWithRelationInput
     updater?: EmployeeOrderByWithRelationInput
     _relevance?: DepartmentOrderByRelevanceInput
@@ -30140,6 +30259,7 @@ export namespace Prisma {
     updatedBy?: IntNullableFilter<"Department"> | number | null
     employees?: EmployeeListRelationFilter
     shifts?: DepartmentShiftListRelationFilter
+    designations?: DesignationListRelationFilter
     creator?: XOR<EmployeeNullableScalarRelationFilter, EmployeeWhereInput> | null
     updater?: XOR<EmployeeNullableScalarRelationFilter, EmployeeWhereInput> | null
   }, "id" | "departmentCode">
@@ -30272,10 +30392,16 @@ export namespace Prisma {
     NOT?: DesignationWhereInput | DesignationWhereInput[]
     id?: IntFilter<"Designation"> | number
     designationName?: StringFilter<"Designation"> | string
+    designationCode?: StringFilter<"Designation"> | string
+    departmentId?: IntFilter<"Designation"> | number
+    sequenceStart?: IntFilter<"Designation"> | number
+    lastSequence?: IntNullableFilter<"Designation"> | number | null
+    releasedSequences?: JsonFilter<"Designation">
     createdAt?: DateTimeFilter<"Designation"> | Date | string
     updatedAt?: DateTimeFilter<"Designation"> | Date | string
     createdBy?: IntNullableFilter<"Designation"> | number | null
     updatedBy?: IntNullableFilter<"Designation"> | number | null
+    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
     employees?: EmployeeListRelationFilter
     creator?: XOR<EmployeeNullableScalarRelationFilter, EmployeeWhereInput> | null
     updater?: XOR<EmployeeNullableScalarRelationFilter, EmployeeWhereInput> | null
@@ -30284,10 +30410,16 @@ export namespace Prisma {
   export type DesignationOrderByWithRelationInput = {
     id?: SortOrder
     designationName?: SortOrder
+    designationCode?: SortOrder
+    departmentId?: SortOrder
+    sequenceStart?: SortOrder
+    lastSequence?: SortOrderInput | SortOrder
+    releasedSequences?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
     updatedBy?: SortOrderInput | SortOrder
+    department?: DepartmentOrderByWithRelationInput
     employees?: EmployeeOrderByRelationAggregateInput
     creator?: EmployeeOrderByWithRelationInput
     updater?: EmployeeOrderByWithRelationInput
@@ -30296,22 +30428,34 @@ export namespace Prisma {
 
   export type DesignationWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    designationName?: string
+    designationCode?: string
+    departmentId_designationName?: DesignationDepartmentIdDesignationNameCompoundUniqueInput
     AND?: DesignationWhereInput | DesignationWhereInput[]
     OR?: DesignationWhereInput[]
     NOT?: DesignationWhereInput | DesignationWhereInput[]
+    designationName?: StringFilter<"Designation"> | string
+    departmentId?: IntFilter<"Designation"> | number
+    sequenceStart?: IntFilter<"Designation"> | number
+    lastSequence?: IntNullableFilter<"Designation"> | number | null
+    releasedSequences?: JsonFilter<"Designation">
     createdAt?: DateTimeFilter<"Designation"> | Date | string
     updatedAt?: DateTimeFilter<"Designation"> | Date | string
     createdBy?: IntNullableFilter<"Designation"> | number | null
     updatedBy?: IntNullableFilter<"Designation"> | number | null
+    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
     employees?: EmployeeListRelationFilter
     creator?: XOR<EmployeeNullableScalarRelationFilter, EmployeeWhereInput> | null
     updater?: XOR<EmployeeNullableScalarRelationFilter, EmployeeWhereInput> | null
-  }, "id" | "designationName">
+  }, "id" | "designationCode" | "departmentId_designationName">
 
   export type DesignationOrderByWithAggregationInput = {
     id?: SortOrder
     designationName?: SortOrder
+    designationCode?: SortOrder
+    departmentId?: SortOrder
+    sequenceStart?: SortOrder
+    lastSequence?: SortOrderInput | SortOrder
+    releasedSequences?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrderInput | SortOrder
@@ -30329,6 +30473,11 @@ export namespace Prisma {
     NOT?: DesignationScalarWhereWithAggregatesInput | DesignationScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Designation"> | number
     designationName?: StringWithAggregatesFilter<"Designation"> | string
+    designationCode?: StringWithAggregatesFilter<"Designation"> | string
+    departmentId?: IntWithAggregatesFilter<"Designation"> | number
+    sequenceStart?: IntWithAggregatesFilter<"Designation"> | number
+    lastSequence?: IntNullableWithAggregatesFilter<"Designation"> | number | null
+    releasedSequences?: JsonWithAggregatesFilter<"Designation">
     createdAt?: DateTimeWithAggregatesFilter<"Designation"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Designation"> | Date | string
     createdBy?: IntNullableWithAggregatesFilter<"Designation"> | number | null
@@ -32357,6 +32506,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     employees?: EmployeeCreateNestedManyWithoutDepartmentInput
     shifts?: DepartmentShiftCreateNestedManyWithoutDepartmentInput
+    designations?: DesignationCreateNestedManyWithoutDepartmentInput
     creator?: EmployeeCreateNestedOneWithoutDepartmentsCreatedInput
     updater?: EmployeeCreateNestedOneWithoutDepartmentsUpdatedInput
   }
@@ -32371,6 +32521,7 @@ export namespace Prisma {
     updatedBy?: number | null
     employees?: EmployeeUncheckedCreateNestedManyWithoutDepartmentInput
     shifts?: DepartmentShiftUncheckedCreateNestedManyWithoutDepartmentInput
+    designations?: DesignationUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUpdateInput = {
@@ -32380,6 +32531,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     employees?: EmployeeUpdateManyWithoutDepartmentNestedInput
     shifts?: DepartmentShiftUpdateManyWithoutDepartmentNestedInput
+    designations?: DesignationUpdateManyWithoutDepartmentNestedInput
     creator?: EmployeeUpdateOneWithoutDepartmentsCreatedNestedInput
     updater?: EmployeeUpdateOneWithoutDepartmentsUpdatedNestedInput
   }
@@ -32394,6 +32546,7 @@ export namespace Prisma {
     updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
     employees?: EmployeeUncheckedUpdateManyWithoutDepartmentNestedInput
     shifts?: DepartmentShiftUncheckedUpdateManyWithoutDepartmentNestedInput
+    designations?: DesignationUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentCreateManyInput = {
@@ -32517,8 +32670,13 @@ export namespace Prisma {
 
   export type DesignationCreateInput = {
     designationName: string
+    designationCode: string
+    sequenceStart: number
+    lastSequence?: number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutDesignationsInput
     employees?: EmployeeCreateNestedManyWithoutDesignationInput
     creator?: EmployeeCreateNestedOneWithoutDesignationsCreatedInput
     updater?: EmployeeCreateNestedOneWithoutDesignationsUpdatedInput
@@ -32527,6 +32685,11 @@ export namespace Prisma {
   export type DesignationUncheckedCreateInput = {
     id?: number
     designationName: string
+    designationCode: string
+    departmentId: number
+    sequenceStart: number
+    lastSequence?: number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: number | null
@@ -32536,8 +32699,13 @@ export namespace Prisma {
 
   export type DesignationUpdateInput = {
     designationName?: StringFieldUpdateOperationsInput | string
+    designationCode?: StringFieldUpdateOperationsInput | string
+    sequenceStart?: IntFieldUpdateOperationsInput | number
+    lastSequence?: NullableIntFieldUpdateOperationsInput | number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutDesignationsNestedInput
     employees?: EmployeeUpdateManyWithoutDesignationNestedInput
     creator?: EmployeeUpdateOneWithoutDesignationsCreatedNestedInput
     updater?: EmployeeUpdateOneWithoutDesignationsUpdatedNestedInput
@@ -32546,6 +32714,11 @@ export namespace Prisma {
   export type DesignationUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     designationName?: StringFieldUpdateOperationsInput | string
+    designationCode?: StringFieldUpdateOperationsInput | string
+    departmentId?: IntFieldUpdateOperationsInput | number
+    sequenceStart?: IntFieldUpdateOperationsInput | number
+    lastSequence?: NullableIntFieldUpdateOperationsInput | number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32556,6 +32729,11 @@ export namespace Prisma {
   export type DesignationCreateManyInput = {
     id?: number
     designationName: string
+    designationCode: string
+    departmentId: number
+    sequenceStart: number
+    lastSequence?: number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: number | null
@@ -32564,6 +32742,10 @@ export namespace Prisma {
 
   export type DesignationUpdateManyMutationInput = {
     designationName?: StringFieldUpdateOperationsInput | string
+    designationCode?: StringFieldUpdateOperationsInput | string
+    sequenceStart?: IntFieldUpdateOperationsInput | number
+    lastSequence?: NullableIntFieldUpdateOperationsInput | number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32571,6 +32753,11 @@ export namespace Prisma {
   export type DesignationUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     designationName?: StringFieldUpdateOperationsInput | string
+    designationCode?: StringFieldUpdateOperationsInput | string
+    departmentId?: IntFieldUpdateOperationsInput | number
+    sequenceStart?: IntFieldUpdateOperationsInput | number
+    lastSequence?: NullableIntFieldUpdateOperationsInput | number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -34809,7 +34996,17 @@ export namespace Prisma {
     none?: DepartmentShiftWhereInput
   }
 
+  export type DesignationListRelationFilter = {
+    every?: DesignationWhereInput
+    some?: DesignationWhereInput
+    none?: DesignationWhereInput
+  }
+
   export type DepartmentShiftOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DesignationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -34946,6 +35143,29 @@ export namespace Prisma {
     _min?: NestedEnumShiftStatusFilter<$PrismaModel>
     _max?: NestedEnumShiftStatusFilter<$PrismaModel>
   }
+  export type JsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type DesignationOrderByRelevanceInput = {
     fields: DesignationOrderByRelevanceFieldEnum | DesignationOrderByRelevanceFieldEnum[]
@@ -34953,9 +35173,19 @@ export namespace Prisma {
     search: string
   }
 
+  export type DesignationDepartmentIdDesignationNameCompoundUniqueInput = {
+    departmentId: number
+    designationName: string
+  }
+
   export type DesignationCountOrderByAggregateInput = {
     id?: SortOrder
     designationName?: SortOrder
+    designationCode?: SortOrder
+    departmentId?: SortOrder
+    sequenceStart?: SortOrder
+    lastSequence?: SortOrder
+    releasedSequences?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -34964,6 +35194,9 @@ export namespace Prisma {
 
   export type DesignationAvgOrderByAggregateInput = {
     id?: SortOrder
+    departmentId?: SortOrder
+    sequenceStart?: SortOrder
+    lastSequence?: SortOrder
     createdBy?: SortOrder
     updatedBy?: SortOrder
   }
@@ -34971,6 +35204,10 @@ export namespace Prisma {
   export type DesignationMaxOrderByAggregateInput = {
     id?: SortOrder
     designationName?: SortOrder
+    designationCode?: SortOrder
+    departmentId?: SortOrder
+    sequenceStart?: SortOrder
+    lastSequence?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -34980,6 +35217,10 @@ export namespace Prisma {
   export type DesignationMinOrderByAggregateInput = {
     id?: SortOrder
     designationName?: SortOrder
+    designationCode?: SortOrder
+    departmentId?: SortOrder
+    sequenceStart?: SortOrder
+    lastSequence?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: SortOrder
@@ -34988,8 +35229,37 @@ export namespace Prisma {
 
   export type DesignationSumOrderByAggregateInput = {
     id?: SortOrder
+    departmentId?: SortOrder
+    sequenceStart?: SortOrder
+    lastSequence?: SortOrder
     createdBy?: SortOrder
     updatedBy?: SortOrder
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
   }
 
   export type BytesNullableFilter<$PrismaModel = never> = {
@@ -35157,12 +35427,6 @@ export namespace Prisma {
     none?: DepartmentWhereInput
   }
 
-  export type DesignationListRelationFilter = {
-    every?: DesignationWhereInput
-    some?: DesignationWhereInput
-    none?: DesignationWhereInput
-  }
-
   export type AttendanceSyncLogListRelationFilter = {
     every?: AttendanceSyncLogWhereInput
     some?: AttendanceSyncLogWhereInput
@@ -35232,10 +35496,6 @@ export namespace Prisma {
   }
 
   export type DepartmentOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type DesignationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -37039,6 +37299,13 @@ export namespace Prisma {
     connect?: DepartmentShiftWhereUniqueInput | DepartmentShiftWhereUniqueInput[]
   }
 
+  export type DesignationCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<DesignationCreateWithoutDepartmentInput, DesignationUncheckedCreateWithoutDepartmentInput> | DesignationCreateWithoutDepartmentInput[] | DesignationUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DesignationCreateOrConnectWithoutDepartmentInput | DesignationCreateOrConnectWithoutDepartmentInput[]
+    createMany?: DesignationCreateManyDepartmentInputEnvelope
+    connect?: DesignationWhereUniqueInput | DesignationWhereUniqueInput[]
+  }
+
   export type EmployeeCreateNestedOneWithoutDepartmentsCreatedInput = {
     create?: XOR<EmployeeCreateWithoutDepartmentsCreatedInput, EmployeeUncheckedCreateWithoutDepartmentsCreatedInput>
     connectOrCreate?: EmployeeCreateOrConnectWithoutDepartmentsCreatedInput
@@ -37063,6 +37330,13 @@ export namespace Prisma {
     connectOrCreate?: DepartmentShiftCreateOrConnectWithoutDepartmentInput | DepartmentShiftCreateOrConnectWithoutDepartmentInput[]
     createMany?: DepartmentShiftCreateManyDepartmentInputEnvelope
     connect?: DepartmentShiftWhereUniqueInput | DepartmentShiftWhereUniqueInput[]
+  }
+
+  export type DesignationUncheckedCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<DesignationCreateWithoutDepartmentInput, DesignationUncheckedCreateWithoutDepartmentInput> | DesignationCreateWithoutDepartmentInput[] | DesignationUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DesignationCreateOrConnectWithoutDepartmentInput | DesignationCreateOrConnectWithoutDepartmentInput[]
+    createMany?: DesignationCreateManyDepartmentInputEnvelope
+    connect?: DesignationWhereUniqueInput | DesignationWhereUniqueInput[]
   }
 
   export type EmployeeUpdateManyWithoutDepartmentNestedInput = {
@@ -37091,6 +37365,20 @@ export namespace Prisma {
     update?: DepartmentShiftUpdateWithWhereUniqueWithoutDepartmentInput | DepartmentShiftUpdateWithWhereUniqueWithoutDepartmentInput[]
     updateMany?: DepartmentShiftUpdateManyWithWhereWithoutDepartmentInput | DepartmentShiftUpdateManyWithWhereWithoutDepartmentInput[]
     deleteMany?: DepartmentShiftScalarWhereInput | DepartmentShiftScalarWhereInput[]
+  }
+
+  export type DesignationUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<DesignationCreateWithoutDepartmentInput, DesignationUncheckedCreateWithoutDepartmentInput> | DesignationCreateWithoutDepartmentInput[] | DesignationUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DesignationCreateOrConnectWithoutDepartmentInput | DesignationCreateOrConnectWithoutDepartmentInput[]
+    upsert?: DesignationUpsertWithWhereUniqueWithoutDepartmentInput | DesignationUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: DesignationCreateManyDepartmentInputEnvelope
+    set?: DesignationWhereUniqueInput | DesignationWhereUniqueInput[]
+    disconnect?: DesignationWhereUniqueInput | DesignationWhereUniqueInput[]
+    delete?: DesignationWhereUniqueInput | DesignationWhereUniqueInput[]
+    connect?: DesignationWhereUniqueInput | DesignationWhereUniqueInput[]
+    update?: DesignationUpdateWithWhereUniqueWithoutDepartmentInput | DesignationUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: DesignationUpdateManyWithWhereWithoutDepartmentInput | DesignationUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: DesignationScalarWhereInput | DesignationScalarWhereInput[]
   }
 
   export type EmployeeUpdateOneWithoutDepartmentsCreatedNestedInput = {
@@ -37139,6 +37427,20 @@ export namespace Prisma {
     update?: DepartmentShiftUpdateWithWhereUniqueWithoutDepartmentInput | DepartmentShiftUpdateWithWhereUniqueWithoutDepartmentInput[]
     updateMany?: DepartmentShiftUpdateManyWithWhereWithoutDepartmentInput | DepartmentShiftUpdateManyWithWhereWithoutDepartmentInput[]
     deleteMany?: DepartmentShiftScalarWhereInput | DepartmentShiftScalarWhereInput[]
+  }
+
+  export type DesignationUncheckedUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<DesignationCreateWithoutDepartmentInput, DesignationUncheckedCreateWithoutDepartmentInput> | DesignationCreateWithoutDepartmentInput[] | DesignationUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: DesignationCreateOrConnectWithoutDepartmentInput | DesignationCreateOrConnectWithoutDepartmentInput[]
+    upsert?: DesignationUpsertWithWhereUniqueWithoutDepartmentInput | DesignationUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: DesignationCreateManyDepartmentInputEnvelope
+    set?: DesignationWhereUniqueInput | DesignationWhereUniqueInput[]
+    disconnect?: DesignationWhereUniqueInput | DesignationWhereUniqueInput[]
+    delete?: DesignationWhereUniqueInput | DesignationWhereUniqueInput[]
+    connect?: DesignationWhereUniqueInput | DesignationWhereUniqueInput[]
+    update?: DesignationUpdateWithWhereUniqueWithoutDepartmentInput | DesignationUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: DesignationUpdateManyWithWhereWithoutDepartmentInput | DesignationUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: DesignationScalarWhereInput | DesignationScalarWhereInput[]
   }
 
   export type DepartmentCreateNestedOneWithoutShiftsInput = {
@@ -37191,6 +37493,12 @@ export namespace Prisma {
     update?: XOR<XOR<EmployeeUpdateToOneWithWhereWithoutShiftsUpdatedInput, EmployeeUpdateWithoutShiftsUpdatedInput>, EmployeeUncheckedUpdateWithoutShiftsUpdatedInput>
   }
 
+  export type DepartmentCreateNestedOneWithoutDesignationsInput = {
+    create?: XOR<DepartmentCreateWithoutDesignationsInput, DepartmentUncheckedCreateWithoutDesignationsInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutDesignationsInput
+    connect?: DepartmentWhereUniqueInput
+  }
+
   export type EmployeeCreateNestedManyWithoutDesignationInput = {
     create?: XOR<EmployeeCreateWithoutDesignationInput, EmployeeUncheckedCreateWithoutDesignationInput> | EmployeeCreateWithoutDesignationInput[] | EmployeeUncheckedCreateWithoutDesignationInput[]
     connectOrCreate?: EmployeeCreateOrConnectWithoutDesignationInput | EmployeeCreateOrConnectWithoutDesignationInput[]
@@ -37215,6 +37523,14 @@ export namespace Prisma {
     connectOrCreate?: EmployeeCreateOrConnectWithoutDesignationInput | EmployeeCreateOrConnectWithoutDesignationInput[]
     createMany?: EmployeeCreateManyDesignationInputEnvelope
     connect?: EmployeeWhereUniqueInput | EmployeeWhereUniqueInput[]
+  }
+
+  export type DepartmentUpdateOneRequiredWithoutDesignationsNestedInput = {
+    create?: XOR<DepartmentCreateWithoutDesignationsInput, DepartmentUncheckedCreateWithoutDesignationsInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutDesignationsInput
+    upsert?: DepartmentUpsertWithoutDesignationsInput
+    connect?: DepartmentWhereUniqueInput
+    update?: XOR<XOR<DepartmentUpdateToOneWithWhereWithoutDesignationsInput, DepartmentUpdateWithoutDesignationsInput>, DepartmentUncheckedUpdateWithoutDesignationsInput>
   }
 
   export type EmployeeUpdateManyWithoutDesignationNestedInput = {
@@ -40356,6 +40672,29 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumShiftStatusFilter<$PrismaModel>
     _max?: NestedEnumShiftStatusFilter<$PrismaModel>
+  }
+  export type NestedJsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type NestedBytesNullableFilter<$PrismaModel = never> = {
@@ -44135,6 +44474,43 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DesignationCreateWithoutDepartmentInput = {
+    designationName: string
+    designationCode: string
+    sequenceStart: number
+    lastSequence?: number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    employees?: EmployeeCreateNestedManyWithoutDesignationInput
+    creator?: EmployeeCreateNestedOneWithoutDesignationsCreatedInput
+    updater?: EmployeeCreateNestedOneWithoutDesignationsUpdatedInput
+  }
+
+  export type DesignationUncheckedCreateWithoutDepartmentInput = {
+    id?: number
+    designationName: string
+    designationCode: string
+    sequenceStart: number
+    lastSequence?: number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: number | null
+    updatedBy?: number | null
+    employees?: EmployeeUncheckedCreateNestedManyWithoutDesignationInput
+  }
+
+  export type DesignationCreateOrConnectWithoutDepartmentInput = {
+    where: DesignationWhereUniqueInput
+    create: XOR<DesignationCreateWithoutDepartmentInput, DesignationUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type DesignationCreateManyDepartmentInputEnvelope = {
+    data: DesignationCreateManyDepartmentInput | DesignationCreateManyDepartmentInput[]
+    skipDuplicates?: boolean
+  }
+
   export type EmployeeCreateWithoutDepartmentsCreatedInput = {
     employeeCode: string
     camAttendanceId: string
@@ -44608,6 +44984,39 @@ export namespace Prisma {
     updatedBy?: IntNullableFilter<"DepartmentShift"> | number | null
   }
 
+  export type DesignationUpsertWithWhereUniqueWithoutDepartmentInput = {
+    where: DesignationWhereUniqueInput
+    update: XOR<DesignationUpdateWithoutDepartmentInput, DesignationUncheckedUpdateWithoutDepartmentInput>
+    create: XOR<DesignationCreateWithoutDepartmentInput, DesignationUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type DesignationUpdateWithWhereUniqueWithoutDepartmentInput = {
+    where: DesignationWhereUniqueInput
+    data: XOR<DesignationUpdateWithoutDepartmentInput, DesignationUncheckedUpdateWithoutDepartmentInput>
+  }
+
+  export type DesignationUpdateManyWithWhereWithoutDepartmentInput = {
+    where: DesignationScalarWhereInput
+    data: XOR<DesignationUpdateManyMutationInput, DesignationUncheckedUpdateManyWithoutDepartmentInput>
+  }
+
+  export type DesignationScalarWhereInput = {
+    AND?: DesignationScalarWhereInput | DesignationScalarWhereInput[]
+    OR?: DesignationScalarWhereInput[]
+    NOT?: DesignationScalarWhereInput | DesignationScalarWhereInput[]
+    id?: IntFilter<"Designation"> | number
+    designationName?: StringFilter<"Designation"> | string
+    designationCode?: StringFilter<"Designation"> | string
+    departmentId?: IntFilter<"Designation"> | number
+    sequenceStart?: IntFilter<"Designation"> | number
+    lastSequence?: IntNullableFilter<"Designation"> | number | null
+    releasedSequences?: JsonFilter<"Designation">
+    createdAt?: DateTimeFilter<"Designation"> | Date | string
+    updatedAt?: DateTimeFilter<"Designation"> | Date | string
+    createdBy?: IntNullableFilter<"Designation"> | number | null
+    updatedBy?: IntNullableFilter<"Designation"> | number | null
+  }
+
   export type EmployeeUpsertWithoutDepartmentsCreatedInput = {
     update: XOR<EmployeeUpdateWithoutDepartmentsCreatedInput, EmployeeUncheckedUpdateWithoutDepartmentsCreatedInput>
     create: XOR<EmployeeCreateWithoutDepartmentsCreatedInput, EmployeeUncheckedCreateWithoutDepartmentsCreatedInput>
@@ -45050,6 +45459,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     employees?: EmployeeCreateNestedManyWithoutDepartmentInput
+    designations?: DesignationCreateNestedManyWithoutDepartmentInput
     creator?: EmployeeCreateNestedOneWithoutDepartmentsCreatedInput
     updater?: EmployeeCreateNestedOneWithoutDepartmentsUpdatedInput
   }
@@ -45063,6 +45473,7 @@ export namespace Prisma {
     createdBy?: number | null
     updatedBy?: number | null
     employees?: EmployeeUncheckedCreateNestedManyWithoutDepartmentInput
+    designations?: DesignationUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutShiftsInput = {
@@ -45511,6 +45922,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     employees?: EmployeeUpdateManyWithoutDepartmentNestedInput
+    designations?: DesignationUpdateManyWithoutDepartmentNestedInput
     creator?: EmployeeUpdateOneWithoutDepartmentsCreatedNestedInput
     updater?: EmployeeUpdateOneWithoutDepartmentsUpdatedNestedInput
   }
@@ -45524,6 +45936,7 @@ export namespace Prisma {
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
     updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
     employees?: EmployeeUncheckedUpdateManyWithoutDepartmentNestedInput
+    designations?: DesignationUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type EmployeeUpsertWithoutShiftsCreatedInput = {
@@ -45960,6 +46373,34 @@ export namespace Prisma {
     reportLogsUpdated?: ReportDownloadLogUncheckedUpdateManyWithoutUpdaterNestedInput
     employeePermissionsCreated?: EmployeePermissionUncheckedUpdateManyWithoutCreatorNestedInput
     employeePermissionsUpdated?: EmployeePermissionUncheckedUpdateManyWithoutUpdaterNestedInput
+  }
+
+  export type DepartmentCreateWithoutDesignationsInput = {
+    departmentName: string
+    departmentCode: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    employees?: EmployeeCreateNestedManyWithoutDepartmentInput
+    shifts?: DepartmentShiftCreateNestedManyWithoutDepartmentInput
+    creator?: EmployeeCreateNestedOneWithoutDepartmentsCreatedInput
+    updater?: EmployeeCreateNestedOneWithoutDepartmentsUpdatedInput
+  }
+
+  export type DepartmentUncheckedCreateWithoutDesignationsInput = {
+    id?: number
+    departmentName: string
+    departmentCode: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: number | null
+    updatedBy?: number | null
+    employees?: EmployeeUncheckedCreateNestedManyWithoutDepartmentInput
+    shifts?: DepartmentShiftUncheckedCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentCreateOrConnectWithoutDesignationsInput = {
+    where: DepartmentWhereUniqueInput
+    create: XOR<DepartmentCreateWithoutDesignationsInput, DepartmentUncheckedCreateWithoutDesignationsInput>
   }
 
   export type EmployeeCreateWithoutDesignationInput = {
@@ -46603,6 +47044,40 @@ export namespace Prisma {
     create: XOR<EmployeeCreateWithoutDesignationsUpdatedInput, EmployeeUncheckedCreateWithoutDesignationsUpdatedInput>
   }
 
+  export type DepartmentUpsertWithoutDesignationsInput = {
+    update: XOR<DepartmentUpdateWithoutDesignationsInput, DepartmentUncheckedUpdateWithoutDesignationsInput>
+    create: XOR<DepartmentCreateWithoutDesignationsInput, DepartmentUncheckedCreateWithoutDesignationsInput>
+    where?: DepartmentWhereInput
+  }
+
+  export type DepartmentUpdateToOneWithWhereWithoutDesignationsInput = {
+    where?: DepartmentWhereInput
+    data: XOR<DepartmentUpdateWithoutDesignationsInput, DepartmentUncheckedUpdateWithoutDesignationsInput>
+  }
+
+  export type DepartmentUpdateWithoutDesignationsInput = {
+    departmentName?: StringFieldUpdateOperationsInput | string
+    departmentCode?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    employees?: EmployeeUpdateManyWithoutDepartmentNestedInput
+    shifts?: DepartmentShiftUpdateManyWithoutDepartmentNestedInput
+    creator?: EmployeeUpdateOneWithoutDepartmentsCreatedNestedInput
+    updater?: EmployeeUpdateOneWithoutDepartmentsUpdatedNestedInput
+  }
+
+  export type DepartmentUncheckedUpdateWithoutDesignationsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    departmentName?: StringFieldUpdateOperationsInput | string
+    departmentCode?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableIntFieldUpdateOperationsInput | number | null
+    updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
+    employees?: EmployeeUncheckedUpdateManyWithoutDepartmentNestedInput
+    shifts?: DepartmentShiftUncheckedUpdateManyWithoutDepartmentNestedInput
+  }
+
   export type EmployeeUpsertWithWhereUniqueWithoutDesignationInput = {
     where: EmployeeWhereUniqueInput
     update: XOR<EmployeeUpdateWithoutDesignationInput, EmployeeUncheckedUpdateWithoutDesignationInput>
@@ -47061,6 +47536,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     shifts?: DepartmentShiftCreateNestedManyWithoutDepartmentInput
+    designations?: DesignationCreateNestedManyWithoutDepartmentInput
     creator?: EmployeeCreateNestedOneWithoutDepartmentsCreatedInput
     updater?: EmployeeCreateNestedOneWithoutDepartmentsUpdatedInput
   }
@@ -47074,6 +47550,7 @@ export namespace Prisma {
     createdBy?: number | null
     updatedBy?: number | null
     shifts?: DepartmentShiftUncheckedCreateNestedManyWithoutDepartmentInput
+    designations?: DesignationUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutEmployeesInput = {
@@ -47083,8 +47560,13 @@ export namespace Prisma {
 
   export type DesignationCreateWithoutEmployeesInput = {
     designationName: string
+    designationCode: string
+    sequenceStart: number
+    lastSequence?: number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutDesignationsInput
     creator?: EmployeeCreateNestedOneWithoutDesignationsCreatedInput
     updater?: EmployeeCreateNestedOneWithoutDesignationsUpdatedInput
   }
@@ -47092,6 +47574,11 @@ export namespace Prisma {
   export type DesignationUncheckedCreateWithoutEmployeesInput = {
     id?: number
     designationName: string
+    designationCode: string
+    departmentId: number
+    sequenceStart: number
+    lastSequence?: number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: number | null
@@ -48947,6 +49434,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     employees?: EmployeeCreateNestedManyWithoutDepartmentInput
     shifts?: DepartmentShiftCreateNestedManyWithoutDepartmentInput
+    designations?: DesignationCreateNestedManyWithoutDepartmentInput
     updater?: EmployeeCreateNestedOneWithoutDepartmentsUpdatedInput
   }
 
@@ -48959,6 +49447,7 @@ export namespace Prisma {
     updatedBy?: number | null
     employees?: EmployeeUncheckedCreateNestedManyWithoutDepartmentInput
     shifts?: DepartmentShiftUncheckedCreateNestedManyWithoutDepartmentInput
+    designations?: DesignationUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutCreatorInput = {
@@ -48978,6 +49467,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     employees?: EmployeeCreateNestedManyWithoutDepartmentInput
     shifts?: DepartmentShiftCreateNestedManyWithoutDepartmentInput
+    designations?: DesignationCreateNestedManyWithoutDepartmentInput
     creator?: EmployeeCreateNestedOneWithoutDepartmentsCreatedInput
   }
 
@@ -48990,6 +49480,7 @@ export namespace Prisma {
     createdBy?: number | null
     employees?: EmployeeUncheckedCreateNestedManyWithoutDepartmentInput
     shifts?: DepartmentShiftUncheckedCreateNestedManyWithoutDepartmentInput
+    designations?: DesignationUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutUpdaterInput = {
@@ -49074,8 +49565,13 @@ export namespace Prisma {
 
   export type DesignationCreateWithoutCreatorInput = {
     designationName: string
+    designationCode: string
+    sequenceStart: number
+    lastSequence?: number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutDesignationsInput
     employees?: EmployeeCreateNestedManyWithoutDesignationInput
     updater?: EmployeeCreateNestedOneWithoutDesignationsUpdatedInput
   }
@@ -49083,6 +49579,11 @@ export namespace Prisma {
   export type DesignationUncheckedCreateWithoutCreatorInput = {
     id?: number
     designationName: string
+    designationCode: string
+    departmentId: number
+    sequenceStart: number
+    lastSequence?: number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     updatedBy?: number | null
@@ -49101,8 +49602,13 @@ export namespace Prisma {
 
   export type DesignationCreateWithoutUpdaterInput = {
     designationName: string
+    designationCode: string
+    sequenceStart: number
+    lastSequence?: number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutDesignationsInput
     employees?: EmployeeCreateNestedManyWithoutDesignationInput
     creator?: EmployeeCreateNestedOneWithoutDesignationsCreatedInput
   }
@@ -49110,6 +49616,11 @@ export namespace Prisma {
   export type DesignationUncheckedCreateWithoutUpdaterInput = {
     id?: number
     designationName: string
+    designationCode: string
+    departmentId: number
+    sequenceStart: number
+    lastSequence?: number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: number | null
@@ -49989,6 +50500,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     shifts?: DepartmentShiftUpdateManyWithoutDepartmentNestedInput
+    designations?: DesignationUpdateManyWithoutDepartmentNestedInput
     creator?: EmployeeUpdateOneWithoutDepartmentsCreatedNestedInput
     updater?: EmployeeUpdateOneWithoutDepartmentsUpdatedNestedInput
   }
@@ -50002,6 +50514,7 @@ export namespace Prisma {
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
     updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
     shifts?: DepartmentShiftUncheckedUpdateManyWithoutDepartmentNestedInput
+    designations?: DesignationUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DesignationUpsertWithoutEmployeesInput = {
@@ -50017,8 +50530,13 @@ export namespace Prisma {
 
   export type DesignationUpdateWithoutEmployeesInput = {
     designationName?: StringFieldUpdateOperationsInput | string
+    designationCode?: StringFieldUpdateOperationsInput | string
+    sequenceStart?: IntFieldUpdateOperationsInput | number
+    lastSequence?: NullableIntFieldUpdateOperationsInput | number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutDesignationsNestedInput
     creator?: EmployeeUpdateOneWithoutDesignationsCreatedNestedInput
     updater?: EmployeeUpdateOneWithoutDesignationsUpdatedNestedInput
   }
@@ -50026,6 +50544,11 @@ export namespace Prisma {
   export type DesignationUncheckedUpdateWithoutEmployeesInput = {
     id?: IntFieldUpdateOperationsInput | number
     designationName?: StringFieldUpdateOperationsInput | string
+    designationCode?: StringFieldUpdateOperationsInput | string
+    departmentId?: IntFieldUpdateOperationsInput | number
+    sequenceStart?: IntFieldUpdateOperationsInput | number
+    lastSequence?: NullableIntFieldUpdateOperationsInput | number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -51293,18 +51816,6 @@ export namespace Prisma {
   export type DesignationUpdateManyWithWhereWithoutCreatorInput = {
     where: DesignationScalarWhereInput
     data: XOR<DesignationUpdateManyMutationInput, DesignationUncheckedUpdateManyWithoutCreatorInput>
-  }
-
-  export type DesignationScalarWhereInput = {
-    AND?: DesignationScalarWhereInput | DesignationScalarWhereInput[]
-    OR?: DesignationScalarWhereInput[]
-    NOT?: DesignationScalarWhereInput | DesignationScalarWhereInput[]
-    id?: IntFilter<"Designation"> | number
-    designationName?: StringFilter<"Designation"> | string
-    createdAt?: DateTimeFilter<"Designation"> | Date | string
-    updatedAt?: DateTimeFilter<"Designation"> | Date | string
-    createdBy?: IntNullableFilter<"Designation"> | number | null
-    updatedBy?: IntNullableFilter<"Designation"> | number | null
   }
 
   export type DesignationUpsertWithWhereUniqueWithoutUpdaterInput = {
@@ -67306,6 +67817,19 @@ export namespace Prisma {
     updatedBy?: number | null
   }
 
+  export type DesignationCreateManyDepartmentInput = {
+    id?: number
+    designationName: string
+    designationCode: string
+    sequenceStart: number
+    lastSequence?: number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: number | null
+    updatedBy?: number | null
+  }
+
   export type EmployeeUpdateWithoutDepartmentInput = {
     employeeCode?: StringFieldUpdateOperationsInput | string
     camAttendanceId?: StringFieldUpdateOperationsInput | string
@@ -67600,6 +68124,46 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     graceMinutes?: IntFieldUpdateOperationsInput | number
     status?: EnumShiftStatusFieldUpdateOperationsInput | $Enums.ShiftStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableIntFieldUpdateOperationsInput | number | null
+    updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type DesignationUpdateWithoutDepartmentInput = {
+    designationName?: StringFieldUpdateOperationsInput | string
+    designationCode?: StringFieldUpdateOperationsInput | string
+    sequenceStart?: IntFieldUpdateOperationsInput | number
+    lastSequence?: NullableIntFieldUpdateOperationsInput | number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    employees?: EmployeeUpdateManyWithoutDesignationNestedInput
+    creator?: EmployeeUpdateOneWithoutDesignationsCreatedNestedInput
+    updater?: EmployeeUpdateOneWithoutDesignationsUpdatedNestedInput
+  }
+
+  export type DesignationUncheckedUpdateWithoutDepartmentInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    designationName?: StringFieldUpdateOperationsInput | string
+    designationCode?: StringFieldUpdateOperationsInput | string
+    sequenceStart?: IntFieldUpdateOperationsInput | number
+    lastSequence?: NullableIntFieldUpdateOperationsInput | number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: NullableIntFieldUpdateOperationsInput | number | null
+    updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
+    employees?: EmployeeUncheckedUpdateManyWithoutDesignationNestedInput
+  }
+
+  export type DesignationUncheckedUpdateManyWithoutDepartmentInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    designationName?: StringFieldUpdateOperationsInput | string
+    designationCode?: StringFieldUpdateOperationsInput | string
+    sequenceStart?: IntFieldUpdateOperationsInput | number
+    lastSequence?: NullableIntFieldUpdateOperationsInput | number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -68317,6 +68881,11 @@ export namespace Prisma {
   export type DesignationCreateManyCreatorInput = {
     id?: number
     designationName: string
+    designationCode: string
+    departmentId: number
+    sequenceStart: number
+    lastSequence?: number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     updatedBy?: number | null
@@ -68325,6 +68894,11 @@ export namespace Prisma {
   export type DesignationCreateManyUpdaterInput = {
     id?: number
     designationName: string
+    designationCode: string
+    departmentId: number
+    sequenceStart: number
+    lastSequence?: number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: number | null
@@ -69980,6 +70554,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     employees?: EmployeeUpdateManyWithoutDepartmentNestedInput
     shifts?: DepartmentShiftUpdateManyWithoutDepartmentNestedInput
+    designations?: DesignationUpdateManyWithoutDepartmentNestedInput
     updater?: EmployeeUpdateOneWithoutDepartmentsUpdatedNestedInput
   }
 
@@ -69992,6 +70567,7 @@ export namespace Prisma {
     updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
     employees?: EmployeeUncheckedUpdateManyWithoutDepartmentNestedInput
     shifts?: DepartmentShiftUncheckedUpdateManyWithoutDepartmentNestedInput
+    designations?: DesignationUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateManyWithoutCreatorInput = {
@@ -70010,6 +70586,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     employees?: EmployeeUpdateManyWithoutDepartmentNestedInput
     shifts?: DepartmentShiftUpdateManyWithoutDepartmentNestedInput
+    designations?: DesignationUpdateManyWithoutDepartmentNestedInput
     creator?: EmployeeUpdateOneWithoutDepartmentsCreatedNestedInput
   }
 
@@ -70022,6 +70599,7 @@ export namespace Prisma {
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
     employees?: EmployeeUncheckedUpdateManyWithoutDepartmentNestedInput
     shifts?: DepartmentShiftUncheckedUpdateManyWithoutDepartmentNestedInput
+    designations?: DesignationUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateManyWithoutUpdaterInput = {
@@ -70111,8 +70689,13 @@ export namespace Prisma {
 
   export type DesignationUpdateWithoutCreatorInput = {
     designationName?: StringFieldUpdateOperationsInput | string
+    designationCode?: StringFieldUpdateOperationsInput | string
+    sequenceStart?: IntFieldUpdateOperationsInput | number
+    lastSequence?: NullableIntFieldUpdateOperationsInput | number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutDesignationsNestedInput
     employees?: EmployeeUpdateManyWithoutDesignationNestedInput
     updater?: EmployeeUpdateOneWithoutDesignationsUpdatedNestedInput
   }
@@ -70120,6 +70703,11 @@ export namespace Prisma {
   export type DesignationUncheckedUpdateWithoutCreatorInput = {
     id?: IntFieldUpdateOperationsInput | number
     designationName?: StringFieldUpdateOperationsInput | string
+    designationCode?: StringFieldUpdateOperationsInput | string
+    departmentId?: IntFieldUpdateOperationsInput | number
+    sequenceStart?: IntFieldUpdateOperationsInput | number
+    lastSequence?: NullableIntFieldUpdateOperationsInput | number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -70129,6 +70717,11 @@ export namespace Prisma {
   export type DesignationUncheckedUpdateManyWithoutCreatorInput = {
     id?: IntFieldUpdateOperationsInput | number
     designationName?: StringFieldUpdateOperationsInput | string
+    designationCode?: StringFieldUpdateOperationsInput | string
+    departmentId?: IntFieldUpdateOperationsInput | number
+    sequenceStart?: IntFieldUpdateOperationsInput | number
+    lastSequence?: NullableIntFieldUpdateOperationsInput | number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -70136,8 +70729,13 @@ export namespace Prisma {
 
   export type DesignationUpdateWithoutUpdaterInput = {
     designationName?: StringFieldUpdateOperationsInput | string
+    designationCode?: StringFieldUpdateOperationsInput | string
+    sequenceStart?: IntFieldUpdateOperationsInput | number
+    lastSequence?: NullableIntFieldUpdateOperationsInput | number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutDesignationsNestedInput
     employees?: EmployeeUpdateManyWithoutDesignationNestedInput
     creator?: EmployeeUpdateOneWithoutDesignationsCreatedNestedInput
   }
@@ -70145,6 +70743,11 @@ export namespace Prisma {
   export type DesignationUncheckedUpdateWithoutUpdaterInput = {
     id?: IntFieldUpdateOperationsInput | number
     designationName?: StringFieldUpdateOperationsInput | string
+    designationCode?: StringFieldUpdateOperationsInput | string
+    departmentId?: IntFieldUpdateOperationsInput | number
+    sequenceStart?: IntFieldUpdateOperationsInput | number
+    lastSequence?: NullableIntFieldUpdateOperationsInput | number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
@@ -70154,6 +70757,11 @@ export namespace Prisma {
   export type DesignationUncheckedUpdateManyWithoutUpdaterInput = {
     id?: IntFieldUpdateOperationsInput | number
     designationName?: StringFieldUpdateOperationsInput | string
+    designationCode?: StringFieldUpdateOperationsInput | string
+    departmentId?: IntFieldUpdateOperationsInput | number
+    sequenceStart?: IntFieldUpdateOperationsInput | number
+    lastSequence?: NullableIntFieldUpdateOperationsInput | number | null
+    releasedSequences?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
