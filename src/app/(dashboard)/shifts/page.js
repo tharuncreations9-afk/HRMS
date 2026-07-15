@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { Clock, Plus, Pencil, Trash2 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -216,7 +217,6 @@ export default function ShiftManagementPage() {
           <CardTitle className="flex items-center gap-2">
             <Clock className="h-5 w-5" /> Shift List
           </CardTitle>
-          <CardDescription>Departments are loaded from the existing Departments master.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {loading ? (
@@ -227,7 +227,78 @@ export default function ShiftManagementPage() {
             </div>
           ) : (
             <>
-              <div className="overflow-x-auto rounded-lg border">
+              <div className="space-y-4 lg:hidden">
+                {shifts.length === 0 ? (
+                  <div className="py-12 text-center text-muted-foreground">
+                    No shifts configured yet. Create a department first, then add a shift.
+                  </div>
+                ) : (
+                  shifts.map((shift, i) => (
+                    <motion.div
+                      key={shift.id}
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: Math.min(i * 0.04, 0.3) }}
+                    >
+                      <Card className="glass-card overflow-hidden">
+                        <div
+                          className={`h-2 bg-gradient-to-r ${
+                            shift.status === "Active"
+                              ? "from-emerald-500 to-emerald-600"
+                              : "from-slate-400 to-slate-500"
+                          }`}
+                        />
+                        <CardHeader className="pb-3">
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="min-w-0">
+                              <CardTitle className="truncate text-base">{shift.departmentName}</CardTitle>
+                              <p className="mt-0.5 text-xs text-muted-foreground">{shift.shiftName}</p>
+                            </div>
+                            <Badge
+                              variant={shift.status === "Active" ? "success" : "secondary"}
+                              className="shrink-0"
+                            >
+                              {shift.statusLabel}
+                            </Badge>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="space-y-3 pt-0">
+                          <div className="grid grid-cols-2 gap-3 text-sm">
+                            <div>
+                              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                Start Time
+                              </p>
+                              <p className="font-medium">{shift.startTimeDisplay}</p>
+                            </div>
+                            <div>
+                              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                End Time
+                              </p>
+                              <p className="font-medium">{shift.endTimeDisplay}</p>
+                            </div>
+                            <div>
+                              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                Grace Time
+                              </p>
+                              <p className="font-medium">{shift.graceDisplay}</p>
+                            </div>
+                          </div>
+                          <div className="flex gap-2 border-t pt-3">
+                            <Button size="sm" variant="outline" onClick={() => openDialog(shift)}>
+                              <Pencil className="h-3.5 w-3.5" /> Edit
+                            </Button>
+                            <Button size="sm" variant="outline" onClick={() => handleDelete(shift)}>
+                              <Trash2 className="h-3.5 w-3.5" /> Delete
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))
+                )}
+              </div>
+
+              <div className="hidden overflow-x-auto rounded-lg border lg:block">
                 <table className="w-full min-w-[900px] text-sm">
                   <thead>
                     <tr className="border-b bg-muted/50">

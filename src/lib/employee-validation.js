@@ -1,6 +1,7 @@
 const PAN_REGEX = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
 const MOBILE_REGEX = /^\d{10}$/;
 const AADHAAR_REGEX = /^\d{12}$/;
+const IFSC_REGEX = /^[A-Z]{4}0[A-Z0-9]{6}$/;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function normalizeEmployeeInput(body = {}) {
@@ -19,6 +20,9 @@ export function normalizeEmployeeInput(body = {}) {
       : "",
     aadhaar: aadhaarDigits || null,
     pan: panValue || null,
+    bankName: body.bankName?.trim() || "",
+    accountNumber: body.accountNumber?.trim() || "",
+    ifscCode: body.ifscCode?.trim().toUpperCase() || "",
   };
 }
 
@@ -70,6 +74,39 @@ export function validatePan(pan, { required = false, field = "pan" } = {}) {
   }
   if (!PAN_REGEX.test(value)) {
     return { valid: false, field, message: "Invalid PAN number format." };
+  }
+  return { valid: true, value };
+}
+
+export function validateIfsc(ifsc, { required = false, field = "ifscCode" } = {}) {
+  const value = String(ifsc || "").trim().toUpperCase();
+  if (!value) {
+    return required
+      ? { valid: false, field, message: "IFSC code is required." }
+      : { valid: true, value: null };
+  }
+  if (!IFSC_REGEX.test(value)) {
+    return { valid: false, field, message: "Invalid IFSC code format." };
+  }
+  return { valid: true, value };
+}
+
+export function validateBankName(bankName, { required = false, field = "bankName" } = {}) {
+  const value = String(bankName || "").trim();
+  if (!value) {
+    return required
+      ? { valid: false, field, message: "Bank name is required." }
+      : { valid: true, value: null };
+  }
+  return { valid: true, value };
+}
+
+export function validateAccountNumber(accountNumber, { required = false, field = "accountNumber" } = {}) {
+  const value = String(accountNumber || "").trim();
+  if (!value) {
+    return required
+      ? { valid: false, field, message: "Account number is required." }
+      : { valid: true, value: null };
   }
   return { valid: true, value };
 }
@@ -138,13 +175,25 @@ export function validateEmployeeForm(body, options = {}) {
   if (!emailCheck.valid) fieldErrors.email = emailCheck.message;
   else if (emailCheck.value) normalized.email = emailCheck.value;
 
-  const aadhaarCheck = validateAadhaar(normalized.aadhaar);
+  const aadhaarCheck = validateAadhaar(normalized.aadhaar, { required: true });
   if (!aadhaarCheck.valid) fieldErrors.aadhaar = aadhaarCheck.message;
   else normalized.aadhaar = aadhaarCheck.value ?? null;
 
-  const panCheck = validatePan(normalized.pan);
+  const panCheck = validatePan(normalized.pan, { required: true });
   if (!panCheck.valid) fieldErrors.pan = panCheck.message;
   else normalized.pan = panCheck.value ?? null;
+
+  const bankNameCheck = validateBankName(normalized.bankName, { required: true });
+  if (!bankNameCheck.valid) fieldErrors.bankName = bankNameCheck.message;
+  else normalized.bankName = bankNameCheck.value ?? null;
+
+  const accountNumberCheck = validateAccountNumber(normalized.accountNumber, { required: true });
+  if (!accountNumberCheck.valid) fieldErrors.accountNumber = accountNumberCheck.message;
+  else normalized.accountNumber = accountNumberCheck.value ?? null;
+
+  const ifscCheck = validateIfsc(normalized.ifscCode, { required: true });
+  if (!ifscCheck.valid) fieldErrors.ifscCode = ifscCheck.message;
+  else normalized.ifscCode = ifscCheck.value ?? null;
 
   const messages = Object.values(fieldErrors);
   return {
@@ -282,9 +331,11 @@ export function mapCategoryErrorsToFields(errors = []) {
     if (message.includes("Qualification")) fieldErrors.qualification = message;
     else if (message.includes("College")) fieldErrors.collegeName = message;
     else if (message.includes("Graduation")) fieldErrors.graduationYear = message;
-    else if (message.includes("Experience")) {
+    else if (/months/i.test(message)) {
+      fieldErrors.totalExperienceMonths = message;
+    } else if (message.includes("Experience")) {
       fieldErrors.totalExperienceYears = message;
-    } else if (message.includes("months")) fieldErrors.totalExperienceMonths = message;
+    }
     else if (message.includes("Previous Company")) fieldErrors.previousCompany = message;
     else if (message.includes("Previous Designation")) fieldErrors.previousDesignation = message;
     else if (message.includes("Previous CTC")) fieldErrors.previousCtc = message;

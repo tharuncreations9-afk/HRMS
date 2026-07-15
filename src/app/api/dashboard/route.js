@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth-server";
+import { buildEmployeeSelfDashboard } from "@/lib/employee-dashboard";
 
 const IST = "Asia/Kolkata";
 
@@ -36,10 +37,19 @@ function istMonthLabel(year, monthIndex) {
   return d.toLocaleDateString("en-IN", { month: "short", timeZone: IST });
 }
 
-export async function GET(request) {
-  const { user, error } = await requireAuth(request);
-  if (error) return error;
+function canViewOrgDashboard(user) {
+  const perms = user?.permissions || [];
+  return [
+    "Employee Management",
+    "User Management",
+    "Attendance Monitoring",
+    "Generate Reports",
+    "Full System Access",
+    "All Permissions",
+  ].some((p) => perms.includes(p));
+}
 
+async function buildOrgDashboard() {
   const { start: today, end: tomorrow } = istDayRange(0);
 
   const [totalEmployees, todayAttendance, recentAudits] = await Promise.all([
@@ -147,12 +157,35 @@ export async function GET(request) {
     icon: log.actionType === "CREATE" ? "user-plus" : log.actionType === "APPROVE" ? "check" : "edit",
   }));
 
-  return Response.json({
+  return {
     stats: { totalEmployees, presentToday, absentToday, onLeave, notMarked },
     weeklyAttendance,
     departmentAttendance,
     monthlyTrend,
     recentActivities,
+  };
+}
+
+export async function GET(request) {
+  const { user, error } = await requireAuth(request);
+  if (error) return error;
+
+  const showOrg = canViewOrgDashboard(user);
+  const self = await buildEmployeeSelfDashboard(prisma, user.id);
+
+  if (!showOrg) {
+    return Response.json({
+      mode: "self",
+      self,
+      user: { name: user.name },
+    });
+  }
+
+  const org = await buildOrgDashboard();
+  return Response.json({
+    mode: "org",
+    ...org,
+    self,
     user: { name: user.name },
   });
 }

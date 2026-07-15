@@ -75,7 +75,7 @@ const emptyForm = {
   previousCtc: "", expectedCtc: "", lastWorkingDate: "", noticePeriod: "", relevantExperience: "",
   mobile: "", alternateMobile: "", email: "",
   password: "", confirmPassword: "",
-  address: "", pan: "", aadhaar: "", bankName: "", accountNumber: "",
+  address: "", pan: "", aadhaar: "", bankName: "", accountNumber: "", ifscCode: "",
 };
 
 function AddEmployeeContent() {
@@ -191,6 +191,7 @@ function AddEmployeeContent() {
           aadhaar: emp.aadhaar || "",
           bankName: emp.bankName || "",
           accountNumber: emp.accountNumber || "",
+          ifscCode: emp.ifscCode || "",
         });
         if (emp.photo) setProfilePreview(emp.photo);
         const docsByType = {};
@@ -334,7 +335,7 @@ function AddEmployeeContent() {
         totalExperienceYears: 2, totalExperienceMonths: 2,
         previousCompany: 2, previousDesignation: 2, previousCtc: 2,
         mobile: 3, email: 3, password: 3, confirmPassword: 3,
-        pan: 4, aadhaar: 4,
+        pan: 4, aadhaar: 4, bankName: 4, accountNumber: 4, ifscCode: 4,
       };
       const errorStep = stepMap[firstKey] ?? 0;
       setStep(errorStep);
@@ -975,7 +976,7 @@ function AddEmployeeContent() {
                 <CardContent className="space-y-6">
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
-                      <Label>PAN Number</Label>
+                      <Label>PAN Number *</Label>
                       <Input
                         className={fieldClass(fieldErrors, "pan")}
                         maxLength={10}
@@ -985,7 +986,7 @@ function AddEmployeeContent() {
                       <FieldError message={fieldErrors.pan} />
                     </div>
                     <div className="space-y-2">
-                      <Label>Aadhaar Number</Label>
+                      <Label>Aadhaar Number *</Label>
                       <Input
                         className={fieldClass(fieldErrors, "aadhaar")}
                         inputMode="numeric"
@@ -996,12 +997,32 @@ function AddEmployeeContent() {
                       <FieldError message={fieldErrors.aadhaar} />
                     </div>
                     <div className="space-y-2">
-                      <Label>Bank Name</Label>
-                      <Input value={form.bankName} onChange={(e) => set("bankName", e.target.value)} />
+                      <Label>Bank Name *</Label>
+                      <Input
+                        className={fieldClass(fieldErrors, "bankName")}
+                        value={form.bankName}
+                        onChange={(e) => set("bankName", e.target.value)}
+                      />
+                      <FieldError message={fieldErrors.bankName} />
                     </div>
                     <div className="space-y-2">
-                      <Label>Account Number</Label>
-                      <Input value={form.accountNumber} onChange={(e) => set("accountNumber", e.target.value)} />
+                      <Label>IFSC Code *</Label>
+                      <Input
+                        className={fieldClass(fieldErrors, "ifscCode")}
+                        maxLength={11}
+                        value={form.ifscCode}
+                        onChange={(e) => set("ifscCode", e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 11))}
+                      />
+                      <FieldError message={fieldErrors.ifscCode} />
+                    </div>
+                    <div className="space-y-2 sm:col-span-2">
+                      <Label>Account Number *</Label>
+                      <Input
+                        className={fieldClass(fieldErrors, "accountNumber")}
+                        value={form.accountNumber}
+                        onChange={(e) => set("accountNumber", e.target.value.replace(/\s/g, ""))}
+                      />
+                      <FieldError message={fieldErrors.accountNumber} />
                     </div>
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">

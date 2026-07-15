@@ -52,6 +52,7 @@ export function mapEmployee(emp, onLeaveIds = null) {
     emergencyContact: emp.emergencyContact,
     bankName: emp.bankName,
     accountNumber: emp.accountNumber,
+    ifscCode: emp.ifscCode,
     pan: emp.pan,
     aadhaar: emp.aadhaar,
     employeeCategory: emp.employeeCategory,

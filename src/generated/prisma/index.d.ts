@@ -10119,6 +10119,7 @@ export namespace Prisma {
     emergencyContact: string | null
     bankName: string | null
     accountNumber: string | null
+    ifscCode: string | null
     pan: string | null
     aadhaar: string | null
     employeeCategory: $Enums.EmployeeCategory | null
@@ -10174,6 +10175,7 @@ export namespace Prisma {
     emergencyContact: string | null
     bankName: string | null
     accountNumber: string | null
+    ifscCode: string | null
     pan: string | null
     aadhaar: string | null
     employeeCategory: $Enums.EmployeeCategory | null
@@ -10229,6 +10231,7 @@ export namespace Prisma {
     emergencyContact: number
     bankName: number
     accountNumber: number
+    ifscCode: number
     pan: number
     aadhaar: number
     employeeCategory: number
@@ -10317,6 +10320,7 @@ export namespace Prisma {
     emergencyContact?: true
     bankName?: true
     accountNumber?: true
+    ifscCode?: true
     pan?: true
     aadhaar?: true
     employeeCategory?: true
@@ -10372,6 +10376,7 @@ export namespace Prisma {
     emergencyContact?: true
     bankName?: true
     accountNumber?: true
+    ifscCode?: true
     pan?: true
     aadhaar?: true
     employeeCategory?: true
@@ -10427,6 +10432,7 @@ export namespace Prisma {
     emergencyContact?: true
     bankName?: true
     accountNumber?: true
+    ifscCode?: true
     pan?: true
     aadhaar?: true
     employeeCategory?: true
@@ -10570,6 +10576,7 @@ export namespace Prisma {
     emergencyContact: string | null
     bankName: string | null
     accountNumber: string | null
+    ifscCode: string | null
     pan: string | null
     aadhaar: string | null
     employeeCategory: $Enums.EmployeeCategory
@@ -10645,6 +10652,7 @@ export namespace Prisma {
     emergencyContact?: boolean
     bankName?: boolean
     accountNumber?: boolean
+    ifscCode?: boolean
     pan?: boolean
     aadhaar?: boolean
     employeeCategory?: boolean
@@ -10759,6 +10767,7 @@ export namespace Prisma {
     emergencyContact?: boolean
     bankName?: boolean
     accountNumber?: boolean
+    ifscCode?: boolean
     pan?: boolean
     aadhaar?: boolean
     employeeCategory?: boolean
@@ -10788,7 +10797,7 @@ export namespace Prisma {
     updatedBy?: boolean
   }
 
-  export type EmployeeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "employeeCode" | "camAttendanceId" | "firstName" | "lastName" | "fullName" | "profilePhoto" | "dob" | "gender" | "bloodGroup" | "mobile" | "alternateMobile" | "email" | "passwordHash" | "roleId" | "lastLogin" | "address" | "departmentId" | "designationId" | "reportingManagerId" | "joiningDate" | "employmentType" | "status" | "emergencyContact" | "bankName" | "accountNumber" | "pan" | "aadhaar" | "employeeCategory" | "qualification" | "specialization" | "skills" | "collegeName" | "graduationYear" | "cgpa" | "internshipDetails" | "certifications" | "totalExperienceYears" | "totalExperienceMonths" | "previousCompany" | "previousDesignation" | "previousCtc" | "expectedCtc" | "lastWorkingDate" | "noticePeriod" | "relevantExperience" | "experienceLetterUrl" | "relievingLetterUrl" | "payslipUrls" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy", ExtArgs["result"]["employee"]>
+  export type EmployeeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "employeeCode" | "camAttendanceId" | "firstName" | "lastName" | "fullName" | "profilePhoto" | "dob" | "gender" | "bloodGroup" | "mobile" | "alternateMobile" | "email" | "passwordHash" | "roleId" | "lastLogin" | "address" | "departmentId" | "designationId" | "reportingManagerId" | "joiningDate" | "employmentType" | "status" | "emergencyContact" | "bankName" | "accountNumber" | "ifscCode" | "pan" | "aadhaar" | "employeeCategory" | "qualification" | "specialization" | "skills" | "collegeName" | "graduationYear" | "cgpa" | "internshipDetails" | "certifications" | "totalExperienceYears" | "totalExperienceMonths" | "previousCompany" | "previousDesignation" | "previousCtc" | "expectedCtc" | "lastWorkingDate" | "noticePeriod" | "relevantExperience" | "experienceLetterUrl" | "relievingLetterUrl" | "payslipUrls" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy", ExtArgs["result"]["employee"]>
   export type EmployeeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     department?: boolean | DepartmentDefaultArgs<ExtArgs>
     designation?: boolean | DesignationDefaultArgs<ExtArgs>
@@ -10934,6 +10943,7 @@ export namespace Prisma {
       emergencyContact: string | null
       bankName: string | null
       accountNumber: string | null
+      ifscCode: string | null
       pan: string | null
       aadhaar: string | null
       employeeCategory: $Enums.EmployeeCategory
@@ -11411,6 +11421,7 @@ export namespace Prisma {
     readonly emergencyContact: FieldRef<"Employee", 'String'>
     readonly bankName: FieldRef<"Employee", 'String'>
     readonly accountNumber: FieldRef<"Employee", 'String'>
+    readonly ifscCode: FieldRef<"Employee", 'String'>
     readonly pan: FieldRef<"Employee", 'String'>
     readonly aadhaar: FieldRef<"Employee", 'String'>
     readonly employeeCategory: FieldRef<"Employee", 'EmployeeCategory'>
@@ -29329,6 +29340,7 @@ export namespace Prisma {
     emergencyContact: 'emergencyContact',
     bankName: 'bankName',
     accountNumber: 'accountNumber',
+    ifscCode: 'ifscCode',
     pan: 'pan',
     aadhaar: 'aadhaar',
     employeeCategory: 'employeeCategory',
@@ -29711,6 +29723,7 @@ export namespace Prisma {
     emergencyContact: 'emergencyContact',
     bankName: 'bankName',
     accountNumber: 'accountNumber',
+    ifscCode: 'ifscCode',
     pan: 'pan',
     aadhaar: 'aadhaar',
     qualification: 'qualification',
@@ -30514,6 +30527,7 @@ export namespace Prisma {
     emergencyContact?: StringNullableFilter<"Employee"> | string | null
     bankName?: StringNullableFilter<"Employee"> | string | null
     accountNumber?: StringNullableFilter<"Employee"> | string | null
+    ifscCode?: StringNullableFilter<"Employee"> | string | null
     pan?: StringNullableFilter<"Employee"> | string | null
     aadhaar?: StringNullableFilter<"Employee"> | string | null
     employeeCategory?: EnumEmployeeCategoryFilter<"Employee"> | $Enums.EmployeeCategory
@@ -30625,6 +30639,7 @@ export namespace Prisma {
     emergencyContact?: SortOrderInput | SortOrder
     bankName?: SortOrderInput | SortOrder
     accountNumber?: SortOrderInput | SortOrder
+    ifscCode?: SortOrderInput | SortOrder
     pan?: SortOrderInput | SortOrder
     aadhaar?: SortOrderInput | SortOrder
     employeeCategory?: SortOrder
@@ -30740,6 +30755,7 @@ export namespace Prisma {
     emergencyContact?: StringNullableFilter<"Employee"> | string | null
     bankName?: StringNullableFilter<"Employee"> | string | null
     accountNumber?: StringNullableFilter<"Employee"> | string | null
+    ifscCode?: StringNullableFilter<"Employee"> | string | null
     pan?: StringNullableFilter<"Employee"> | string | null
     aadhaar?: StringNullableFilter<"Employee"> | string | null
     employeeCategory?: EnumEmployeeCategoryFilter<"Employee"> | $Enums.EmployeeCategory
@@ -30851,6 +30867,7 @@ export namespace Prisma {
     emergencyContact?: SortOrderInput | SortOrder
     bankName?: SortOrderInput | SortOrder
     accountNumber?: SortOrderInput | SortOrder
+    ifscCode?: SortOrderInput | SortOrder
     pan?: SortOrderInput | SortOrder
     aadhaar?: SortOrderInput | SortOrder
     employeeCategory?: SortOrder
@@ -30915,6 +30932,7 @@ export namespace Prisma {
     emergencyContact?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     bankName?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     accountNumber?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    ifscCode?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     pan?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     aadhaar?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     employeeCategory?: EnumEmployeeCategoryWithAggregatesFilter<"Employee"> | $Enums.EmployeeCategory
@@ -32786,6 +32804,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -32895,6 +32914,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -32995,6 +33015,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -33104,6 +33125,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -33209,6 +33231,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -33260,6 +33283,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -33314,6 +33338,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -35548,6 +35573,7 @@ export namespace Prisma {
     emergencyContact?: SortOrder
     bankName?: SortOrder
     accountNumber?: SortOrder
+    ifscCode?: SortOrder
     pan?: SortOrder
     aadhaar?: SortOrder
     employeeCategory?: SortOrder
@@ -35619,6 +35645,7 @@ export namespace Prisma {
     emergencyContact?: SortOrder
     bankName?: SortOrder
     accountNumber?: SortOrder
+    ifscCode?: SortOrder
     pan?: SortOrder
     aadhaar?: SortOrder
     employeeCategory?: SortOrder
@@ -35674,6 +35701,7 @@ export namespace Prisma {
     emergencyContact?: SortOrder
     bankName?: SortOrder
     accountNumber?: SortOrder
+    ifscCode?: SortOrder
     pan?: SortOrder
     aadhaar?: SortOrder
     employeeCategory?: SortOrder
@@ -41105,6 +41133,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -41212,6 +41241,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -41349,6 +41379,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -41457,6 +41488,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -41561,6 +41593,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -41669,6 +41702,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -41797,6 +41831,7 @@ export namespace Prisma {
     emergencyContact?: StringNullableFilter<"Employee"> | string | null
     bankName?: StringNullableFilter<"Employee"> | string | null
     accountNumber?: StringNullableFilter<"Employee"> | string | null
+    ifscCode?: StringNullableFilter<"Employee"> | string | null
     pan?: StringNullableFilter<"Employee"> | string | null
     aadhaar?: StringNullableFilter<"Employee"> | string | null
     employeeCategory?: EnumEmployeeCategoryFilter<"Employee"> | $Enums.EmployeeCategory
@@ -41888,6 +41923,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -41996,6 +42032,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -42106,6 +42143,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -42214,6 +42252,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -42367,6 +42406,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -42475,6 +42515,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -42579,6 +42620,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -42687,6 +42729,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -42847,6 +42890,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -42955,6 +42999,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -43065,6 +43110,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -43173,6 +43219,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -43322,6 +43369,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -43430,6 +43478,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -43534,6 +43583,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -43642,6 +43692,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -43819,6 +43870,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -43927,6 +43979,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -44037,6 +44090,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -44145,6 +44199,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -44244,6 +44299,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -44351,6 +44407,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -44533,6 +44590,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -44641,6 +44699,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -44745,6 +44804,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -44853,6 +44913,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -45050,6 +45111,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -45158,6 +45220,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -45268,6 +45331,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -45376,6 +45440,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -45503,6 +45568,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -45611,6 +45677,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -45715,6 +45782,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -45823,6 +45891,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -45972,6 +46041,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -46080,6 +46150,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -46190,6 +46261,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -46298,6 +46370,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -46425,6 +46498,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -46532,6 +46606,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -46642,6 +46717,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -46750,6 +46826,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -46854,6 +46931,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -46962,6 +47040,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -47127,6 +47206,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -47235,6 +47315,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -47345,6 +47426,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -47453,6 +47535,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -47636,6 +47719,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -47744,6 +47828,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -47848,6 +47933,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -47955,6 +48041,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -48417,6 +48504,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -48525,6 +48613,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -48629,6 +48718,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -48737,6 +48827,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -48841,6 +48932,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -48949,6 +49041,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -49058,6 +49151,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -49166,6 +49260,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -50618,6 +50713,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -50726,6 +50822,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -51169,6 +51266,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -51277,6 +51375,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -51387,6 +51486,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -51495,6 +51595,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -52298,6 +52399,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -52406,6 +52508,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -52510,6 +52613,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -52618,6 +52722,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -52722,6 +52827,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -52830,6 +52936,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -52945,6 +53052,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -53053,6 +53161,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -53163,6 +53272,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -53271,6 +53381,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -53381,6 +53492,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -53489,6 +53601,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -53588,6 +53701,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -53696,6 +53810,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -53843,6 +53958,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -53951,6 +54067,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -54055,6 +54172,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -54163,6 +54281,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -54278,6 +54397,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -54386,6 +54506,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -54512,6 +54633,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -54620,6 +54742,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -54730,6 +54853,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -54838,6 +54962,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -54937,6 +55062,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -55045,6 +55171,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -55149,6 +55276,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -55257,6 +55385,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -55372,6 +55501,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -55480,6 +55610,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -55590,6 +55721,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -55698,6 +55830,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -55797,6 +55930,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -55905,6 +56039,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -56009,6 +56144,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -56117,6 +56253,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -56221,6 +56358,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -56329,6 +56467,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -56444,6 +56583,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -56552,6 +56692,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -56662,6 +56803,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -56770,6 +56912,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -56880,6 +57023,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -56988,6 +57132,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -57163,6 +57308,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -57271,6 +57417,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -57375,6 +57522,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -57483,6 +57631,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -57630,6 +57779,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -57738,6 +57888,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -57848,6 +57999,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -57956,6 +58108,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -58055,6 +58208,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -58163,6 +58317,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -58293,6 +58448,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -58401,6 +58557,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -58505,6 +58662,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -58613,6 +58771,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -58728,6 +58887,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -58836,6 +58996,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -58978,6 +59139,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -59086,6 +59248,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -59196,6 +59359,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -59304,6 +59468,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -59403,6 +59568,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -59511,6 +59677,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -59641,6 +59808,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -59749,6 +59917,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -59853,6 +60022,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -59961,6 +60131,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -60076,6 +60247,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -60184,6 +60356,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -60326,6 +60499,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -60434,6 +60608,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -60544,6 +60719,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -60652,6 +60828,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -60751,6 +60928,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -60859,6 +61037,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -60963,6 +61142,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -61071,6 +61251,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -61186,6 +61367,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -61294,6 +61476,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -61404,6 +61587,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -61512,6 +61696,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -61611,6 +61796,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -61719,6 +61905,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -61865,6 +62052,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -61973,6 +62161,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -62077,6 +62266,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -62185,6 +62375,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -62289,6 +62480,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -62397,6 +62589,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -62512,6 +62705,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -62620,6 +62814,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -62778,6 +62973,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -62886,6 +63082,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -62996,6 +63193,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -63104,6 +63302,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -63214,6 +63413,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -63322,6 +63522,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -63421,6 +63622,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -63529,6 +63731,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -63633,6 +63836,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -63741,6 +63945,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -63845,6 +64050,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -63953,6 +64159,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -64068,6 +64275,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -64176,6 +64384,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -64286,6 +64495,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -64394,6 +64604,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -64504,6 +64715,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -64612,6 +64824,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -64711,6 +64924,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -64819,6 +65033,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -64934,6 +65149,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -65042,6 +65258,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -65141,6 +65358,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -65249,6 +65467,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -65364,6 +65583,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -65472,6 +65692,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -65571,6 +65792,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -65679,6 +65901,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -65794,6 +66017,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -65902,6 +66126,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -66001,6 +66226,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -66109,6 +66335,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -66239,6 +66466,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -66347,6 +66575,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -66451,6 +66680,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -66559,6 +66789,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -66674,6 +66905,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -66782,6 +67014,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -66924,6 +67157,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -67032,6 +67266,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -67142,6 +67377,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -67250,6 +67486,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -67353,6 +67590,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -67413,6 +67651,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -67520,6 +67759,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -67624,6 +67864,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -67775,6 +68016,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -67852,6 +68094,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -67959,6 +68202,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -68063,6 +68307,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -68196,6 +68441,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -68247,6 +68493,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -68354,6 +68601,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -68458,6 +68706,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -68513,6 +68762,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -68699,6 +68949,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -68754,6 +69005,7 @@ export namespace Prisma {
     emergencyContact?: string | null
     bankName?: string | null
     accountNumber?: string | null
+    ifscCode?: string | null
     pan?: string | null
     aadhaar?: string | null
     employeeCategory?: $Enums.EmployeeCategory
@@ -69235,6 +69487,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -69342,6 +69595,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -69446,6 +69700,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -69879,6 +70134,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -69987,6 +70243,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -70091,6 +70348,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -70141,6 +70399,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -70249,6 +70508,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory
@@ -70353,6 +70613,7 @@ export namespace Prisma {
     emergencyContact?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    ifscCode?: NullableStringFieldUpdateOperationsInput | string | null
     pan?: NullableStringFieldUpdateOperationsInput | string | null
     aadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     employeeCategory?: EnumEmployeeCategoryFieldUpdateOperationsInput | $Enums.EmployeeCategory

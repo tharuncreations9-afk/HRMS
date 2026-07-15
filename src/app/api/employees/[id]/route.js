@@ -53,111 +53,120 @@ const SELF_EDIT_FIELDS = new Set([
   "bloodGroup",
   "bankName",
   "accountNumber",
+  "ifscCode",
   "profilePhoto",
   "skills",
 ]);
 
+async function loadDocumentsSafe(employeeId) {
+  try {
+    return await prisma.employeeDocument.findMany({ where: { employeeId } });
+  } catch (err) {
+    console.error("employee detail documents failed:", err?.message || err);
+    return [];
+  }
+}
+
 export async function GET(request, { params }) {
-  const { user, error } = await requireAuth(request);
-  if (error) return error;
+  try {
+    const { user, error } = await requireAuth(request);
+    if (error) return error;
 
-  const id = parseInt(params.id, 10);
-  const employee = await prisma.employee.findUnique({
-    where: { id },
-    include: { department: true, designation: true, reportingManager: true, role: true },
-  });
+    const id = parseInt(params.id, 10);
+    if (!Number.isFinite(id)) {
+      return Response.json({ error: "Invalid employee id" }, { status: 400 });
+    }
 
-  if (!employee) return Response.json({ error: "Not found" }, { status: 404 });
+    const employee = await prisma.employee.findUnique({
+      where: { id },
+      include: { department: true, designation: true, reportingManager: true, role: true },
+    });
 
-  if (!canManageEmployees(user) && user.id !== id) {
-    return forbiddenResponse();
-  }
+    if (!employee) return Response.json({ error: "Not found" }, { status: 404 });
 
-  const canEdit = canEditEmployee(user, id);
-  let lookups = null;
-  if (canEdit) {
-    const [departments, designations, roles, managers] = await Promise.all([
-      prisma.department.findMany({ orderBy: { departmentName: "asc" } }),
-      prisma.designation.findMany({ orderBy: { designationName: "asc" } }),
-      prisma.role.findMany({ orderBy: { roleName: "asc" } }),
-      prisma.employee.findMany({
-        where: { status: "Active", id: { not: id } },
-        select: { id: true, fullName: true, employeeCode: true },
-        orderBy: { fullName: "asc" },
+    if (!canManageEmployees(user) && user.id !== id) {
+      return forbiddenResponse();
+    }
+
+    const canEdit = canEditEmployee(user, id);
+    let lookups = null;
+    if (canEdit) {
+      const [departments, designations, roles, managers] = await Promise.all([
+        prisma.department.findMany({ orderBy: { departmentName: "asc" } }),
+        prisma.designation.findMany({ orderBy: { designationName: "asc" } }),
+        prisma.role.findMany({ orderBy: { roleName: "asc" } }),
+        prisma.employee.findMany({
+          where: { status: "Active", id: { not: id } },
+          select: { id: true, fullName: true, employeeCode: true },
+          orderBy: { fullName: "asc" },
+        }),
+      ]);
+      lookups = {
+        departments,
+        designations,
+        roles: roles.map((r) => ({
+          id: r.id,
+          roleName: r.roleName,
+          label: r.roleName.replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+        })),
+        managers,
+      };
+    }
+
+    const [attendance, leaves, documents] = await Promise.all([
+      prisma.attendance.findMany({
+        where: { employeeId: id },
+        orderBy: { attendanceDate: "desc" },
+        take: 10,
       }),
+      prisma.leaveRequest.findMany({
+        where: { employeeId: id },
+        include: { leaveType: true },
+        orderBy: { createdAt: "desc" },
+        take: 10,
+      }),
+      loadDocumentsSafe(id),
     ]);
-    lookups = {
-      departments,
-      designations,
-      roles: roles.map((r) => ({
-        id: r.id,
-        roleName: r.roleName,
-        label: r.roleName.replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+
+    const onLeaveIds = await getEmployeeIdsOnLeaveToday(prisma);
+    const mappedEmployee = mapEmployee(employee, onLeaveIds);
+    const byType = mapDocumentsByType(documents);
+    if (byType.Experience_Letter?.url) mappedEmployee.experienceLetterUrl = byType.Experience_Letter.url;
+    if (byType.Relieving_Letter?.url) mappedEmployee.relievingLetterUrl = byType.Relieving_Letter.url;
+    if (byType.Payslip?.length) {
+      mappedEmployee.payslipUrls = byType.Payslip.map((p) => p.url).filter(Boolean);
+    }
+
+    return Response.json({
+      employee: mappedEmployee,
+      canEdit: Boolean(getEditScope(user, id)),
+      editScope: getEditScope(user, id),
+      lookups,
+      attendance: attendance.map((a) => ({
+        date: a.attendanceDate.toISOString().split("T")[0],
+        status: a.attendanceStatus.replace("_", " "),
+        inTime: a.inTime ? a.inTime.toISOString().slice(11, 16) : "-",
+        outTime: a.outTime ? a.outTime.toISOString().slice(11, 16) : "-",
       })),
-      managers,
-    };
-  }
-
-  const [attendance, leaves, documents, activityLogs] = await Promise.all([
-    prisma.attendance.findMany({
-      where: { employeeId: id },
-      orderBy: { attendanceDate: "desc" },
-      take: 10,
-    }),
-    prisma.leaveRequest.findMany({
-      where: { employeeId: id },
-      include: { leaveType: true },
-      orderBy: { createdAt: "desc" },
-      take: 10,
-    }),
-    prisma.employeeDocument.findMany({ where: { employeeId: id } }),
-    prisma.auditLog.findMany({
-      where: {
-        OR: [
-          { newValue: { path: "$.employeeCode", equals: employee.employeeCode } },
-          { moduleName: "Employee Management" },
-        ],
+      leaves: leaves.map((l) => ({
+        type: l.leaveType?.leaveName || "—",
+        from: l.fromDate.toISOString().split("T")[0],
+        to: l.toDate.toISOString().split("T")[0],
+        days: Number(l.totalDays),
+        status: l.finalStatus,
+      })),
+      documents: documents.map((d) => mapEmployeeDocument(d)),
+    });
+  } catch (err) {
+    console.error("GET /api/employees/[id] failed:", err);
+    return Response.json(
+      {
+        error: "Failed to load employee",
+        detail: process.env.NODE_ENV === "development" ? String(err?.message || err) : undefined,
       },
-      orderBy: { actionDate: "desc" },
-      take: 10,
-    }),
-  ]);
-
-  const onLeaveIds = await getEmployeeIdsOnLeaveToday(prisma);
-  const mappedEmployee = mapEmployee(employee, onLeaveIds);
-  const byType = mapDocumentsByType(documents);
-  if (byType.Experience_Letter?.url) mappedEmployee.experienceLetterUrl = byType.Experience_Letter.url;
-  if (byType.Relieving_Letter?.url) mappedEmployee.relievingLetterUrl = byType.Relieving_Letter.url;
-  if (byType.Payslip?.length) {
-    mappedEmployee.payslipUrls = byType.Payslip.map((p) => p.url).filter(Boolean);
+      { status: 500 }
+    );
   }
-
-  return Response.json({
-    employee: mappedEmployee,
-    canEdit: Boolean(getEditScope(user, id)),
-    editScope: getEditScope(user, id),
-    lookups,
-    attendance: attendance.map((a) => ({
-      date: a.attendanceDate.toISOString().split("T")[0],
-      status: a.attendanceStatus.replace("_", " "),
-      inTime: a.inTime ? a.inTime.toISOString().slice(11, 16) : "-",
-      outTime: a.outTime ? a.outTime.toISOString().slice(11, 16) : "-",
-    })),
-    leaves: leaves.map((l) => ({
-      type: l.leaveType.leaveName,
-      from: l.fromDate.toISOString().split("T")[0],
-      to: l.toDate.toISOString().split("T")[0],
-      days: Number(l.totalDays),
-      status: l.finalStatus,
-    })),
-    documents: documents.map((d) => mapEmployeeDocument(d)),
-    activityLogs: activityLogs.map((log) => ({
-      action: `${log.moduleName} ${log.actionType}`,
-      by: "System",
-      date: log.actionDate.toISOString().split("T")[0],
-      details: log.newValue ? JSON.stringify(log.newValue) : "",
-    })),
-  });
 }
 
 export async function PATCH(request, { params }) {
@@ -245,7 +254,7 @@ export async function PATCH(request, { params }) {
 
   const fields = [
     "firstName", "lastName", "gender", "bloodGroup", "mobile", "alternateMobile",
-    "email", "address", "emergencyContact", "bankName", "accountNumber", "pan", "aadhaar",
+    "email", "address", "emergencyContact", "bankName", "accountNumber", "ifscCode", "pan", "aadhaar",
   ];
   fields.forEach((f) => {
     if (body[f] !== undefined) {
@@ -257,6 +266,12 @@ export async function PATCH(request, { params }) {
         else if (f === "pan" && normalizedInput?.pan !== undefined) updateData.pan = normalizedInput.pan || null;
         else if (f === "aadhaar" && normalizedInput?.aadhaar !== undefined) {
           updateData.aadhaar = normalizedInput.aadhaar || null;
+        } else if (f === "bankName" && normalizedInput?.bankName !== undefined) {
+          updateData.bankName = normalizedInput.bankName || null;
+        } else if (f === "accountNumber" && normalizedInput?.accountNumber !== undefined) {
+          updateData.accountNumber = normalizedInput.accountNumber || null;
+        } else if (f === "ifscCode" && normalizedInput?.ifscCode !== undefined) {
+          updateData.ifscCode = normalizedInput.ifscCode || null;
         } else {
           updateData[f] = body[f];
         }

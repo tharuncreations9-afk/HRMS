@@ -67,6 +67,7 @@ function toEditForm(emp) {
     aadhaar: emp.aadhaar || "",
     bankName: emp.bankName || "",
     accountNumber: emp.accountNumber || "",
+    ifscCode: emp.ifscCode || "",
     skills: emp.skills || "",
   };
 }
@@ -119,7 +120,6 @@ export default function EmployeeProfilePage() {
   const [attendance, setAttendance] = useState([]);
   const [leaves, setLeaves] = useState([]);
   const [documents, setDocuments] = useState([]);
-  const [activityLogs, setActivityLogs] = useState([]);
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState({});
   const [saving, setSaving] = useState(false);
@@ -207,7 +207,6 @@ export default function EmployeeProfilePage() {
       setAttendance(data.attendance || []);
       setLeaves(data.leaves || []);
       setDocuments(data.documents || []);
-      setActivityLogs(data.activityLogs || []);
       setEditForm(toEditForm(data.employee));
       setPhotoPreview(data.employee?.photo || null);
       setPendingPhoto(null);
@@ -262,7 +261,6 @@ export default function EmployeeProfilePage() {
 
       const data = await api.employee(params.id);
       setLookups(data.lookups || null);
-      setActivityLogs(data.activityLogs || []);
 
       if (isOwnProfile) {
         try {
@@ -417,7 +415,6 @@ export default function EmployeeProfilePage() {
           <TabsTrigger value="attendance">Attendance</TabsTrigger>
           <TabsTrigger value="leaves">Leaves</TabsTrigger>
           <TabsTrigger value="documents">Documents</TabsTrigger>
-          {isFullEdit && <TabsTrigger value="activity">Activity Logs</TabsTrigger>}
         </TabsList>
 
         <TabsContent value="overview">
@@ -678,6 +675,13 @@ export default function EmployeeProfilePage() {
                     <EditField label="Bank Name">
                       <Input value={editForm.bankName} onChange={(e) => set("bankName", e.target.value)} />
                     </EditField>
+                    <EditField label="IFSC Code">
+                      <Input
+                        maxLength={11}
+                        value={editForm.ifscCode}
+                        onChange={(e) => set("ifscCode", e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 11))}
+                      />
+                    </EditField>
                     <EditField label="Account Number">
                       <Input
                         value={editForm.accountNumber}
@@ -698,6 +702,7 @@ export default function EmployeeProfilePage() {
                 ) : (
                   <>
                     <DetailRow label="Bank Name" value={employee.bankName} />
+                    <DetailRow label="IFSC Code" value={employee.ifscCode} />
                     <DetailRow label="Account Number" value={employee.accountNumber} />
                     {isFullEdit && (
                       <>
@@ -876,29 +881,6 @@ export default function EmployeeProfilePage() {
             </CardContent>
           </Card>
         </TabsContent>
-
-        {isFullEdit && (
-          <TabsContent value="activity">
-            <Card className="glass-card">
-              <CardHeader><CardTitle>Audit History</CardTitle></CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {activityLogs.map((log, i) => (
-                    <div key={i} className="flex gap-4 border-l-2 border-champagne pl-4">
-                      <div>
-                        <p className="font-medium">{log.action}</p>
-                        <p className="text-sm text-muted-foreground">{log.details}</p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          by {log.by} · {formatDate(log.date)}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        )}
       </Tabs>
     </div>
   );

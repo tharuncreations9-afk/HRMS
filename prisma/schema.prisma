@@ -304,6 +304,7 @@ model Employee {
   emergencyContact   String?        @map("emergency_contact") @db.VarChar(200)
   bankName           String?        @map("bank_name") @db.VarChar(100)
   accountNumber      String?        @map("account_number") @db.VarChar(50)
+  ifscCode           String?        @map("ifsc_code") @db.VarChar(11)
   pan                String?        @db.VarChar(20)
   aadhaar            String?        @db.VarChar(20)
   employeeCategory   EmployeeCategory @default(Fresher) @map("employee_category")

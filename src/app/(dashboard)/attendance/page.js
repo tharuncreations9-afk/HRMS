@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { motion } from "framer-motion";
 import { Printer, Search, Clock, Users, UserCheck, UserX, Loader2, Lock, FileEdit } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,20 @@ function statusAllowsOutTime(statusValue) {
 
 function getAutoSaveTimes() {
   return { inTime: undefined, outTime: undefined };
+}
+
+function getStatusAccent(statusValue) {
+  switch (statusValue) {
+    case "present":
+      return "from-emerald-500 to-emerald-600";
+    case "halfDay":
+      return "from-amber-500 to-amber-600";
+    case "leave":
+    case "absent":
+      return "from-red-500 to-red-600";
+    default:
+      return "from-slate-300 to-slate-400";
+  }
 }
 
 function getRowStatusClass(statusValue) {
@@ -506,13 +521,11 @@ export default function DailyAttendancePage() {
                 <Clock className="h-5 w-5 text-champagne" />
                 {canMark ? "Mark Attendance" : "Attendance List"} — {dateLabel}
               </CardTitle>
-              <CardDescription>
-                {isLocked
-                  ? "Read-only — use Correct to update with reason"
-                  : canMark
-                    ? "Status changes save instantly to the database"
-                    : `${markedCount} marked · ${absentCount} not marked`}
-              </CardDescription>
+              {isLocked && (
+                <CardDescription>
+                  Read-only — use Correct to update with reason
+                </CardDescription>
+              )}
             </div>
             <Badge variant="secondary" className="w-fit">
               {pagination?.total ?? 0} employees
@@ -561,7 +574,98 @@ export default function DailyAttendancePage() {
             </div>
           ) : (
             <>
-              <div className="hidden overflow-x-auto rounded-lg border md:block">
+              <div className="space-y-4 lg:hidden">
+                {rows.length === 0 ? (
+                  <p className="py-10 text-center text-muted-foreground">No employees match the selected filters</p>
+                ) : (
+                  rows.map((row, index) => {
+                    const isSaving = savingCode === row.employeeCode;
+                    return (
+                      <motion.div
+                        key={row.employeeCode}
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: Math.min(index * 0.04, 0.3) }}
+                      >
+                        <Card className={`glass-card overflow-hidden ${getRowStatusClass(row.markStatusValue)}`}>
+                          <div className={`h-2 bg-gradient-to-r ${getStatusAccent(row.markStatusValue)}`} />
+                          <CardHeader className="pb-3">
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="min-w-0">
+                                <CardTitle className="truncate text-base">{row.employeeName}</CardTitle>
+                                <p className="mt-0.5 font-mono text-xs text-muted-foreground">{row.employeeCode}</p>
+                                <p className="mt-0.5 text-xs text-muted-foreground">{row.department || "—"}</p>
+                              </div>
+                              {!canEditDate && (
+                                <div className="shrink-0 text-right">
+                                  {renderStatusBadge(row)}
+                                  {renderCorrectionReason(row)}
+                                </div>
+                              )}
+                            </div>
+                          </CardHeader>
+                          <CardContent className="space-y-3 pt-0">
+                            {canEditDate && (
+                              <div className="flex items-center gap-2">
+                                <Select
+                                  value={row.markStatusValue || ""}
+                                  onValueChange={(v) => handleStatusChange(row, v)}
+                                  disabled={isSaving}
+                                >
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select status" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {statuses.map((opt) => (
+                                      <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                                {isSaving && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
+                              </div>
+                            )}
+                            {row.markStatusValue && (
+                              <div className="grid grid-cols-2 gap-3 text-sm">
+                                <div>
+                                  <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                    Shift
+                                  </p>
+                                  <p className="font-medium">{row.shiftTime || "—"}</p>
+                                </div>
+                                <div>
+                                  <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                    Late (min)
+                                  </p>
+                                  <p className="font-medium">
+                                    {row.lateMinutes != null ? row.lateMinutes : "—"}
+                                  </p>
+                                </div>
+                                <div className="col-span-2">
+                                  <p className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                    In Time
+                                  </p>
+                                  {renderInTimeEditor(row)}
+                                </div>
+                                <div className="col-span-2">
+                                  <p className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                    Out Time
+                                  </p>
+                                  {renderOutTimeEditor(row)}
+                                </div>
+                              </div>
+                            )}
+                            {isLocked && canRequestCorrection && (
+                              <div className="border-t pt-3">{renderCorrectionAction(row)}</div>
+                            )}
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    );
+                  })
+                )}
+              </div>
+
+              <div className="hidden overflow-x-auto rounded-lg border lg:block">
                 <table className="w-full min-w-[980px] text-sm">
                   <thead>
                     <tr className="border-b bg-muted/50">
@@ -635,73 +739,6 @@ export default function DailyAttendancePage() {
                     )}
                   </tbody>
                 </table>
-              </div>
-
-              <div className="space-y-3 md:hidden">
-                {rows.length === 0 ? (
-                  <p className="py-10 text-center text-muted-foreground">No employees match the selected filters</p>
-                ) : (
-                  rows.map((row) => {
-                    const isSaving = savingCode === row.employeeCode;
-                    const rowClass = getRowStatusClass(row.markStatusValue);
-                    const noTimes = row.markStatusValue === "leave" || row.markStatusValue === "absent";
-                    return (
-                      <div
-                        key={row.employeeCode}
-                        className={`rounded-lg border p-4 space-y-3 ${rowClass}`}
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          <div>
-                            <p className="font-medium">{row.employeeName}</p>
-                            <p className="text-xs font-mono text-muted-foreground">{row.employeeCode}</p>
-                            <p className="text-xs text-muted-foreground">{row.department}</p>
-                          </div>
-                          {!canEditDate && (
-                            <div>
-                              {renderStatusBadge(row)}
-                              {renderCorrectionReason(row)}
-                            </div>
-                          )}
-                        </div>
-                        {canEditDate && (
-                          <div className="flex items-center gap-2">
-                            <Select
-                              value={row.markStatusValue || ""}
-                              onValueChange={(v) => handleStatusChange(row, v)}
-                              disabled={isSaving}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select status" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {statuses.map((opt) => (
-                                  <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            {isSaving && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
-                          </div>
-                        )}
-                        {row.markStatusValue && (
-                          <div className="space-y-2 text-xs">
-                            <div className="flex flex-wrap gap-4 text-muted-foreground">
-                              <span>Shift: {row.shiftTime || "—"}</span>
-                            </div>
-                            <div className="flex flex-wrap items-center gap-2">
-                              <span className="text-muted-foreground">In:</span>
-                              {renderInTimeEditor(row)}
-                            </div>
-                            <div className="flex flex-wrap items-center gap-2">
-                              <span className="text-muted-foreground">Out:</span>
-                              {renderOutTimeEditor(row)}
-                            </div>
-                          </div>
-                        )}
-                        {isLocked && renderCorrectionAction(row)}
-                      </div>
-                    );
-                  })
-                )}
               </div>
             </>
           )}

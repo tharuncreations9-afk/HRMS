@@ -216,6 +216,7 @@ export async function POST(request) {
         emergencyContact: normalized.emergencyContact || null,
         bankName: normalized.bankName || null,
         accountNumber: normalized.accountNumber || null,
+        ifscCode: normalized.ifscCode || null,
         pan: normalized.pan || null,
         aadhaar: normalized.aadhaar || null,
         ...categoryData,
