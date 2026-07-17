@@ -79,9 +79,15 @@ export async function GET(request) {
     }
   }
 
+  const isPrintExport = searchParams.get("export") === "print";
   const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
-  const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") || "25", 10)));
-  const skip = (page - 1) * limit;
+  const maxLimit = isPrintExport ? 5000 : 100;
+  const defaultLimit = isPrintExport ? 5000 : 25;
+  const limit = Math.min(
+    maxLimit,
+    Math.max(1, parseInt(searchParams.get("limit") || String(defaultLimit), 10))
+  );
+  const skip = isPrintExport ? 0 : (page - 1) * limit;
   const whereClause = where.AND.length ? where : undefined;
 
   const [employees, total, departmentRows, designationRows] = await Promise.all([
@@ -112,6 +118,7 @@ export async function GET(request) {
     value: d.designationName,
     label: d.designationName,
     designationName: d.designationName,
+    departmentId: d.departmentId,
   }));
 
   return Response.json({

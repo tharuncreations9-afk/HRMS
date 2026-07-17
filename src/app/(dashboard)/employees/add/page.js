@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, Suspense, useMemo, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { ArrowLeft, Upload, Save, ChevronRight, ChevronLeft, Check } from "lucide-react";
+import { ArrowLeft, Upload, Save, ChevronRight, ChevronLeft, Check, Camera } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,7 @@ import {
 import { isValidEmail } from "@/lib/auth-validation";
 import { useAuth } from "@/context/auth-context";
 import { useLookups } from "@/hooks/use-lookups";
+import { CameraCaptureDialog } from "@/components/employees/camera-capture-dialog";
 
 const sections = [
   { id: "personal", title: "Personal Information" },
@@ -102,6 +103,7 @@ function AddEmployeeContent() {
   const [pendingFiles, setPendingFiles] = useState({});
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [profilePreview, setProfilePreview] = useState(null);
+  const [cameraOpen, setCameraOpen] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
   const [codeLoading, setCodeLoading] = useState(false);
   const [existingDocs, setExistingDocs] = useState({});
@@ -265,6 +267,20 @@ function AddEmployeeContent() {
     setProfilePhoto(file);
     setProfilePreview(URL.createObjectURL(file));
     event.target.value = "";
+  };
+
+  const applyProfilePhotoFile = (file) => {
+    if (!file) return;
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error("Photo must be under 2MB");
+      return;
+    }
+    if (!["image/jpeg", "image/jpg", "image/png"].includes(file.type)) {
+      toast.error("Only JPG and PNG photos are allowed");
+      return;
+    }
+    setProfilePhoto(file);
+    setProfilePreview(URL.createObjectURL(file));
   };
 
   const validateStep = (stepIndex) => {
@@ -514,17 +530,23 @@ function AddEmployeeContent() {
                       )}
                     </div>
                     <div>
-                      <input
-                        ref={photoInputRef}
-                        type="file"
-                        accept="image/jpeg,image/jpg,image/png"
-                        className="hidden"
-                        onChange={handlePhotoSelect}
-                      />
-                      <Button variant="outline" size="sm" type="button" onClick={() => photoInputRef.current?.click()}>
-                        <Upload className="mr-1 h-3 w-3" />
-                        {profilePhoto ? "Change Photo" : "Upload Photo"}
-                      </Button>
+                      <div className="flex flex-wrap gap-2">
+                        <input
+                          ref={photoInputRef}
+                          type="file"
+                          accept="image/jpeg,image/jpg,image/png"
+                          className="hidden"
+                          onChange={handlePhotoSelect}
+                        />
+                        <Button variant="outline" size="sm" type="button" onClick={() => photoInputRef.current?.click()}>
+                          <Upload className="mr-1 h-3 w-3" />
+                          {profilePhoto ? "Change Photo" : "Upload Photo"}
+                        </Button>
+                        <Button variant="outline" size="sm" type="button" onClick={() => setCameraOpen(true)}>
+                          <Camera className="mr-1 h-3 w-3" />
+                          Take Photo
+                        </Button>
+                      </div>
                       <p className="mt-1 text-xs text-muted-foreground">
                         {profilePhoto ? profilePhoto.name : "JPG, PNG. Max 2MB"}
                       </p>
@@ -1120,6 +1142,12 @@ function AddEmployeeContent() {
           </div>
         </div>
       </div>
+
+      <CameraCaptureDialog
+        open={cameraOpen}
+        onOpenChange={setCameraOpen}
+        onCapture={applyProfilePhotoFile}
+      />
     </div>
   );
 }

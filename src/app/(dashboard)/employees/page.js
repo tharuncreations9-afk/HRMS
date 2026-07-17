@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback, Suspense } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Search, Plus, Eye, Pencil, Trash2, Upload, Download, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
+import { Search, Plus, Eye, Pencil, Trash2, Upload, Download, CheckCircle2, XCircle, AlertCircle, Printer } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,6 +31,7 @@ import { useAuth } from "@/context/auth-context";
 import { useLookups } from "@/hooks/use-lookups";
 import { ListPagination } from "@/components/ui/list-pagination";
 import { toast } from "sonner";
+import "@/components/employees/employee-list-print.css";
 
 function EmployeeListContent() {
   const searchParams = useSearchParams();
@@ -48,6 +49,7 @@ function EmployeeListContent() {
   const [search, setSearch] = useState(initialSearch);
   const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
   const [department, setDepartment] = useState("all");
+  const [designation, setDesignation] = useState("all");
   const [status, setStatus] = useState("all");
   const [employees, setEmployees] = useState([]);
   const [page, setPage] = useState(1);
@@ -58,6 +60,15 @@ function EmployeeListContent() {
   const [listFilters, setListFilters] = useState(null);
   const statusFilters = listFilters?.employeeStatusFilters || lookups?.employeeStatusFilters || [];
   const departments = listFilters?.departmentFilters || lookups?.departmentFilters || [];
+  const allDesignations = listFilters?.designationFilters || lookups?.designationFilters || [];
+  const filteredDesignations = useMemo(() => {
+    if (department === "all") return allDesignations;
+    const deptRow = departments.find((d) => d.value === department);
+    if (!deptRow?.id) return allDesignations;
+    return allDesignations.filter(
+      (d) => d.value === "all" || String(d.departmentId) === String(deptRow.id)
+    );
+  }, [allDesignations, departments, department]);
   const [bulkOpen, setBulkOpen] = useState(false);
   const [resultOpen, setResultOpen] = useState(false);
   const [bulkFile, setBulkFile] = useState(null);
@@ -65,6 +76,9 @@ function EmployeeListContent() {
   const [uploadResult, setUploadResult] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [printEmployees, setPrintEmployees] = useState([]);
+  const [printPending, setPrintPending] = useState(false);
+  const [printing, setPrinting] = useState(false);
 
   const fileInputRef = useRef(null);
   const tableScrollRef = useRef(null);
@@ -82,17 +96,25 @@ function EmployeeListContent() {
 
   useEffect(() => {
     setPage(1);
-  }, [debouncedSearch, department, status, limit]);
+  }, [debouncedSearch, department, designation, status, limit]);
+
+  useEffect(() => {
+    if (designation === "all") return;
+    const stillValid = filteredDesignations.some((d) => d.value === designation);
+    if (!stillValid) setDesignation("all");
+  }, [department, designation, filteredDesignations]);
 
   const buildParams = useCallback(
-    (pageNum) => {
-      const params = { page: String(pageNum), limit: String(limit) };
+    (pageNum, { forPrint = false } = {}) => {
+      const params = { page: String(pageNum), limit: forPrint ? "5000" : String(limit) };
+      if (forPrint) params.export = "print";
       if (debouncedSearch) params.search = debouncedSearch;
       if (department !== "all") params.department = department;
+      if (designation !== "all") params.designation = designation;
       if (status !== "all") params.status = status;
       return params;
     },
-    [debouncedSearch, department, status, limit]
+    [debouncedSearch, department, designation, status, limit]
   );
 
   const fetchPage = useCallback(
@@ -120,6 +142,36 @@ function EmployeeListContent() {
   useEffect(() => {
     fetchPage(page);
   }, [fetchPage, page]);
+
+  useEffect(() => {
+    if (!printPending) return;
+    const timer = setTimeout(() => {
+      window.print();
+      setPrintPending(false);
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [printPending, printEmployees]);
+
+  const handlePrint = async () => {
+    setPrinting(true);
+    try {
+      const data = await api.employees(buildParams(1, { forPrint: true }));
+      setPrintEmployees(data.employees || []);
+      setPrintPending(true);
+    } catch (err) {
+      toast.error(err?.message || "Failed to prepare print");
+    } finally {
+      setPrinting(false);
+    }
+  };
+
+  const rowsForPrint = printEmployees.length ? printEmployees : employees;
+  const printFilterSummary = [
+    department !== "all" ? `Department — ${department}` : null,
+    designation !== "all" ? `Designation — ${designation}` : null,
+    status !== "all" ? `Status — ${status}` : null,
+    debouncedSearch ? `Search — "${debouncedSearch}"` : null,
+  ].filter(Boolean);
 
   const statusVariant = (s) => {
     if (s === "Active") return "success";
@@ -211,13 +263,19 @@ function EmployeeListContent() {
   );
 
   return (
-    <div className="space-y-6">
+    <>
+    <div className="space-y-6 no-print">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-display text-2xl font-bold lg:text-3xl">Employee Management</h1>
           <p className="text-muted-foreground">Manage and view all employees</p>
         </div>
         <div className="flex flex-wrap gap-2">
+          {canManageEmployees && (
+            <Button variant="outline" onClick={handlePrint} disabled={printing}>
+              <Printer className="h-4 w-4" /> {printing ? "Preparing..." : "Print List"}
+            </Button>
+          )}
           {canManageEmployees && (
             <Button variant="outline" onClick={() => setBulkOpen(true)}>
               <Upload className="h-4 w-4" /> Bulk Upload
@@ -371,12 +429,28 @@ function EmployeeListContent() {
               />
             </div>
             <div className="grid w-full grid-cols-1 gap-2 min-[480px]:grid-cols-2 sm:flex sm:flex-wrap lg:w-auto">
-              <Select value={department} onValueChange={setDepartment}>
+              <Select
+                value={department}
+                onValueChange={(v) => {
+                  setDepartment(v);
+                  setDesignation("all");
+                }}
+              >
                 <SelectTrigger className="w-full sm:w-[150px]">
                   <SelectValue placeholder="Department" />
                 </SelectTrigger>
                 <SelectContent>
                   {departments.map((d) => (
+                    <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={designation} onValueChange={setDesignation}>
+                <SelectTrigger className="w-full sm:w-[150px]">
+                  <SelectValue placeholder="Designation" />
+                </SelectTrigger>
+                <SelectContent>
+                  {filteredDesignations.map((d) => (
                     <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>
                   ))}
                 </SelectContent>
@@ -537,6 +611,59 @@ function EmployeeListContent() {
         </CardContent>
       </Card>
     </div>
+
+      <div className="employee-list-print-root">
+        <div className="bg-white p-4 text-black">
+          <h2 className="mb-1 text-center text-base font-semibold">Employee List</h2>
+          <p className="mb-4 text-center text-sm text-gray-700">
+            {new Date().toLocaleDateString("en-IN", {
+              weekday: "long",
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            })}
+          </p>
+          {printFilterSummary.length > 0 && (
+            <p className="mb-3 text-center text-xs text-gray-600">
+              Filters: {printFilterSummary.join(" · ")}
+            </p>
+          )}
+          <table className="w-full border-collapse border border-black text-xs">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="border border-black px-2 py-1.5 text-left">#</th>
+                <th className="border border-black px-2 py-1.5 text-left">Employee ID</th>
+                <th className="border border-black px-2 py-1.5 text-left">Name</th>
+                <th className="border border-black px-2 py-1.5 text-left">Department</th>
+                <th className="border border-black px-2 py-1.5 text-left">Designation</th>
+                <th className="border border-black px-2 py-1.5 text-left">Mobile</th>
+                <th className="border border-black px-2 py-1.5 text-left">Joining</th>
+                <th className="border border-black px-2 py-1.5 text-left">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rowsForPrint.map((emp, index) => (
+                <tr key={emp.id}>
+                  <td className="border border-black px-2 py-1.5">{index + 1}</td>
+                  <td className="border border-black px-2 py-1.5 font-mono">{emp.employeeCode}</td>
+                  <td className="border border-black px-2 py-1.5">{emp.name}</td>
+                  <td className="border border-black px-2 py-1.5">{emp.department || "—"}</td>
+                  <td className="border border-black px-2 py-1.5">{emp.designation || "—"}</td>
+                  <td className="border border-black px-2 py-1.5">{emp.mobile || "—"}</td>
+                  <td className="border border-black px-2 py-1.5">
+                    {emp.joiningDate ? formatDate(emp.joiningDate) : "—"}
+                  </td>
+                  <td className="border border-black px-2 py-1.5">{emp.status || "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className="mt-3 text-right text-xs text-gray-600">
+            Total: {rowsForPrint.length} employee(s)
+          </p>
+        </div>
+      </div>
+    </>
   );
 }
 

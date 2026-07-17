@@ -1,0 +1,45 @@
+/* Employee list — print only the employee table */
+@page {
+  size: A4 landscape;
+  margin: 10mm;
+}
+
+.employee-list-print-root {
+  display: none;
+}
+
+@media print {
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .employee-list-print-root,
+  .employee-list-print-root * {
+    visibility: visible;
+  }
+
+  .employee-list-print-root {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #000;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}

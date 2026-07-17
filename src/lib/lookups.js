@@ -70,6 +70,7 @@ export function buildDesignationFilterOptions(designations, allLabel = "All Desi
       id: d.id,
       value: d.designationName || d.value,
       label: d.designationName || d.label,
+      departmentId: d.departmentId,
     })),
   ];
 }
