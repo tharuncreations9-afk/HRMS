@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Camera } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Camera, SwitchCamera } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -17,31 +17,57 @@ export function CameraCaptureDialog({ open, onOpenChange, onCapture }) {
   const streamRef = useRef(null);
   const [error, setError] = useState("");
   const [ready, setReady] = useState(false);
+  const [facingMode, setFacingMode] = useState("user");
+
+  const stopStream = useCallback(() => {
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    streamRef.current = null;
+    setReady(false);
+  }, []);
 
   useEffect(() => {
     if (!open) {
-      streamRef.current?.getTracks().forEach((track) => track.stop());
-      streamRef.current = null;
-      setReady(false);
+      stopStream();
       setError("");
+      setFacingMode("user");
       return undefined;
     }
 
     let active = true;
 
     (async () => {
+      stopStream();
+      setError("");
+
       try {
         if (!navigator.mediaDevices?.getUserMedia) {
           throw new Error("Camera not supported on this device");
         }
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: { ideal: "user" } },
+
+        const constraints = {
+          video: {
+            facingMode: { ideal: facingMode },
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+          },
           audio: false,
-        });
+        };
+
+        let stream;
+        try {
+          stream = await navigator.mediaDevices.getUserMedia(constraints);
+        } catch {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode },
+            audio: false,
+          });
+        }
+
         if (!active) {
           stream.getTracks().forEach((track) => track.stop());
           return;
         }
+
         streamRef.current = stream;
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
@@ -49,16 +75,21 @@ export function CameraCaptureDialog({ open, onOpenChange, onCapture }) {
           setReady(true);
         }
       } catch (err) {
-        setError(err?.message || "Unable to access camera");
+        if (active) {
+          setError(err?.message || "Unable to access camera");
+        }
       }
     })();
 
     return () => {
       active = false;
-      streamRef.current?.getTracks().forEach((track) => track.stop());
-      streamRef.current = null;
+      stopStream();
     };
-  }, [open]);
+  }, [open, facingMode, stopStream]);
+
+  const toggleCamera = () => {
+    setFacingMode((prev) => (prev === "user" ? "environment" : "user"));
+  };
 
   const handleCapture = () => {
     const video = videoRef.current;
@@ -88,7 +119,9 @@ export function CameraCaptureDialog({ open, onOpenChange, onCapture }) {
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Take Photo</DialogTitle>
-          <DialogDescription>Position your face in the frame and capture.</DialogDescription>
+          <DialogDescription>
+            Use front or back camera. Tap switch to change camera on mobile.
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-3">
           {error ? (
@@ -96,7 +129,7 @@ export function CameraCaptureDialog({ open, onOpenChange, onCapture }) {
               {error}
             </p>
           ) : (
-            <div className="overflow-hidden rounded-lg border bg-black">
+            <div className="relative overflow-hidden rounded-lg border bg-black">
               <video
                 ref={videoRef}
                 className="aspect-[4/3] w-full object-cover"
@@ -104,10 +137,22 @@ export function CameraCaptureDialog({ open, onOpenChange, onCapture }) {
                 muted
                 autoPlay
               />
+              {ready && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  className="absolute bottom-3 right-3 shadow-md"
+                  onClick={toggleCamera}
+                >
+                  <SwitchCamera className="mr-1 h-4 w-4" />
+                  {facingMode === "user" ? "Back" : "Front"}
+                </Button>
+              )}
             </div>
           )}
         </div>
-        <DialogFooter>
+        <DialogFooter className="gap-2 sm:gap-0">
           <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
