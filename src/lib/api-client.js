@@ -162,4 +162,6 @@ export const api = {
   updateShift: (id, body) => apiFetch(`/shifts/${id}`, { method: "PATCH", body: JSON.stringify(body) }),
   deleteShift: (id) => apiFetch(`/shifts/${id}`, { method: "DELETE" }),
   lookups: () => apiFetch("/lookups"),
+  banks: () => apiFetch("/banks"),
+  createBank: (body) => apiFetch("/banks", { method: "POST", body: JSON.stringify(body) }),
 };

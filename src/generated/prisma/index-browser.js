@@ -199,6 +199,12 @@ exports.Prisma.EmployeeScalarFieldEnum = {
   dob: 'dob',
   gender: 'gender',
   bloodGroup: 'bloodGroup',
+  motherName: 'motherName',
+  fatherName: 'fatherName',
+  maritalStatus: 'maritalStatus',
+  spouseName: 'spouseName',
+  religion: 'religion',
+  nationality: 'nationality',
   mobile: 'mobile',
   alternateMobile: 'alternateMobile',
   email: 'email',
@@ -206,6 +212,7 @@ exports.Prisma.EmployeeScalarFieldEnum = {
   roleId: 'roleId',
   lastLogin: 'lastLogin',
   address: 'address',
+  temporaryAddress: 'temporaryAddress',
   departmentId: 'departmentId',
   designationId: 'designationId',
   reportingManagerId: 'reportingManagerId',
@@ -362,6 +369,13 @@ exports.Prisma.LeaveRequestScalarFieldEnum = {
   updatedBy: 'updatedBy'
 };
 
+exports.Prisma.BankScalarFieldEnum = {
+  id: 'id',
+  bankName: 'bankName',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.HolidayScalarFieldEnum = {
   id: 'id',
   holidayName: 'holidayName',
@@ -509,11 +523,18 @@ exports.Prisma.EmployeeOrderByRelevanceFieldEnum = {
   fullName: 'fullName',
   gender: 'gender',
   bloodGroup: 'bloodGroup',
+  motherName: 'motherName',
+  fatherName: 'fatherName',
+  maritalStatus: 'maritalStatus',
+  spouseName: 'spouseName',
+  religion: 'religion',
+  nationality: 'nationality',
   mobile: 'mobile',
   alternateMobile: 'alternateMobile',
   email: 'email',
   passwordHash: 'passwordHash',
   address: 'address',
+  temporaryAddress: 'temporaryAddress',
   emergencyContact: 'emergencyContact',
   bankName: 'bankName',
   accountNumber: 'accountNumber',
@@ -567,6 +588,10 @@ exports.Prisma.LeaveTypeOrderByRelevanceFieldEnum = {
 
 exports.Prisma.LeaveRequestOrderByRelevanceFieldEnum = {
   reason: 'reason'
+};
+
+exports.Prisma.BankOrderByRelevanceFieldEnum = {
+  bankName: 'bankName'
 };
 
 exports.Prisma.HolidayOrderByRelevanceFieldEnum = {
@@ -712,6 +737,7 @@ exports.Prisma.ModelName = {
   LeaveType: 'LeaveType',
   LeaveBalance: 'LeaveBalance',
   LeaveRequest: 'LeaveRequest',
+  Bank: 'Bank',
   Holiday: 'Holiday',
   AttendanceCorrection: 'AttendanceCorrection',
   ReportDownloadLog: 'ReportDownloadLog',

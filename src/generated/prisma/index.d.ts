@@ -89,6 +89,11 @@ export type LeaveBalance = $Result.DefaultSelection<Prisma.$LeaveBalancePayload>
  */
 export type LeaveRequest = $Result.DefaultSelection<Prisma.$LeaveRequestPayload>
 /**
+ * Model Bank
+ * 
+ */
+export type Bank = $Result.DefaultSelection<Prisma.$BankPayload>
+/**
  * Model Holiday
  * 
  */
@@ -593,6 +598,16 @@ export class PrismaClient<
     * ```
     */
   get leaveRequest(): Prisma.LeaveRequestDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.bank`: Exposes CRUD operations for the **Bank** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Banks
+    * const banks = await prisma.bank.findMany()
+    * ```
+    */
+  get bank(): Prisma.BankDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.holiday`: Exposes CRUD operations for the **Holiday** model.
@@ -1119,6 +1134,7 @@ export namespace Prisma {
     LeaveType: 'LeaveType',
     LeaveBalance: 'LeaveBalance',
     LeaveRequest: 'LeaveRequest',
+    Bank: 'Bank',
     Holiday: 'Holiday',
     AttendanceCorrection: 'AttendanceCorrection',
     ReportDownloadLog: 'ReportDownloadLog',
@@ -1144,7 +1160,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "role" | "permission" | "rolePermission" | "department" | "departmentShift" | "designation" | "employee" | "employeeDocument" | "attendance" | "attendanceSyncLog" | "attendanceException" | "attendanceStatusSetting" | "leaveType" | "leaveBalance" | "leaveRequest" | "holiday" | "attendanceCorrection" | "reportDownloadLog" | "auditLog" | "notification" | "passwordResetToken" | "employeePermission"
+      modelProps: "role" | "permission" | "rolePermission" | "department" | "departmentShift" | "designation" | "employee" | "employeeDocument" | "attendance" | "attendanceSyncLog" | "attendanceException" | "attendanceStatusSetting" | "leaveType" | "leaveBalance" | "leaveRequest" | "bank" | "holiday" | "attendanceCorrection" | "reportDownloadLog" | "auditLog" | "notification" | "passwordResetToken" | "employeePermission"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2138,6 +2154,72 @@ export namespace Prisma {
           }
         }
       }
+      Bank: {
+        payload: Prisma.$BankPayload<ExtArgs>
+        fields: Prisma.BankFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BankFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BankPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BankFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BankPayload>
+          }
+          findFirst: {
+            args: Prisma.BankFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BankPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BankFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BankPayload>
+          }
+          findMany: {
+            args: Prisma.BankFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BankPayload>[]
+          }
+          create: {
+            args: Prisma.BankCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BankPayload>
+          }
+          createMany: {
+            args: Prisma.BankCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.BankDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BankPayload>
+          }
+          update: {
+            args: Prisma.BankUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BankPayload>
+          }
+          deleteMany: {
+            args: Prisma.BankDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BankUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.BankUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BankPayload>
+          }
+          aggregate: {
+            args: Prisma.BankAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBank>
+          }
+          groupBy: {
+            args: Prisma.BankGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BankGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BankCountArgs<ExtArgs>
+            result: $Utils.Optional<BankCountAggregateOutputType> | number
+          }
+        }
+      }
       Holiday: {
         payload: Prisma.$HolidayPayload<ExtArgs>
         fields: Prisma.HolidayFieldRefs
@@ -2711,6 +2793,7 @@ export namespace Prisma {
     leaveType?: LeaveTypeOmit
     leaveBalance?: LeaveBalanceOmit
     leaveRequest?: LeaveRequestOmit
+    bank?: BankOmit
     holiday?: HolidayOmit
     attendanceCorrection?: AttendanceCorrectionOmit
     reportDownloadLog?: ReportDownloadLogOmit
@@ -10103,6 +10186,12 @@ export namespace Prisma {
     dob: Date | null
     gender: string | null
     bloodGroup: string | null
+    motherName: string | null
+    fatherName: string | null
+    maritalStatus: string | null
+    spouseName: string | null
+    religion: string | null
+    nationality: string | null
     mobile: string | null
     alternateMobile: string | null
     email: string | null
@@ -10110,6 +10199,7 @@ export namespace Prisma {
     roleId: number | null
     lastLogin: Date | null
     address: string | null
+    temporaryAddress: string | null
     departmentId: number | null
     designationId: number | null
     reportingManagerId: number | null
@@ -10159,6 +10249,12 @@ export namespace Prisma {
     dob: Date | null
     gender: string | null
     bloodGroup: string | null
+    motherName: string | null
+    fatherName: string | null
+    maritalStatus: string | null
+    spouseName: string | null
+    religion: string | null
+    nationality: string | null
     mobile: string | null
     alternateMobile: string | null
     email: string | null
@@ -10166,6 +10262,7 @@ export namespace Prisma {
     roleId: number | null
     lastLogin: Date | null
     address: string | null
+    temporaryAddress: string | null
     departmentId: number | null
     designationId: number | null
     reportingManagerId: number | null
@@ -10215,6 +10312,12 @@ export namespace Prisma {
     dob: number
     gender: number
     bloodGroup: number
+    motherName: number
+    fatherName: number
+    maritalStatus: number
+    spouseName: number
+    religion: number
+    nationality: number
     mobile: number
     alternateMobile: number
     email: number
@@ -10222,6 +10325,7 @@ export namespace Prisma {
     roleId: number
     lastLogin: number
     address: number
+    temporaryAddress: number
     departmentId: number
     designationId: number
     reportingManagerId: number
@@ -10304,6 +10408,12 @@ export namespace Prisma {
     dob?: true
     gender?: true
     bloodGroup?: true
+    motherName?: true
+    fatherName?: true
+    maritalStatus?: true
+    spouseName?: true
+    religion?: true
+    nationality?: true
     mobile?: true
     alternateMobile?: true
     email?: true
@@ -10311,6 +10421,7 @@ export namespace Prisma {
     roleId?: true
     lastLogin?: true
     address?: true
+    temporaryAddress?: true
     departmentId?: true
     designationId?: true
     reportingManagerId?: true
@@ -10360,6 +10471,12 @@ export namespace Prisma {
     dob?: true
     gender?: true
     bloodGroup?: true
+    motherName?: true
+    fatherName?: true
+    maritalStatus?: true
+    spouseName?: true
+    religion?: true
+    nationality?: true
     mobile?: true
     alternateMobile?: true
     email?: true
@@ -10367,6 +10484,7 @@ export namespace Prisma {
     roleId?: true
     lastLogin?: true
     address?: true
+    temporaryAddress?: true
     departmentId?: true
     designationId?: true
     reportingManagerId?: true
@@ -10416,6 +10534,12 @@ export namespace Prisma {
     dob?: true
     gender?: true
     bloodGroup?: true
+    motherName?: true
+    fatherName?: true
+    maritalStatus?: true
+    spouseName?: true
+    religion?: true
+    nationality?: true
     mobile?: true
     alternateMobile?: true
     email?: true
@@ -10423,6 +10547,7 @@ export namespace Prisma {
     roleId?: true
     lastLogin?: true
     address?: true
+    temporaryAddress?: true
     departmentId?: true
     designationId?: true
     reportingManagerId?: true
@@ -10560,6 +10685,12 @@ export namespace Prisma {
     dob: Date | null
     gender: string | null
     bloodGroup: string | null
+    motherName: string | null
+    fatherName: string | null
+    maritalStatus: string | null
+    spouseName: string | null
+    religion: string | null
+    nationality: string | null
     mobile: string
     alternateMobile: string | null
     email: string
@@ -10567,6 +10698,7 @@ export namespace Prisma {
     roleId: number
     lastLogin: Date | null
     address: string | null
+    temporaryAddress: string | null
     departmentId: number
     designationId: number
     reportingManagerId: number | null
@@ -10636,6 +10768,12 @@ export namespace Prisma {
     dob?: boolean
     gender?: boolean
     bloodGroup?: boolean
+    motherName?: boolean
+    fatherName?: boolean
+    maritalStatus?: boolean
+    spouseName?: boolean
+    religion?: boolean
+    nationality?: boolean
     mobile?: boolean
     alternateMobile?: boolean
     email?: boolean
@@ -10643,6 +10781,7 @@ export namespace Prisma {
     roleId?: boolean
     lastLogin?: boolean
     address?: boolean
+    temporaryAddress?: boolean
     departmentId?: boolean
     designationId?: boolean
     reportingManagerId?: boolean
@@ -10751,6 +10890,12 @@ export namespace Prisma {
     dob?: boolean
     gender?: boolean
     bloodGroup?: boolean
+    motherName?: boolean
+    fatherName?: boolean
+    maritalStatus?: boolean
+    spouseName?: boolean
+    religion?: boolean
+    nationality?: boolean
     mobile?: boolean
     alternateMobile?: boolean
     email?: boolean
@@ -10758,6 +10903,7 @@ export namespace Prisma {
     roleId?: boolean
     lastLogin?: boolean
     address?: boolean
+    temporaryAddress?: boolean
     departmentId?: boolean
     designationId?: boolean
     reportingManagerId?: boolean
@@ -10797,7 +10943,7 @@ export namespace Prisma {
     updatedBy?: boolean
   }
 
-  export type EmployeeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "employeeCode" | "camAttendanceId" | "firstName" | "lastName" | "fullName" | "profilePhoto" | "dob" | "gender" | "bloodGroup" | "mobile" | "alternateMobile" | "email" | "passwordHash" | "roleId" | "lastLogin" | "address" | "departmentId" | "designationId" | "reportingManagerId" | "joiningDate" | "employmentType" | "status" | "emergencyContact" | "bankName" | "accountNumber" | "ifscCode" | "pan" | "aadhaar" | "employeeCategory" | "qualification" | "specialization" | "skills" | "collegeName" | "graduationYear" | "cgpa" | "internshipDetails" | "certifications" | "totalExperienceYears" | "totalExperienceMonths" | "previousCompany" | "previousDesignation" | "previousCtc" | "expectedCtc" | "lastWorkingDate" | "noticePeriod" | "relevantExperience" | "experienceLetterUrl" | "relievingLetterUrl" | "payslipUrls" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy", ExtArgs["result"]["employee"]>
+  export type EmployeeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "employeeCode" | "camAttendanceId" | "firstName" | "lastName" | "fullName" | "profilePhoto" | "dob" | "gender" | "bloodGroup" | "motherName" | "fatherName" | "maritalStatus" | "spouseName" | "religion" | "nationality" | "mobile" | "alternateMobile" | "email" | "passwordHash" | "roleId" | "lastLogin" | "address" | "temporaryAddress" | "departmentId" | "designationId" | "reportingManagerId" | "joiningDate" | "employmentType" | "status" | "emergencyContact" | "bankName" | "accountNumber" | "ifscCode" | "pan" | "aadhaar" | "employeeCategory" | "qualification" | "specialization" | "skills" | "collegeName" | "graduationYear" | "cgpa" | "internshipDetails" | "certifications" | "totalExperienceYears" | "totalExperienceMonths" | "previousCompany" | "previousDesignation" | "previousCtc" | "expectedCtc" | "lastWorkingDate" | "noticePeriod" | "relevantExperience" | "experienceLetterUrl" | "relievingLetterUrl" | "payslipUrls" | "createdAt" | "updatedAt" | "createdBy" | "updatedBy", ExtArgs["result"]["employee"]>
   export type EmployeeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     department?: boolean | DepartmentDefaultArgs<ExtArgs>
     designation?: boolean | DesignationDefaultArgs<ExtArgs>
@@ -10927,6 +11073,12 @@ export namespace Prisma {
       dob: Date | null
       gender: string | null
       bloodGroup: string | null
+      motherName: string | null
+      fatherName: string | null
+      maritalStatus: string | null
+      spouseName: string | null
+      religion: string | null
+      nationality: string | null
       mobile: string
       alternateMobile: string | null
       email: string
@@ -10934,6 +11086,7 @@ export namespace Prisma {
       roleId: number
       lastLogin: Date | null
       address: string | null
+      temporaryAddress: string | null
       departmentId: number
       designationId: number
       reportingManagerId: number | null
@@ -11405,6 +11558,12 @@ export namespace Prisma {
     readonly dob: FieldRef<"Employee", 'DateTime'>
     readonly gender: FieldRef<"Employee", 'String'>
     readonly bloodGroup: FieldRef<"Employee", 'String'>
+    readonly motherName: FieldRef<"Employee", 'String'>
+    readonly fatherName: FieldRef<"Employee", 'String'>
+    readonly maritalStatus: FieldRef<"Employee", 'String'>
+    readonly spouseName: FieldRef<"Employee", 'String'>
+    readonly religion: FieldRef<"Employee", 'String'>
+    readonly nationality: FieldRef<"Employee", 'String'>
     readonly mobile: FieldRef<"Employee", 'String'>
     readonly alternateMobile: FieldRef<"Employee", 'String'>
     readonly email: FieldRef<"Employee", 'String'>
@@ -11412,6 +11571,7 @@ export namespace Prisma {
     readonly roleId: FieldRef<"Employee", 'Int'>
     readonly lastLogin: FieldRef<"Employee", 'DateTime'>
     readonly address: FieldRef<"Employee", 'String'>
+    readonly temporaryAddress: FieldRef<"Employee", 'String'>
     readonly departmentId: FieldRef<"Employee", 'Int'>
     readonly designationId: FieldRef<"Employee", 'Int'>
     readonly reportingManagerId: FieldRef<"Employee", 'Int'>
@@ -21849,6 +22009,911 @@ export namespace Prisma {
 
 
   /**
+   * Model Bank
+   */
+
+  export type AggregateBank = {
+    _count: BankCountAggregateOutputType | null
+    _avg: BankAvgAggregateOutputType | null
+    _sum: BankSumAggregateOutputType | null
+    _min: BankMinAggregateOutputType | null
+    _max: BankMaxAggregateOutputType | null
+  }
+
+  export type BankAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type BankSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type BankMinAggregateOutputType = {
+    id: number | null
+    bankName: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BankMaxAggregateOutputType = {
+    id: number | null
+    bankName: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BankCountAggregateOutputType = {
+    id: number
+    bankName: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type BankAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type BankSumAggregateInputType = {
+    id?: true
+  }
+
+  export type BankMinAggregateInputType = {
+    id?: true
+    bankName?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BankMaxAggregateInputType = {
+    id?: true
+    bankName?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BankCountAggregateInputType = {
+    id?: true
+    bankName?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type BankAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Bank to aggregate.
+     */
+    where?: BankWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Banks to fetch.
+     */
+    orderBy?: BankOrderByWithRelationInput | BankOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BankWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Banks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Banks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Banks
+    **/
+    _count?: true | BankCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: BankAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: BankSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BankMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BankMaxAggregateInputType
+  }
+
+  export type GetBankAggregateType<T extends BankAggregateArgs> = {
+        [P in keyof T & keyof AggregateBank]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBank[P]>
+      : GetScalarType<T[P], AggregateBank[P]>
+  }
+
+
+
+
+  export type BankGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BankWhereInput
+    orderBy?: BankOrderByWithAggregationInput | BankOrderByWithAggregationInput[]
+    by: BankScalarFieldEnum[] | BankScalarFieldEnum
+    having?: BankScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BankCountAggregateInputType | true
+    _avg?: BankAvgAggregateInputType
+    _sum?: BankSumAggregateInputType
+    _min?: BankMinAggregateInputType
+    _max?: BankMaxAggregateInputType
+  }
+
+  export type BankGroupByOutputType = {
+    id: number
+    bankName: string
+    createdAt: Date
+    updatedAt: Date
+    _count: BankCountAggregateOutputType | null
+    _avg: BankAvgAggregateOutputType | null
+    _sum: BankSumAggregateOutputType | null
+    _min: BankMinAggregateOutputType | null
+    _max: BankMaxAggregateOutputType | null
+  }
+
+  type GetBankGroupByPayload<T extends BankGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BankGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BankGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BankGroupByOutputType[P]>
+            : GetScalarType<T[P], BankGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BankSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bankName?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["bank"]>
+
+
+
+  export type BankSelectScalar = {
+    id?: boolean
+    bankName?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type BankOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bankName" | "createdAt" | "updatedAt", ExtArgs["result"]["bank"]>
+
+  export type $BankPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Bank"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      bankName: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["bank"]>
+    composites: {}
+  }
+
+  type BankGetPayload<S extends boolean | null | undefined | BankDefaultArgs> = $Result.GetResult<Prisma.$BankPayload, S>
+
+  type BankCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<BankFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: BankCountAggregateInputType | true
+    }
+
+  export interface BankDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Bank'], meta: { name: 'Bank' } }
+    /**
+     * Find zero or one Bank that matches the filter.
+     * @param {BankFindUniqueArgs} args - Arguments to find a Bank
+     * @example
+     * // Get one Bank
+     * const bank = await prisma.bank.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BankFindUniqueArgs>(args: SelectSubset<T, BankFindUniqueArgs<ExtArgs>>): Prisma__BankClient<$Result.GetResult<Prisma.$BankPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Bank that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {BankFindUniqueOrThrowArgs} args - Arguments to find a Bank
+     * @example
+     * // Get one Bank
+     * const bank = await prisma.bank.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BankFindUniqueOrThrowArgs>(args: SelectSubset<T, BankFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BankClient<$Result.GetResult<Prisma.$BankPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Bank that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BankFindFirstArgs} args - Arguments to find a Bank
+     * @example
+     * // Get one Bank
+     * const bank = await prisma.bank.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BankFindFirstArgs>(args?: SelectSubset<T, BankFindFirstArgs<ExtArgs>>): Prisma__BankClient<$Result.GetResult<Prisma.$BankPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Bank that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BankFindFirstOrThrowArgs} args - Arguments to find a Bank
+     * @example
+     * // Get one Bank
+     * const bank = await prisma.bank.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BankFindFirstOrThrowArgs>(args?: SelectSubset<T, BankFindFirstOrThrowArgs<ExtArgs>>): Prisma__BankClient<$Result.GetResult<Prisma.$BankPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Banks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BankFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Banks
+     * const banks = await prisma.bank.findMany()
+     * 
+     * // Get first 10 Banks
+     * const banks = await prisma.bank.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const bankWithIdOnly = await prisma.bank.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BankFindManyArgs>(args?: SelectSubset<T, BankFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BankPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Bank.
+     * @param {BankCreateArgs} args - Arguments to create a Bank.
+     * @example
+     * // Create one Bank
+     * const Bank = await prisma.bank.create({
+     *   data: {
+     *     // ... data to create a Bank
+     *   }
+     * })
+     * 
+     */
+    create<T extends BankCreateArgs>(args: SelectSubset<T, BankCreateArgs<ExtArgs>>): Prisma__BankClient<$Result.GetResult<Prisma.$BankPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Banks.
+     * @param {BankCreateManyArgs} args - Arguments to create many Banks.
+     * @example
+     * // Create many Banks
+     * const bank = await prisma.bank.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BankCreateManyArgs>(args?: SelectSubset<T, BankCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Bank.
+     * @param {BankDeleteArgs} args - Arguments to delete one Bank.
+     * @example
+     * // Delete one Bank
+     * const Bank = await prisma.bank.delete({
+     *   where: {
+     *     // ... filter to delete one Bank
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BankDeleteArgs>(args: SelectSubset<T, BankDeleteArgs<ExtArgs>>): Prisma__BankClient<$Result.GetResult<Prisma.$BankPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Bank.
+     * @param {BankUpdateArgs} args - Arguments to update one Bank.
+     * @example
+     * // Update one Bank
+     * const bank = await prisma.bank.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BankUpdateArgs>(args: SelectSubset<T, BankUpdateArgs<ExtArgs>>): Prisma__BankClient<$Result.GetResult<Prisma.$BankPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Banks.
+     * @param {BankDeleteManyArgs} args - Arguments to filter Banks to delete.
+     * @example
+     * // Delete a few Banks
+     * const { count } = await prisma.bank.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BankDeleteManyArgs>(args?: SelectSubset<T, BankDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Banks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BankUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Banks
+     * const bank = await prisma.bank.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BankUpdateManyArgs>(args: SelectSubset<T, BankUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Bank.
+     * @param {BankUpsertArgs} args - Arguments to update or create a Bank.
+     * @example
+     * // Update or create a Bank
+     * const bank = await prisma.bank.upsert({
+     *   create: {
+     *     // ... data to create a Bank
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Bank we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BankUpsertArgs>(args: SelectSubset<T, BankUpsertArgs<ExtArgs>>): Prisma__BankClient<$Result.GetResult<Prisma.$BankPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Banks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BankCountArgs} args - Arguments to filter Banks to count.
+     * @example
+     * // Count the number of Banks
+     * const count = await prisma.bank.count({
+     *   where: {
+     *     // ... the filter for the Banks we want to count
+     *   }
+     * })
+    **/
+    count<T extends BankCountArgs>(
+      args?: Subset<T, BankCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BankCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Bank.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BankAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BankAggregateArgs>(args: Subset<T, BankAggregateArgs>): Prisma.PrismaPromise<GetBankAggregateType<T>>
+
+    /**
+     * Group by Bank.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BankGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BankGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BankGroupByArgs['orderBy'] }
+        : { orderBy?: BankGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BankGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBankGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Bank model
+   */
+  readonly fields: BankFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Bank.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BankClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Bank model
+   */
+  interface BankFieldRefs {
+    readonly id: FieldRef<"Bank", 'Int'>
+    readonly bankName: FieldRef<"Bank", 'String'>
+    readonly createdAt: FieldRef<"Bank", 'DateTime'>
+    readonly updatedAt: FieldRef<"Bank", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Bank findUnique
+   */
+  export type BankFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bank
+     */
+    select?: BankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bank
+     */
+    omit?: BankOmit<ExtArgs> | null
+    /**
+     * Filter, which Bank to fetch.
+     */
+    where: BankWhereUniqueInput
+  }
+
+  /**
+   * Bank findUniqueOrThrow
+   */
+  export type BankFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bank
+     */
+    select?: BankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bank
+     */
+    omit?: BankOmit<ExtArgs> | null
+    /**
+     * Filter, which Bank to fetch.
+     */
+    where: BankWhereUniqueInput
+  }
+
+  /**
+   * Bank findFirst
+   */
+  export type BankFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bank
+     */
+    select?: BankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bank
+     */
+    omit?: BankOmit<ExtArgs> | null
+    /**
+     * Filter, which Bank to fetch.
+     */
+    where?: BankWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Banks to fetch.
+     */
+    orderBy?: BankOrderByWithRelationInput | BankOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Banks.
+     */
+    cursor?: BankWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Banks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Banks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Banks.
+     */
+    distinct?: BankScalarFieldEnum | BankScalarFieldEnum[]
+  }
+
+  /**
+   * Bank findFirstOrThrow
+   */
+  export type BankFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bank
+     */
+    select?: BankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bank
+     */
+    omit?: BankOmit<ExtArgs> | null
+    /**
+     * Filter, which Bank to fetch.
+     */
+    where?: BankWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Banks to fetch.
+     */
+    orderBy?: BankOrderByWithRelationInput | BankOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Banks.
+     */
+    cursor?: BankWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Banks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Banks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Banks.
+     */
+    distinct?: BankScalarFieldEnum | BankScalarFieldEnum[]
+  }
+
+  /**
+   * Bank findMany
+   */
+  export type BankFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bank
+     */
+    select?: BankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bank
+     */
+    omit?: BankOmit<ExtArgs> | null
+    /**
+     * Filter, which Banks to fetch.
+     */
+    where?: BankWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Banks to fetch.
+     */
+    orderBy?: BankOrderByWithRelationInput | BankOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Banks.
+     */
+    cursor?: BankWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Banks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Banks.
+     */
+    skip?: number
+    distinct?: BankScalarFieldEnum | BankScalarFieldEnum[]
+  }
+
+  /**
+   * Bank create
+   */
+  export type BankCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bank
+     */
+    select?: BankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bank
+     */
+    omit?: BankOmit<ExtArgs> | null
+    /**
+     * The data needed to create a Bank.
+     */
+    data: XOR<BankCreateInput, BankUncheckedCreateInput>
+  }
+
+  /**
+   * Bank createMany
+   */
+  export type BankCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Banks.
+     */
+    data: BankCreateManyInput | BankCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Bank update
+   */
+  export type BankUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bank
+     */
+    select?: BankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bank
+     */
+    omit?: BankOmit<ExtArgs> | null
+    /**
+     * The data needed to update a Bank.
+     */
+    data: XOR<BankUpdateInput, BankUncheckedUpdateInput>
+    /**
+     * Choose, which Bank to update.
+     */
+    where: BankWhereUniqueInput
+  }
+
+  /**
+   * Bank updateMany
+   */
+  export type BankUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Banks.
+     */
+    data: XOR<BankUpdateManyMutationInput, BankUncheckedUpdateManyInput>
+    /**
+     * Filter which Banks to update
+     */
+    where?: BankWhereInput
+    /**
+     * Limit how many Banks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Bank upsert
+   */
+  export type BankUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bank
+     */
+    select?: BankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bank
+     */
+    omit?: BankOmit<ExtArgs> | null
+    /**
+     * The filter to search for the Bank to update in case it exists.
+     */
+    where: BankWhereUniqueInput
+    /**
+     * In case the Bank found by the `where` argument doesn't exist, create a new Bank with this data.
+     */
+    create: XOR<BankCreateInput, BankUncheckedCreateInput>
+    /**
+     * In case the Bank was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BankUpdateInput, BankUncheckedUpdateInput>
+  }
+
+  /**
+   * Bank delete
+   */
+  export type BankDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bank
+     */
+    select?: BankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bank
+     */
+    omit?: BankOmit<ExtArgs> | null
+    /**
+     * Filter which Bank to delete.
+     */
+    where: BankWhereUniqueInput
+  }
+
+  /**
+   * Bank deleteMany
+   */
+  export type BankDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Banks to delete
+     */
+    where?: BankWhereInput
+    /**
+     * Limit how many Banks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Bank without action
+   */
+  export type BankDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bank
+     */
+    select?: BankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bank
+     */
+    omit?: BankOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Model Holiday
    */
 
@@ -29324,6 +30389,12 @@ export namespace Prisma {
     dob: 'dob',
     gender: 'gender',
     bloodGroup: 'bloodGroup',
+    motherName: 'motherName',
+    fatherName: 'fatherName',
+    maritalStatus: 'maritalStatus',
+    spouseName: 'spouseName',
+    religion: 'religion',
+    nationality: 'nationality',
     mobile: 'mobile',
     alternateMobile: 'alternateMobile',
     email: 'email',
@@ -29331,6 +30402,7 @@ export namespace Prisma {
     roleId: 'roleId',
     lastLogin: 'lastLogin',
     address: 'address',
+    temporaryAddress: 'temporaryAddress',
     departmentId: 'departmentId',
     designationId: 'designationId',
     reportingManagerId: 'reportingManagerId',
@@ -29512,6 +30584,16 @@ export namespace Prisma {
   };
 
   export type LeaveRequestScalarFieldEnum = (typeof LeaveRequestScalarFieldEnum)[keyof typeof LeaveRequestScalarFieldEnum]
+
+
+  export const BankScalarFieldEnum: {
+    id: 'id',
+    bankName: 'bankName',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type BankScalarFieldEnum = (typeof BankScalarFieldEnum)[keyof typeof BankScalarFieldEnum]
 
 
   export const HolidayScalarFieldEnum: {
@@ -29715,11 +30797,18 @@ export namespace Prisma {
     fullName: 'fullName',
     gender: 'gender',
     bloodGroup: 'bloodGroup',
+    motherName: 'motherName',
+    fatherName: 'fatherName',
+    maritalStatus: 'maritalStatus',
+    spouseName: 'spouseName',
+    religion: 'religion',
+    nationality: 'nationality',
     mobile: 'mobile',
     alternateMobile: 'alternateMobile',
     email: 'email',
     passwordHash: 'passwordHash',
     address: 'address',
+    temporaryAddress: 'temporaryAddress',
     emergencyContact: 'emergencyContact',
     bankName: 'bankName',
     accountNumber: 'accountNumber',
@@ -29797,6 +30886,13 @@ export namespace Prisma {
   };
 
   export type LeaveRequestOrderByRelevanceFieldEnum = (typeof LeaveRequestOrderByRelevanceFieldEnum)[keyof typeof LeaveRequestOrderByRelevanceFieldEnum]
+
+
+  export const BankOrderByRelevanceFieldEnum: {
+    bankName: 'bankName'
+  };
+
+  export type BankOrderByRelevanceFieldEnum = (typeof BankOrderByRelevanceFieldEnum)[keyof typeof BankOrderByRelevanceFieldEnum]
 
 
   export const HolidayOrderByRelevanceFieldEnum: {
@@ -30511,6 +31607,12 @@ export namespace Prisma {
     dob?: DateTimeNullableFilter<"Employee"> | Date | string | null
     gender?: StringNullableFilter<"Employee"> | string | null
     bloodGroup?: StringNullableFilter<"Employee"> | string | null
+    motherName?: StringNullableFilter<"Employee"> | string | null
+    fatherName?: StringNullableFilter<"Employee"> | string | null
+    maritalStatus?: StringNullableFilter<"Employee"> | string | null
+    spouseName?: StringNullableFilter<"Employee"> | string | null
+    religion?: StringNullableFilter<"Employee"> | string | null
+    nationality?: StringNullableFilter<"Employee"> | string | null
     mobile?: StringFilter<"Employee"> | string
     alternateMobile?: StringNullableFilter<"Employee"> | string | null
     email?: StringFilter<"Employee"> | string
@@ -30518,6 +31620,7 @@ export namespace Prisma {
     roleId?: IntFilter<"Employee"> | number
     lastLogin?: DateTimeNullableFilter<"Employee"> | Date | string | null
     address?: StringNullableFilter<"Employee"> | string | null
+    temporaryAddress?: StringNullableFilter<"Employee"> | string | null
     departmentId?: IntFilter<"Employee"> | number
     designationId?: IntFilter<"Employee"> | number
     reportingManagerId?: IntNullableFilter<"Employee"> | number | null
@@ -30623,6 +31726,12 @@ export namespace Prisma {
     dob?: SortOrderInput | SortOrder
     gender?: SortOrderInput | SortOrder
     bloodGroup?: SortOrderInput | SortOrder
+    motherName?: SortOrderInput | SortOrder
+    fatherName?: SortOrderInput | SortOrder
+    maritalStatus?: SortOrderInput | SortOrder
+    spouseName?: SortOrderInput | SortOrder
+    religion?: SortOrderInput | SortOrder
+    nationality?: SortOrderInput | SortOrder
     mobile?: SortOrder
     alternateMobile?: SortOrderInput | SortOrder
     email?: SortOrder
@@ -30630,6 +31739,7 @@ export namespace Prisma {
     roleId?: SortOrder
     lastLogin?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
+    temporaryAddress?: SortOrderInput | SortOrder
     departmentId?: SortOrder
     designationId?: SortOrder
     reportingManagerId?: SortOrderInput | SortOrder
@@ -30740,12 +31850,19 @@ export namespace Prisma {
     dob?: DateTimeNullableFilter<"Employee"> | Date | string | null
     gender?: StringNullableFilter<"Employee"> | string | null
     bloodGroup?: StringNullableFilter<"Employee"> | string | null
+    motherName?: StringNullableFilter<"Employee"> | string | null
+    fatherName?: StringNullableFilter<"Employee"> | string | null
+    maritalStatus?: StringNullableFilter<"Employee"> | string | null
+    spouseName?: StringNullableFilter<"Employee"> | string | null
+    religion?: StringNullableFilter<"Employee"> | string | null
+    nationality?: StringNullableFilter<"Employee"> | string | null
     mobile?: StringFilter<"Employee"> | string
     alternateMobile?: StringNullableFilter<"Employee"> | string | null
     passwordHash?: StringFilter<"Employee"> | string
     roleId?: IntFilter<"Employee"> | number
     lastLogin?: DateTimeNullableFilter<"Employee"> | Date | string | null
     address?: StringNullableFilter<"Employee"> | string | null
+    temporaryAddress?: StringNullableFilter<"Employee"> | string | null
     departmentId?: IntFilter<"Employee"> | number
     designationId?: IntFilter<"Employee"> | number
     reportingManagerId?: IntNullableFilter<"Employee"> | number | null
@@ -30851,6 +31968,12 @@ export namespace Prisma {
     dob?: SortOrderInput | SortOrder
     gender?: SortOrderInput | SortOrder
     bloodGroup?: SortOrderInput | SortOrder
+    motherName?: SortOrderInput | SortOrder
+    fatherName?: SortOrderInput | SortOrder
+    maritalStatus?: SortOrderInput | SortOrder
+    spouseName?: SortOrderInput | SortOrder
+    religion?: SortOrderInput | SortOrder
+    nationality?: SortOrderInput | SortOrder
     mobile?: SortOrder
     alternateMobile?: SortOrderInput | SortOrder
     email?: SortOrder
@@ -30858,6 +31981,7 @@ export namespace Prisma {
     roleId?: SortOrder
     lastLogin?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
+    temporaryAddress?: SortOrderInput | SortOrder
     departmentId?: SortOrder
     designationId?: SortOrder
     reportingManagerId?: SortOrderInput | SortOrder
@@ -30916,6 +32040,12 @@ export namespace Prisma {
     dob?: DateTimeNullableWithAggregatesFilter<"Employee"> | Date | string | null
     gender?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     bloodGroup?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    motherName?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    fatherName?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    maritalStatus?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    spouseName?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    religion?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    nationality?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     mobile?: StringWithAggregatesFilter<"Employee"> | string
     alternateMobile?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     email?: StringWithAggregatesFilter<"Employee"> | string
@@ -30923,6 +32053,7 @@ export namespace Prisma {
     roleId?: IntWithAggregatesFilter<"Employee"> | number
     lastLogin?: DateTimeNullableWithAggregatesFilter<"Employee"> | Date | string | null
     address?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    temporaryAddress?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     departmentId?: IntWithAggregatesFilter<"Employee"> | number
     designationId?: IntWithAggregatesFilter<"Employee"> | number
     reportingManagerId?: IntNullableWithAggregatesFilter<"Employee"> | number | null
@@ -31738,6 +32869,56 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"LeaveRequest"> | Date | string
     createdBy?: IntNullableWithAggregatesFilter<"LeaveRequest"> | number | null
     updatedBy?: IntNullableWithAggregatesFilter<"LeaveRequest"> | number | null
+  }
+
+  export type BankWhereInput = {
+    AND?: BankWhereInput | BankWhereInput[]
+    OR?: BankWhereInput[]
+    NOT?: BankWhereInput | BankWhereInput[]
+    id?: IntFilter<"Bank"> | number
+    bankName?: StringFilter<"Bank"> | string
+    createdAt?: DateTimeFilter<"Bank"> | Date | string
+    updatedAt?: DateTimeFilter<"Bank"> | Date | string
+  }
+
+  export type BankOrderByWithRelationInput = {
+    id?: SortOrder
+    bankName?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _relevance?: BankOrderByRelevanceInput
+  }
+
+  export type BankWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    bankName?: string
+    AND?: BankWhereInput | BankWhereInput[]
+    OR?: BankWhereInput[]
+    NOT?: BankWhereInput | BankWhereInput[]
+    createdAt?: DateTimeFilter<"Bank"> | Date | string
+    updatedAt?: DateTimeFilter<"Bank"> | Date | string
+  }, "id" | "bankName">
+
+  export type BankOrderByWithAggregationInput = {
+    id?: SortOrder
+    bankName?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: BankCountOrderByAggregateInput
+    _avg?: BankAvgOrderByAggregateInput
+    _max?: BankMaxOrderByAggregateInput
+    _min?: BankMinOrderByAggregateInput
+    _sum?: BankSumOrderByAggregateInput
+  }
+
+  export type BankScalarWhereWithAggregatesInput = {
+    AND?: BankScalarWhereWithAggregatesInput | BankScalarWhereWithAggregatesInput[]
+    OR?: BankScalarWhereWithAggregatesInput[]
+    NOT?: BankScalarWhereWithAggregatesInput | BankScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Bank"> | number
+    bankName?: StringWithAggregatesFilter<"Bank"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Bank"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Bank"> | Date | string
   }
 
   export type HolidayWhereInput = {
@@ -32792,12 +33973,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -32898,6 +34086,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -32905,6 +34099,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -33003,12 +34198,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -33109,6 +34311,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -33116,6 +34324,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -33215,6 +34424,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -33222,6 +34437,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -33271,12 +34487,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -33322,6 +34545,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -33329,6 +34558,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -34152,6 +35382,52 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
     updatedBy?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type BankCreateInput = {
+    bankName: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BankUncheckedCreateInput = {
+    id?: number
+    bankName: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BankUpdateInput = {
+    bankName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BankUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bankName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BankCreateManyInput = {
+    id?: number
+    bankName: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BankUpdateManyMutationInput = {
+    bankName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BankUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bankName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type HolidayCreateInput = {
@@ -35557,6 +36833,12 @@ export namespace Prisma {
     dob?: SortOrder
     gender?: SortOrder
     bloodGroup?: SortOrder
+    motherName?: SortOrder
+    fatherName?: SortOrder
+    maritalStatus?: SortOrder
+    spouseName?: SortOrder
+    religion?: SortOrder
+    nationality?: SortOrder
     mobile?: SortOrder
     alternateMobile?: SortOrder
     email?: SortOrder
@@ -35564,6 +36846,7 @@ export namespace Prisma {
     roleId?: SortOrder
     lastLogin?: SortOrder
     address?: SortOrder
+    temporaryAddress?: SortOrder
     departmentId?: SortOrder
     designationId?: SortOrder
     reportingManagerId?: SortOrder
@@ -35629,6 +36912,12 @@ export namespace Prisma {
     dob?: SortOrder
     gender?: SortOrder
     bloodGroup?: SortOrder
+    motherName?: SortOrder
+    fatherName?: SortOrder
+    maritalStatus?: SortOrder
+    spouseName?: SortOrder
+    religion?: SortOrder
+    nationality?: SortOrder
     mobile?: SortOrder
     alternateMobile?: SortOrder
     email?: SortOrder
@@ -35636,6 +36925,7 @@ export namespace Prisma {
     roleId?: SortOrder
     lastLogin?: SortOrder
     address?: SortOrder
+    temporaryAddress?: SortOrder
     departmentId?: SortOrder
     designationId?: SortOrder
     reportingManagerId?: SortOrder
@@ -35685,6 +36975,12 @@ export namespace Prisma {
     dob?: SortOrder
     gender?: SortOrder
     bloodGroup?: SortOrder
+    motherName?: SortOrder
+    fatherName?: SortOrder
+    maritalStatus?: SortOrder
+    spouseName?: SortOrder
+    religion?: SortOrder
+    nationality?: SortOrder
     mobile?: SortOrder
     alternateMobile?: SortOrder
     email?: SortOrder
@@ -35692,6 +36988,7 @@ export namespace Prisma {
     roleId?: SortOrder
     lastLogin?: SortOrder
     address?: SortOrder
+    temporaryAddress?: SortOrder
     departmentId?: SortOrder
     designationId?: SortOrder
     reportingManagerId?: SortOrder
@@ -36528,6 +37825,41 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumLeaveWorkflowStatusFilter<$PrismaModel>
     _max?: NestedEnumLeaveWorkflowStatusFilter<$PrismaModel>
+  }
+
+  export type BankOrderByRelevanceInput = {
+    fields: BankOrderByRelevanceFieldEnum | BankOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type BankCountOrderByAggregateInput = {
+    id?: SortOrder
+    bankName?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BankAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type BankMaxOrderByAggregateInput = {
+    id?: SortOrder
+    bankName?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BankMinOrderByAggregateInput = {
+    id?: SortOrder
+    bankName?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BankSumOrderByAggregateInput = {
+    id?: SortOrder
   }
 
   export type EnumHolidayTypeFilter<$PrismaModel = never> = {
@@ -41121,12 +42453,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -41226,12 +42565,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -41367,12 +42713,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -41472,6 +42825,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -41479,6 +42838,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -41581,12 +42941,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -41686,6 +43053,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -41693,6 +43066,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -41815,6 +43189,12 @@ export namespace Prisma {
     dob?: DateTimeNullableFilter<"Employee"> | Date | string | null
     gender?: StringNullableFilter<"Employee"> | string | null
     bloodGroup?: StringNullableFilter<"Employee"> | string | null
+    motherName?: StringNullableFilter<"Employee"> | string | null
+    fatherName?: StringNullableFilter<"Employee"> | string | null
+    maritalStatus?: StringNullableFilter<"Employee"> | string | null
+    spouseName?: StringNullableFilter<"Employee"> | string | null
+    religion?: StringNullableFilter<"Employee"> | string | null
+    nationality?: StringNullableFilter<"Employee"> | string | null
     mobile?: StringFilter<"Employee"> | string
     alternateMobile?: StringNullableFilter<"Employee"> | string | null
     email?: StringFilter<"Employee"> | string
@@ -41822,6 +43202,7 @@ export namespace Prisma {
     roleId?: IntFilter<"Employee"> | number
     lastLogin?: DateTimeNullableFilter<"Employee"> | Date | string | null
     address?: StringNullableFilter<"Employee"> | string | null
+    temporaryAddress?: StringNullableFilter<"Employee"> | string | null
     departmentId?: IntFilter<"Employee"> | number
     designationId?: IntFilter<"Employee"> | number
     reportingManagerId?: IntNullableFilter<"Employee"> | number | null
@@ -41911,12 +43292,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -42016,6 +43404,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -42023,6 +43417,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -42131,12 +43526,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -42236,6 +43638,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -42243,6 +43651,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -42394,12 +43803,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -42499,6 +43915,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -42506,6 +43928,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -42608,12 +44031,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -42713,6 +44143,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -42720,6 +44156,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -42878,12 +44315,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -42983,6 +44427,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -42990,6 +44440,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -43098,12 +44549,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -43203,6 +44661,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -43210,6 +44674,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -43357,12 +44822,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -43462,6 +44934,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -43469,6 +44947,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -43571,12 +45050,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -43676,6 +45162,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -43683,6 +45175,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -43858,12 +45351,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -43963,6 +45463,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -43970,6 +45476,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -44078,12 +45585,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -44183,6 +45697,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -44190,6 +45710,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -44287,12 +45808,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -44392,6 +45920,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -44399,6 +45933,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     designationId: number
     reportingManagerId?: number | null
     joiningDate: Date | string
@@ -44578,12 +46113,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -44683,6 +46225,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -44690,6 +46238,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -44792,12 +46341,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -44897,6 +46453,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -44904,6 +46466,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -45099,12 +46662,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -45204,6 +46774,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -45211,6 +46787,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -45319,12 +46896,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -45424,6 +47008,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -45431,6 +47021,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -45556,12 +47147,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -45661,6 +47259,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -45668,6 +47272,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -45770,12 +47375,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -45875,6 +47487,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -45882,6 +47500,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -46029,12 +47648,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -46134,6 +47760,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -46141,6 +47773,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -46249,12 +47882,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -46354,6 +47994,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -46361,6 +48007,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -46486,12 +48133,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -46591,6 +48245,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -46598,6 +48258,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     reportingManagerId?: number | null
     joiningDate: Date | string
@@ -46705,12 +48366,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -46810,6 +48478,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -46817,6 +48491,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -46919,12 +48594,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -47024,6 +48706,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -47031,6 +48719,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -47194,12 +48883,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -47299,6 +48995,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -47306,6 +49008,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -47414,12 +49117,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -47519,6 +49229,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -47526,6 +49242,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -47707,12 +49424,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -47812,6 +49536,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -47819,6 +49549,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -47921,12 +49652,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -48026,6 +49764,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -48033,6 +49777,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     joiningDate: Date | string
@@ -48492,12 +50237,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -48597,6 +50349,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -48604,6 +50362,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -48706,12 +50465,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -48811,6 +50577,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -48818,6 +50590,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -48920,12 +50693,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -49025,6 +50805,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -49032,6 +50818,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -49139,12 +50926,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -49244,6 +51038,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -49251,6 +51051,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -50701,12 +52502,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -50806,6 +52614,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -50813,6 +52627,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -51254,12 +53069,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -51359,6 +53181,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -51366,6 +53194,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -51474,12 +53303,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -51579,6 +53415,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -51586,6 +53428,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -52387,12 +54230,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -52492,6 +54342,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -52499,6 +54355,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -52601,12 +54458,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -52706,6 +54570,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -52713,6 +54583,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -52815,12 +54686,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -52920,6 +54798,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -52927,6 +54811,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -53040,12 +54925,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -53145,6 +55037,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -53152,6 +55050,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -53260,12 +55159,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -53365,6 +55271,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -53372,6 +55284,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -53480,12 +55393,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -53585,6 +55505,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -53592,6 +55518,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -53689,12 +55616,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -53794,6 +55728,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -53801,6 +55741,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -53946,12 +55887,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -54051,6 +55999,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -54058,6 +56012,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -54160,12 +56115,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -54265,6 +56227,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -54272,6 +56240,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -54385,12 +56354,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -54490,6 +56466,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -54497,6 +56479,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -54621,12 +56604,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -54726,6 +56716,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -54733,6 +56729,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -54841,12 +56838,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -54946,6 +56950,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -54953,6 +56963,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -55050,12 +57061,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -55155,6 +57173,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -55162,6 +57186,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -55264,12 +57289,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -55369,6 +57401,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -55376,6 +57414,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -55489,12 +57528,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -55594,6 +57640,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -55601,6 +57653,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -55709,12 +57762,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -55814,6 +57874,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -55821,6 +57887,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -55918,12 +57985,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -56023,6 +58097,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -56030,6 +58110,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -56132,12 +58213,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -56237,6 +58325,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -56244,6 +58338,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -56346,12 +58441,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -56451,6 +58553,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -56458,6 +58566,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -56571,12 +58680,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -56676,6 +58792,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -56683,6 +58805,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -56791,12 +58914,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -56896,6 +59026,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -56903,6 +59039,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -57011,12 +59148,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -57116,6 +59260,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -57123,6 +59273,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -57296,12 +59447,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -57401,6 +59559,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -57408,6 +59572,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -57510,12 +59675,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -57615,6 +59787,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -57622,6 +59800,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -57767,12 +59946,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -57872,6 +60058,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -57879,6 +60071,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -57987,12 +60180,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -58092,6 +60292,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -58099,6 +60305,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -58196,12 +60403,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -58301,6 +60515,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -58308,6 +60528,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -58436,12 +60657,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -58541,6 +60769,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -58548,6 +60782,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -58650,12 +60885,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -58755,6 +60997,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -58762,6 +61010,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -58875,12 +61124,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -58980,6 +61236,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -58987,6 +61249,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -59127,12 +61390,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -59232,6 +61502,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -59239,6 +61515,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -59347,12 +61624,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -59452,6 +61736,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -59459,6 +61749,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -59556,12 +61847,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -59661,6 +61959,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -59668,6 +61972,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -59796,12 +62101,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -59901,6 +62213,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -59908,6 +62226,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -60010,12 +62329,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -60115,6 +62441,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -60122,6 +62454,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -60235,12 +62568,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -60340,6 +62680,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -60347,6 +62693,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -60487,12 +62834,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -60592,6 +62946,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -60599,6 +62959,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -60707,12 +63068,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -60812,6 +63180,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -60819,6 +63193,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -60916,12 +63291,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -61021,6 +63403,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -61028,6 +63416,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -61130,12 +63519,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -61235,6 +63631,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -61242,6 +63644,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -61355,12 +63758,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -61460,6 +63870,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -61467,6 +63883,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -61575,12 +63992,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -61680,6 +64104,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -61687,6 +64117,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -61784,12 +64215,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -61889,6 +64327,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -61896,6 +64340,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -62040,12 +64485,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -62145,6 +64597,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -62152,6 +64610,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -62254,12 +64713,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -62359,6 +64825,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -62366,6 +64838,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -62468,12 +64941,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -62573,6 +65053,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -62580,6 +65066,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -62693,12 +65180,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -62798,6 +65292,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -62805,6 +65305,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -62961,12 +65462,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -63066,6 +65574,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -63073,6 +65587,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -63181,12 +65696,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -63286,6 +65808,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -63293,6 +65821,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -63401,12 +65930,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -63506,6 +66042,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -63513,6 +66055,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -63610,12 +66153,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -63715,6 +66265,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -63722,6 +66278,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -63824,12 +66381,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -63929,6 +66493,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -63936,6 +66506,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -64038,12 +66609,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -64143,6 +66721,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -64150,6 +66734,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -64263,12 +66848,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -64368,6 +66960,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -64375,6 +66973,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -64483,12 +67082,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -64588,6 +67194,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -64595,6 +67207,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -64703,12 +67316,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -64808,6 +67428,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -64815,6 +67441,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -64912,12 +67539,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -65017,6 +67651,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -65024,6 +67664,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -65137,12 +67778,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -65242,6 +67890,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -65249,6 +67903,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -65346,12 +68001,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -65451,6 +68113,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -65458,6 +68126,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -65571,12 +68240,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -65676,6 +68352,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -65683,6 +68365,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -65780,12 +68463,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -65885,6 +68575,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -65892,6 +68588,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -66005,12 +68702,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -66110,6 +68814,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -66117,6 +68827,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -66214,12 +68925,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -66319,6 +69037,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -66326,6 +69050,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -66454,12 +69179,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -66559,6 +69291,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -66566,6 +69304,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -66668,12 +69407,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     joiningDate: Date | string
     employmentType?: $Enums.EmploymentType
     status?: $Enums.EmployeeStatus
@@ -66773,6 +69519,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -66780,6 +69532,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -66893,12 +69646,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -66998,6 +69758,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -67005,6 +69771,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -67145,12 +69912,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -67250,6 +70024,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -67257,6 +70037,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -67365,12 +70146,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -67470,6 +70258,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -67477,6 +70271,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -67575,12 +70370,19 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
     passwordHash: string
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -67639,12 +70441,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -67744,12 +70553,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -67849,12 +70665,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -68001,6 +70824,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -68008,6 +70837,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     designationId: number
     reportingManagerId?: number | null
     joiningDate: Date | string
@@ -68082,12 +70912,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -68187,6 +71024,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -68194,6 +71037,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68292,6 +71136,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -68299,6 +71149,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68426,6 +71277,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -68433,6 +71290,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     reportingManagerId?: number | null
     joiningDate: Date | string
@@ -68481,12 +71339,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -68586,6 +71451,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -68593,6 +71464,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68691,6 +71563,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -68698,6 +71576,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68747,6 +71626,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -68754,6 +71639,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     joiningDate: Date | string
@@ -68933,6 +71819,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -68940,6 +71832,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -68989,6 +71882,12 @@ export namespace Prisma {
     dob?: Date | string | null
     gender?: string | null
     bloodGroup?: string | null
+    motherName?: string | null
+    fatherName?: string | null
+    maritalStatus?: string | null
+    spouseName?: string | null
+    religion?: string | null
+    nationality?: string | null
     mobile: string
     alternateMobile?: string | null
     email: string
@@ -68996,6 +71895,7 @@ export namespace Prisma {
     roleId: number
     lastLogin?: Date | string | null
     address?: string | null
+    temporaryAddress?: string | null
     departmentId: number
     designationId: number
     reportingManagerId?: number | null
@@ -69475,12 +72375,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -69580,6 +72487,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -69587,6 +72500,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -69685,6 +72599,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -69692,6 +72612,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -70122,12 +73043,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -70227,6 +73155,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -70234,6 +73168,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -70332,6 +73267,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -70339,6 +73280,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -70387,12 +73329,19 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     employmentType?: EnumEmploymentTypeFieldUpdateOperationsInput | $Enums.EmploymentType
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
@@ -70492,6 +73441,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -70499,6 +73454,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -70597,6 +73553,12 @@ export namespace Prisma {
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bloodGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    motherName?: NullableStringFieldUpdateOperationsInput | string | null
+    fatherName?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
     mobile?: StringFieldUpdateOperationsInput | string
     alternateMobile?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
@@ -70604,6 +73566,7 @@ export namespace Prisma {
     roleId?: IntFieldUpdateOperationsInput | number
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: IntFieldUpdateOperationsInput | number
     designationId?: IntFieldUpdateOperationsInput | number
     reportingManagerId?: NullableIntFieldUpdateOperationsInput | number | null
